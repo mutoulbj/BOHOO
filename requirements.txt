@@ -1,0 +1,4 @@
+django
+django-endless-pagination
+south
+compress

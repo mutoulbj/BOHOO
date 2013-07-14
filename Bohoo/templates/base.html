@@ -1,0 +1,94 @@
+{% load compress %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="{% block descrition %}{% endblock %}">
+    <link rel="shortcut icon" href="{{ STATIC_URL }}img/favicon.ico">
+    <title>{% block title %}{% endblock %}</title>
+{% compress css %}
+    <!-- boorstrap and font awesome -->
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/font-awesome.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.min.css">
+    <!-- bootstrap and awesome font end -->
+    <style type="text/css">
+    .input-append{
+        margin-top: 5px;
+    }
+    .main-content{
+        padding-top: 70px;
+    }
+    </style>
+{% endcompress %}
+{% block head_other %}{% endblock %}
+</head>
+
+<body>
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="#">BOHOO</a>
+
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li>
+                        <form class="search-query">
+                            <div class="input-append">
+                                <input class="search-input" name="search-content" type="text" placeholder="Search">
+                                <button class="btn btn-primary"><i class="icon-search icon-large"></i></button>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+                <ul class="nav">
+                    <li>
+                        <a href="/"><i class="icon-home"></i>首页</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="icon-leaf"></i>推荐</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="icon-comments"></i>我的群组</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="icon-phone"></i>我的话题</a>
+                    </li>
+                </ul>
+
+                <ul class="nav pull-right">
+                    <li>
+                        <a href="#"><i class="icon-fire"></i>登录</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="icon-lemon"></i>注册</a>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" role="button" data-toggle="dropdown">
+                            操作
+                            <i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">我的帐号</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">退出</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content" style="width:1000px;margin: 0 auto;float: none;">
+    {% block main %}{% endblock %}
+</div>
+
+
+{% compress js %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+{% endcompress %}
+{% block js_base_other %}{% endblock %}
+</body>
+</html>
