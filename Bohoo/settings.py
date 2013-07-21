@@ -144,11 +144,12 @@ ROOT_URLCONF = 'Bohoo.urls'
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'Bohoo.wsgi.application'
 
+DIRNAME = os.path.abspath(os.path.dirname(__file__))
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.join(os.path.dirname(__file__), 'templates').replace("\\", '/'),
+    os.path.join(DIRNAME, 'templates').replace("\\", '/'),
 )
 
 INSTALLED_APPS = (
@@ -164,8 +165,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'User',
     'groups',
+    'accounts',
     'endless_pagination',
-    'notification',
+    # 'notification',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )

@@ -146,6 +146,7 @@ class Reply(models.Model):
 		self.topic.save()
 		super(Reply, self).save(force_insert, force_update)
 
+
 class Group_memeber(models.Model):
 	'''小组-成员关系模式'''
 	group = models.ForeignKey(Group, related_name='group_gms', verbose_name='小组')

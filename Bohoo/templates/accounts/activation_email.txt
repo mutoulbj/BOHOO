@@ -1,1 +1,0 @@
-hello,plese click  http://localhost:8000/accounts/activate/{{activation_key}} to activation your account!

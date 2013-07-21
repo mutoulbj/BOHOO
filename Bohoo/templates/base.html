@@ -19,6 +19,16 @@
     .main-content{
         padding-top: 70px;
     }
+    .border-block{
+        position: relative;
+        padding: 18px 30px 14px;
+        *padding-top: 19px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+    }
     </style>
 {% endcompress %}
 {% block head_other %}{% endblock %}
@@ -89,6 +99,6 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
 {% endcompress %}
-{% block js_base_other %}{% endblock %}
+{% block js_other %}{% endblock %}
 </body>
 </html>
