@@ -1,6 +1,6 @@
 # Create your views here.
 #coding=utf-8
-import random,hashlib
+import random, hashlib
 #from itertools import chain
 import re
 import os
@@ -10,227 +10,233 @@ import cStringIO
 import urllib
 from PIL import Image
 import django
-from django.http import HttpResponse,Http404
-from django.shortcuts import render_to_response,redirect,render
+from django.http import HttpResponse, Http404
+from django.shortcuts import render_to_response, redirect, render
 from django.template import RequestContext
 
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
-from django.db.models import F,Q
-from models import Group_memeber,Catelog,Group,Topic,Topic_reply_amount,Reply,Report
+from django.db.models import F, Q
+from models import Group_memeber, Catelog, Group, Topic, Topic_reply_amount, Reply, Report
 import group_utils
 
-SHA1_RE = re.compile('^[a-f0-9]{40}$')  
+SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 User = get_user_model()
 
 SEARCH_GROUP = '9999'
 SEARCH_TOPIC = '8888'
 
+
 def home(request):
-	vars = {}
-	tag = request.GET.get("tag","")
-	if tag == "":
-		groups = Group.objects.all()[:20]
-		vars["groups"] = groups
-		d = group_utils.getCatelog()
-		vars['catelog'] = d
-		return render(request,'index.html',vars)
-	else:
-		catelog = Catelog.objects.get(cate_name=tag)
-		#this means the catelog is a root catelog
-		if catelog.parent_id == -1:
-			#get all child catelog
-			child_catelogs = Catelog.objects.filter(parent_id=catelog.id)
-			all_groups = []
-			for child_catelog in child_catelogs:
-				group = Group.objects.filter(catelog=child_catelog)
-				all_groups.extend(group)
-			vars["groups"] = all_groups
-			d = group_utils.getCatelog()
-			vars['catelog'] = d
-			vars['tag'] = tag
-			return render(request,'index.html',vars)
-		groups = Group.objects.filter(catelog=catelog)
-		vars["groups"] = groups
-		d = group_utils.getCatelog()
-		vars['catelog'] = d
-		vars['tag'] = tag
-		return render(request,'index.html',vars)
-		
+    vars = {}
+    tag = request.GET.get("tag", "")
+    if tag == "":
+        groups = Group.objects.all()[:20]
+        vars["groups"] = groups
+        d = group_utils.getCatelog()
+        vars['catelog'] = d
+        return render(request, 'index.html', vars)
+    else:
+        catelog = Catelog.objects.get(cate_name=tag)
+        #this means the catelog is a root catelog
+        if catelog.parent_id == -1:
+            #get all child catelog
+            child_catelogs = Catelog.objects.filter(parent_id=catelog.id)
+            all_groups = []
+            for child_catelog in child_catelogs:
+                group = Group.objects.filter(catelog=child_catelog)
+                all_groups.extend(group)
+            vars["groups"] = all_groups
+            d = group_utils.getCatelog()
+            vars['catelog'] = d
+            vars['tag'] = tag
+            return render(request, 'index.html', vars)
+        groups = Group.objects.filter(catelog=catelog)
+        vars["groups"] = groups
+        d = group_utils.getCatelog()
+        vars['catelog'] = d
+        vars['tag'] = tag
+        return render(request, 'index.html', vars)
+
+
 def explore_topic(request):
-	'''
+    '''
 		explore topics
 		reply = [(topic,rep) for rep in [Topic_reply_amount.objects.filter(topic=topic)]]
 	'''
-	vars = {}
-	tag = request.GET.get("tag","")
-	if tag == "":
-		topics = Topic.objects.all()[:20]
-		topic_reply = []
-		for topic in topics:
-			reply = [(topic,rep) for rep in [Topic_reply_amount.objects.filter(topic=topic)]]
-			topic_reply.append(reply)
-		vars["topics"] = topic_reply
-		d = group_utils.getCatelog()
-		vars['catelog'] = d
-		return render(request,'explore_topics.html',vars)
-	else:
-		catelog = Catelog.objects.get(cate_name=tag)
-		if catelog.parent_id == -1:
-			child_catelogs = Catelog.objects.filter(parent_id=catelog.id)
-			all_groups = []
-			for child_catelog in child_catelogs:
-				group = Group.objects.filter(catelog=child_catelog)
-				all_groups.extend(group)
-			all_topics = []
-			topic_reply = []
-			if len(all_groups) > 0:
-				for gp in all_groups:
-					topics = Topic.objects.filter(group=gp)
-					all_topics.extend(topics)
-				for topic in all_topics:
-					reply = [(topic,rep) for rep in [Topic_reply_amount.objects.filter(topic=topic)]]
-					topic_reply.append(reply)
-			vars["topics"] = topic_reply
-			d = group_utils.getCatelog()
-			vars['catelog'] = d
-			vars["tag"] = tag
-			return render(request,'explore_topics.html',vars)
-		else:
-			group = Group.objects.filter(catelog=catelog)
-			topic_reply = []
-			all_topics = []
-			if group.count() > 0:
-				for gp in group:
-					topics = Topic.objects.filter(group=gp)
-					all_topics.extend(topics)
-				for topic in all_topics:
-					reply = [(topic,rep) for rep in [Topic_reply_amount.objects.filter(topic=topic)]]
-					topic_reply.append(reply)
-			vars["topics"] = topic_reply
-			d = group_utils.getCatelog()
-			vars['catelog'] = d
-			vars["tag"] = tag
-			return render(request,'explore_topics.html',vars)
-	
+    vars = {}
+    tag = request.GET.get("tag", "")
+    if tag == "":
+        topics = Topic.objects.all()[:20]
+        topic_reply = []
+        for topic in topics:
+            reply = [(topic, rep) for rep in [Topic_reply_amount.objects.filter(topic=topic)]]
+            topic_reply.append(reply)
+        vars["topics"] = topic_reply
+        d = group_utils.getCatelog()
+        vars['catelog'] = d
+        return render(request, 'explore_topics.html', vars)
+    else:
+        catelog = Catelog.objects.get(cate_name=tag)
+        if catelog.parent_id == -1:
+            child_catelogs = Catelog.objects.filter(parent_id=catelog.id)
+            all_groups = []
+            for child_catelog in child_catelogs:
+                group = Group.objects.filter(catelog=child_catelog)
+                all_groups.extend(group)
+            all_topics = []
+            topic_reply = []
+            if len(all_groups) > 0:
+                for gp in all_groups:
+                    topics = Topic.objects.filter(group=gp)
+                    all_topics.extend(topics)
+                for topic in all_topics:
+                    reply = [(topic, rep) for rep in [Topic_reply_amount.objects.filter(topic=topic)]]
+                    topic_reply.append(reply)
+            vars["topics"] = topic_reply
+            d = group_utils.getCatelog()
+            vars['catelog'] = d
+            vars["tag"] = tag
+            return render(request, 'explore_topics.html', vars)
+        else:
+            group = Group.objects.filter(catelog=catelog)
+            topic_reply = []
+            all_topics = []
+            if group.count() > 0:
+                for gp in group:
+                    topics = Topic.objects.filter(group=gp)
+                    all_topics.extend(topics)
+                for topic in all_topics:
+                    reply = [(topic, rep) for rep in [Topic_reply_amount.objects.filter(topic=topic)]]
+                    topic_reply.append(reply)
+            vars["topics"] = topic_reply
+            d = group_utils.getCatelog()
+            vars['catelog'] = d
+            vars["tag"] = tag
+            return render(request, 'explore_topics.html', vars)
+
+
 def register(request):
-	vars = {}
-	if request.method == "POST":
-		form_email = request.POST.get("form_email",'')
-		form_password = request.POST.get("form_password",'')
-		form_name = request.POST.get("form_name",'')
-		captcha = request.POST.get('captcha-solution','')
-		if form_email == "" or form_password == '' or form_name == '':
-			vars['msg'] = 'empty error!'
-			return render(request,'join.html',vars)
-		if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", form_email) == None:
-			vars['msg'] = 'email 不合法!'
-			return render(request,'join.html',vars)
-		if captcha == '':
-			vars['msg'] = 'captcha empty error!'
-			return render(request,'join.html',vars)
-		if captcha.lower() != request.session.get("captcha_code",""):
-			vars['msg'] = 'captcha  error!'
-			return render(request,'join.html',vars)
-		user_indb = User.objects.filter(email=form_email).count()
-		#if len(user_indb) > 0:
-		if user_indb > 0:
-			vars['msg'] = 'user exists!'
-			return render(request,'join.html',vars)
-		nickname_indb = User.objects.filter(nickname=form_name).count()
-		if nickname_indb > 0:
-			vars['msg'] = 'nickname exists!'
-			return render(request,'join.html',vars)
-		user = User.objects.create_user(email=form_email, nickname=form_name, password=form_password)
-		
-		salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
-		username = user.email  
-		if isinstance(username, unicode):  
-			username = username.encode('utf-8')  
-		activation_key = hashlib.sha1(salt+username).hexdigest()  
-		user.activation_key=activation_key
-		user.is_active=0
-		user.save()
-		user_auth = authenticate(username=form_email,password=form_password)
-		django.contrib.auth.login(request,user_auth)
-		try:
-			user.send_activation_email(username,'group') 
-		except Exception:
-			return HttpResponse("发信失败，请重试或者联系管理员：xxx@ddd.com")
-			
-		return redirect('/accounts/wait_activate')
-	return render_to_response('join.html', context_instance=RequestContext(request))
-	
+    vars = {}
+    if request.method == "POST":
+        form_email = request.POST.get("form_email", '')
+        form_password = request.POST.get("form_password", '')
+        form_name = request.POST.get("form_name", '')
+        captcha = request.POST.get('captcha-solution', '')
+        if form_email == "" or form_password == '' or form_name == '':
+            vars['msg'] = 'empty error!'
+            return render(request, 'join.html', vars)
+        if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", form_email) == None:
+            vars['msg'] = 'email 不合法!'
+            return render(request, 'join.html', vars)
+        if captcha == '':
+            vars['msg'] = 'captcha empty error!'
+            return render(request, 'join.html', vars)
+        if captcha.lower() != request.session.get("captcha_code", ""):
+            vars['msg'] = 'captcha  error!'
+            return render(request, 'join.html', vars)
+        user_indb = User.objects.filter(email=form_email).count()
+        #if len(user_indb) > 0:
+        if user_indb > 0:
+            vars['msg'] = 'user exists!'
+            return render(request, 'join.html', vars)
+        nickname_indb = User.objects.filter(nickname=form_name).count()
+        if nickname_indb > 0:
+            vars['msg'] = 'nickname exists!'
+            return render(request, 'join.html', vars)
+        user = User.objects.create_user(email=form_email, nickname=form_name, password=form_password)
+
+        salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+        username = user.email
+        if isinstance(username, unicode):
+            username = username.encode('utf-8')
+        activation_key = hashlib.sha1(salt + username).hexdigest()
+        user.activation_key = activation_key
+        user.is_active = 0
+        user.save()
+        user_auth = authenticate(username=form_email, password=form_password)
+        django.contrib.auth.login(request, user_auth)
+        try:
+            user.send_activation_email(username, 'group')
+        except Exception:
+            return HttpResponse("发信失败，请重试或者联系管理员：xxx@ddd.com")
+
+        return redirect('/accounts/wait_activate')
+    return render_to_response('join.html', context_instance=RequestContext(request))
+
+
 def get_captcha(request):
-	c=group_utils.picChecker() 
-	t=c.createChecker()
-	request.session["captcha_code"] = t[0].lower()
-	buf = cStringIO.StringIO()
-	t[1].save(buf,'gif')
-	return HttpResponse(buf.getvalue(),'image/gif')
-	#print(t)
-	
-	
+    c = group_utils.picChecker()
+    t = c.createChecker()
+    request.session["captcha_code"] = t[0].lower()
+    buf = cStringIO.StringIO()
+    t[1].save(buf, 'gif')
+    return HttpResponse(buf.getvalue(), 'image/gif')
+
+#print(t)
+
+
 def login(request):
-	vars = {}
-	if request.method == 'POST':
-		form_email = request.POST.get("form_email",'')
-		form_password = request.POST.get("form_password",'')
-		if form_email == '' or form_password == '':
-			vars['msg'] = 'empty error'
-			return render(request,'login.html',vars)
-		#return HttpResponse(str([form_email,form_password]))
-		if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", form_email) == None:
-			vars['msg'] = 'email不合法'
-			return render(request,'login.html',vars)
-		user = authenticate(username=form_email,password=form_password)
+    vars = {}
+    if request.method == 'POST':
+        form_email = request.POST.get("form_email", '')
+        form_password = request.POST.get("form_password", '')
+        if form_email == '' or form_password == '':
+            vars['msg'] = 'empty error'
+            return render(request, 'login.html', vars)
+        #return HttpResponse(str([form_email,form_password]))
+        if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", form_email) == None:
+            vars['msg'] = 'email不合法'
+            return render(request, 'login.html', vars)
+        user = authenticate(username=form_email, password=form_password)
 
-		if user is not None:
-			user_activate = user.is_active
-			if user_activate == 0:
-				return redirect('/accounts/wait_activate')
-			django.contrib.auth.login(request,user)
-			member = Group_memeber.objects.filter(member=user)
-			next =request.META['HTTP_REFERER']
-			#print 'next:',next
-			#next is like http://localhost:8000/group/login?next=/group/name
-			if "?" in next:
-				
-				next = next.split("?")[-1].split("=")[-1]
-				keys = urllib.unquote_plus(next.split("/")[-2])
-				if keys == "mygroup":
-					#return redirect mygroup page
-					return redirect("mygroup")
-				group_name = urllib.unquote_plus(keys)
+        if user is not None:
+            user_activate = user.is_active
+            if user_activate == 0:
+                return redirect('/accounts/wait_activate')
+            django.contrib.auth.login(request, user)
+            member = Group_memeber.objects.filter(member=user)
+            next = request.META['HTTP_REFERER']
+            #print 'next:',next
+            #next is like http://localhost:8000/group/login?next=/group/name
+            if "?" in next:
 
-				try:
-					group_db = Group.objects.get(name=group_name)
-				except ObjectDoesNotExist:
-					raise Http404()
-				if request.user not in group_db.member.all():
-					group_db.member.add(request.user)
-				return redirect(next)
-			#user has not join any group yet!
-			if len(member) == 0 :
-				d = group_utils.getCatelogAndGroup()
-				vars['catelog'] = d
-				return render(request,'guide.html',vars)
-				#return redirect('guide')
-			return redirect("mygroup")
-			
-		else:
-			vars['msg'] = 'username or password incorrect'
-			return render(request,'login.html',vars)
-			#return HttpResponse("login failed!")
-	return render(request,"login.html")
+                next = next.split("?")[-1].split("=")[-1]
+                keys = urllib.unquote_plus(next.split("/")[-2])
+                if keys == "mygroup":
+                    #return redirect mygroup page
+                    return redirect("mygroup")
+                group_name = urllib.unquote_plus(keys)
 
-@login_required	
+                try:
+                    group_db = Group.objects.get(name=group_name)
+                except ObjectDoesNotExist:
+                    raise Http404()
+                if request.user not in group_db.member.all():
+                    group_db.member.add(request.user)
+                return redirect(next)
+            #user has not join any group yet!
+            if len(member) == 0:
+                d = group_utils.getCatelogAndGroup()
+                vars['catelog'] = d
+                return render(request, 'guide.html', vars)
+            #return redirect('guide')
+            return redirect("mygroup")
+
+        else:
+            vars['msg'] = 'username or password incorrect'
+            return render(request, 'login.html', vars)
+        #return HttpResponse("login failed!")
+    return render(request, "login.html")
+
+
+@login_required
 def groupjoin(request):
 	user = request.POST.get("user",'')
 	group = request.POST.get("group",'')
@@ -312,30 +318,29 @@ def my_topics(request):
 				#d.append(reply)
 	vars["mygroups"] = d
 	return render(request,'mygroup.html',vars)
-	
+
+
 @login_required
 def my_replied_topics(request):
-	'''
-		display the topics that current user response
-	'''
-	vars = {}
-	vars["tp"] = "res"
-	d = []
-	
-	replys = Reply.objects.filter(creator=request.user)
-	topic_set = set()
-	for rep in replys:
-		topic_set.add(rep.topic)
-	temp_list = []
-	for ts in topic_set:
-		if Reply.objects.filter(topic=ts).count() > 0:
-			temp_list.append(Reply.objects.filter(topic=ts)[0])
- 
-	for reply in temp_list:
-		tp = [(reply.topic,rep) for rep in [Topic_reply_amount.objects.filter(topic=reply.topic)]]
-		d.append(tp)
-	vars["mygroups"] = d
-	return render(request,'mygroup.html',vars)
+    """
+    display the topics that current user response
+    """
+    vars = {}
+    vars["tp"] = "res"
+    d = []
+    replys = Reply.objects.filter(creator=request.user)
+    topic_set = set()
+    for rep in replys:
+        topic_set.add(rep.topic)
+    temp_list = []
+    for ts in topic_set:
+        if Reply.objects.filter(topic=ts).count() > 0:
+            temp_list.append(Reply.objects.filter(topic=ts)[0])
+    for reply in temp_list:
+        tp = [(reply.topic,rep) for rep in [Topic_reply_amount.objects.filter(topic=reply.topic)]]
+        d.append(tp)
+        vars["mygroups"] = d
+    return render(request, 'mygroup.html', vars)
 
 @login_required
 def mine(request):
@@ -782,23 +787,23 @@ def del_image(request):
 	return HttpResponse(-3)
 	
 	
-def activate(request, activation_key):  
-    if SHA1_RE.search(activation_key):  
-		try:  
-			user = User.objects.get(activation_key=activation_key)
-		except :  
-			return render_to_response('error.html', RequestContext(request, locals()))  
-		if not user.activation_key_expired():  
-			user.is_active = 1  
-			user.save()  
-			user.activation_key = u"ALREADY_ACTIVATED"  
-			user.save()
-			return render_to_response('activate_complete.html', RequestContext(request, locals()))
+def activate(request, activation_key):
+    if SHA1_RE.search(activation_key):
+        try:
+            user = User.objects.get(activation_key=activation_key)
+        except:
+            return render_to_response('error.html', RequestContext(request, locals()))
+        if not user.activation_key_expired():
+            user.is_active = 1
+            user.save()
+            user.activation_key = u"ALREADY_ACTIVATED"
+            user.save()
+        return render_to_response('activate_complete.html', RequestContext(request, locals()))
 
 def wait_activate(request):  
-    return render_to_response('wait_activate.html', RequestContext(request, locals())) 			
-	
-	
+    return render_to_response('wait_activate.html', RequestContext(request, locals()))
+
+
 def dispatcher(request,page):
-	if page == 'blank':
-		return render_to_response('blank.htm')
+    if page == 'blank':
+        return render_to_response('blank.htm')

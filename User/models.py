@@ -6,13 +6,11 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.template.loader import render_to_string
-
 from django.utils import timezone
 
-from groups.models import Catelog
+from groups.models import Catelog,
 
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
-
 
 
 class MyUserManager(BaseUserManager):
@@ -39,14 +37,12 @@ class MyUserManager(BaseUserManager):
 
     def create_superuser(self, email, nickname, password):
         """
-		Creates and saves a User with the given email, nickname,user_groups image and password.
-		"""
+        Creates and saves a User with the given email, nickname,user_groups image and password.
+        """
         user = self.create_user(email,
                                 password=password,
-                                #date_of_birth=date_of_birth
-                                nickname=nickname,
-                                #user_groups=user_groups,
-        )
+                                nickname=nickname
+                                )
         user.is_admin = True
         user.is_superuser = True
         user.save(using=self._db)
@@ -60,7 +56,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     ipaddr = models.IPAddressField(verbose_name='注册ip', null=True, blank=True)
     iplocation = models.CharField(max_length=50, verbose_name='注册ip位置', null=True, blank=True)
     job = models.ForeignKey(Catelog, verbose_name='职业', null=True, blank=True, default=None)
-    user_groups = models.CharField(max_length=255, null=True, verbose_name='用户的小组')
+    user_groups = models.ManyToManyField()
     activation_key = models.CharField(_('activation key'), max_length=40, blank=True)
     date_joined = models.DateTimeField('注册时间', default=timezone.now())
     image = models.ImageField(upload_to='user_images/%Y/%m/%d', blank=True, null=True, verbose_name='小组图片')

@@ -1,9 +1,5 @@
 #coding=utf-8
 
-'''
-@author: 潘飞(cnweike@gmail.com)
-'''
-
 from django.conf import settings
 
 from django.db import models
@@ -17,31 +13,34 @@ MEMBER_JOIN_CHOICES = ((0, 'Everyone can join'), (1, 'Need check'))
 REPORT_TYPE_CHOICES = ((0, '话题'), (1, '回复'))
 REASON_CHOICES = ((0, '广告或垃圾信息'), (1, '色情、淫秽或低俗内容'),(2, '激进时政或意识形态话题'),(3, '其他原因'))
 
-#for group category
+
 class Catelog(models.Model):
-	'''小组分类'''
-	cate_name = models.CharField(max_length=200, verbose_name='分类',unique=True,db_index=True)
-	parent_id = models.IntegerField(default=-1,verbose_name='父id')
-	#south_test = models.CharField(max_length=10,blank=True,null=True)
-	
-	def __unicode__(self):
-		return self.cate_name
-	
-	class Meta:
-		verbose_name = '分类'
-		verbose_name_plural='分类'
+    """
+    小组分类
+    """
+    cate_name = models.CharField(max_length=200, verbose_name='分类',unique=True,db_index=True)
+    parent_id = models.IntegerField(default=-1,verbose_name='父id')
+
+    def __unicode__(self):
+        return self.cate_name
+    class Meta:
+        verbose_name = '分类'
+        verbose_name_plural='分类'
+
 
 class Group(models.Model):
-	'''小组模式'''
-	name = models.CharField(max_length=255, verbose_name='小组名称',unique=True,db_index=True)
-	description = models.TextField(blank=True, verbose_name='小组描述')
-	catelog = models.ForeignKey(Catelog,related_name='catelog_groups',verbose_name='小组分类')
-	image = models.ImageField(upload_to='group_images/%Y%m%d', blank=True, null=True, verbose_name='小组图片')
-	creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='created_groups', verbose_name='小组创建人')
-	member  = models.ManyToManyField(settings.AUTH_USER_MODEL)
-	gfriend  = models.ManyToManyField('self',symmetrical = False,verbose_name='友情小组')
-	member_nick = models.CharField(max_length=100,verbose_name='成员名称',default='成员')
-	type = models.SmallIntegerField(default=0, choices=GROUP_TYPE_CHOICES, verbose_name='小组类型')
+    """
+    小组模式
+    """
+    name = models.CharField(max_length=255, verbose_name='小组名称',unique=True,db_index=True)
+    description = models.TextField(blank=True, verbose_name='小组描述')
+    catelog = models.ForeignKey(Catelog,related_name='catelog_groups',verbose_name='小组分类')
+    image = models.ImageField(upload_to='group_images/%Y%m%d', blank=True, null=True, verbose_name='小组图片')
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='created_groups', verbose_name='小组创建人')
+    member  = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    gfriend  = models.ManyToManyField('self',symmetrical = False,verbose_name='友情小组')
+    member_nick = models.CharField(max_length=100,verbose_name='成员名称',default='成员')
+    type = models.SmallIntegerField(default=0, choices=GROUP_TYPE_CHOICES, verbose_name='小组类型')
 	member_join = models.SmallIntegerField(default=0, choices=MEMBER_JOIN_CHOICES, verbose_name='用户加入方式')
 	#create_time = models.DateTimeField(auto_now_add=True, verbose_name='小组创建时间')
 	create_time = models.DateTimeField(default=datetime.datetime.now, verbose_name='小组创建时间')
