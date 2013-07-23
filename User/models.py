@@ -7,17 +7,12 @@ from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.template.loader import render_to_string
 from django.utils import timezone
-
-from groups.models import Catelog,
-
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 
 class MyUserManager(BaseUserManager):
+    # 创建用户
     def create_user(self, email, nickname, user_groups=None, image=None, password=None):
-        """
-        Creates and saves a User with the given email, nickname,user_groups image and password.
-        """
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -35,10 +30,8 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    # 创建超级用户
     def create_superuser(self, email, nickname, password):
-        """
-        Creates and saves a User with the given email, nickname,user_groups image and password.
-        """
         user = self.create_user(email,
                                 password=password,
                                 nickname=nickname
@@ -50,32 +43,40 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(verbose_name='email address', max_length=255, unique=True, db_index=True)
-    nickname = models.CharField(max_length=100, verbose_name='username', unique=True, db_index=True)
-    sign = models.CharField(max_length=255, verbose_name='签名', null=True, blank=True)
-    ipaddr = models.IPAddressField(verbose_name='注册ip', null=True, blank=True)
-    iplocation = models.CharField(max_length=50, verbose_name='注册ip位置', null=True, blank=True)
-    job = models.ForeignKey(Catelog, verbose_name='职业', null=True, blank=True, default=None)
-    user_groups = models.ManyToManyField()
-    activation_key = models.CharField(_('activation key'), max_length=40, blank=True)
-    date_joined = models.DateTimeField('注册时间', default=timezone.now())
-    image = models.ImageField(upload_to='user_images/%Y/%m/%d', blank=True, null=True, verbose_name='小组图片')
-    first_name = models.CharField(verbose_name='first name', max_length=256)
-    last_name = models.CharField(verbose_name='last name', max_length=256)
+    email = models.EmailField(max_length=255, verbose_name=u'邮箱', unique=True, db_index=True)
+    nickname = models.CharField(max_length=100, verbose_name=u'昵称', unique=True, db_index=True)
+    sign = models.CharField(max_length=1024, verbose_name=u'签名', null=True, blank=True)
+    job = models.CharField(max_length=1024, verbose_name='职业', null=True, blank=True, default=None)
+    activation_key = models.CharField(max_length=40, verbose_name=u'激活码', blank=True)
+    date_joined = models.DateTimeField(auto_now_add=True, verbose_name=u'注册时间')
+    avatar = models.ImageField(upload_to='user_avatar/%Y/%m/%d', blank=True, null=True, verbose_name=u'头像')
+    first_name = models.CharField(max_length=256, verbose_name=u'名', null=True, blank=True)
+    last_name = models.CharField(max_length=256, verbose_name=u'姓', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
-
+    follower = models.ManyToManyField('self')
+    sex = models.CharField(max_length=128, verbose_name=u'性别', null=True, blank=True)
+    birthday = models.DateField(verbose_name=u'生日', null=True, blank=True)
+    country = models.CharField(max_length=256, verbose_name=u'国家', null=True, blank=True)
+    state = models.CharField(max_length=256, verbose_name=u'州省', null=True, blank=True)
+    city = models.CharField(max_length=256, verbose_name=u'区县', null=True, blank=True)
+    qq = models.IntegerField(verbose_name=u'qq', null=True, blank=True)
+    weibo = models.CharField(max_length=256,verbose_name=u'微博', null=True, blank=True)
     objects = MyUserManager()
 
     USERNAME_FIELD = 'nickname'
     REQUIRED_FIELDS = ['email']
 
     def get_full_name(self):
-        # The user is identified by their email address
-        return self.nickname
+        # 返回全名
+        return self.last_name + self.first_name
 
     def get_short_name(self):
-        # The user is identified by their email address
+        # 返回名字
+        return self.first_name
+
+    def get_nickname(self):
+        # 返回昵称
         return self.nickname
 
     def __unicode__(self):
