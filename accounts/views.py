@@ -23,6 +23,13 @@ def register(request):
     """
     注册
     """
+    # print request.POST
+    if request.method == 'POST':
+        form = register_form(request.POST)
+        print form.errors
+        if form.is_valid():
+            # print form.cleaned_data
+            form.save()
     vt = loader.get_template('register.html')
     c = RequestContext(
         request, {

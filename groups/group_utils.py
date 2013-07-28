@@ -1,5 +1,5 @@
 #coding=utf-8
-from models import Catelog, Group
+from models import Category, Group
 from django.contrib.auth import get_user_model
 
 

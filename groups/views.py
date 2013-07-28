@@ -22,7 +22,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from django.db.models import F, Q
-from models import Group_memeber, Catelog, Group, Topic, Topic_reply_amount, Reply, Report
+from models import Category, Group, Topic, Reply, Report
 import group_utils
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
@@ -43,11 +43,10 @@ def home(request):
         vars['catelog'] = d
         return render(request, 'index.html', vars)
     else:
-        catelog = Catelog.objects.get(cate_name=tag)
-        #this means the catelog is a root catelog
+        catelog = Category.objects.get(name=tag)
         if catelog.parent_id == -1:
             #get all child catelog
-            child_catelogs = Catelog.objects.filter(parent_id=catelog.id)
+            child_catelogs = Category.objects.filter(parent_id=catelog.id)
             all_groups = []
             for child_catelog in child_catelogs:
                 group = Group.objects.filter(catelog=child_catelog)
@@ -190,7 +189,7 @@ def login(request):
         if form_email == '' or form_password == '':
             vars['msg'] = 'empty error'
             return render(request, 'login.html', vars)
-        #return HttpResponse(str([form_email,form_password]))
+            #return HttpResponse(str([form_email,form_password]))
         if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", form_email) == None:
             vars['msg'] = 'email不合法'
             return render(request, 'login.html', vars)
@@ -221,51 +220,51 @@ def login(request):
                 if request.user not in group_db.member.all():
                     group_db.member.add(request.user)
                 return redirect(next)
-            #user has not join any group yet!
+                #user has not join any group yet!
             if len(member) == 0:
                 d = group_utils.getCatelogAndGroup()
                 vars['catelog'] = d
                 return render(request, 'guide.html', vars)
-            #return redirect('guide')
+                #return redirect('guide')
             return redirect("mygroup")
 
         else:
             vars['msg'] = 'username or password incorrect'
             return render(request, 'login.html', vars)
-        #return HttpResponse("login failed!")
+            #return HttpResponse("login failed!")
     return render(request, "login.html")
 
 
 @login_required
 def groupjoin(request):
-	user = request.POST.get("user",'')
-	group = request.POST.get("group",'')
-	if user != '' and group != '':
-		#return HttpResponse(str([user,group]))
-		group_db = Group.objects.filter(name=group)
-		if request.user in group_db[0].member.all():
-			#-1 means user already join the group
-			return HttpResponse("-1")
-		if len(group_db) != 0:
-			group_db[0].member.add(request.user)
-			return HttpResponse("0")
-	return HttpResponse("-2")
-	
+    user = request.POST.get("user", '')
+    group = request.POST.get("group", '')
+    if user != '' and group != '':
+        #return HttpResponse(str([user,group]))
+        group_db = Group.objects.filter(name=group)
+        if request.user in group_db[0].member.all():
+            #-1 means user already join the group
+            return HttpResponse("-1")
+        if len(group_db) != 0:
+            group_db[0].member.add(request.user)
+            return HttpResponse("0")
+    return HttpResponse("-2")
 
-	
+
 def logout(request):
-	django.contrib.auth.logout(request)
-	return redirect("home")
-	
+    django.contrib.auth.logout(request)
+    return redirect("home")
+
 #@login_required
 def guide(request):
-	vars = {}
-	d = group_utils.getCatelogAndGroup()
-	print "d is:",d
-	vars['catelog'] = d
-	return render(request,'guide.html',vars)
+    vars = {}
+    d = group_utils.getCatelogAndGroup()
+    print "d is:", d
+    vars['catelog'] = d
+    return render(request, 'guide.html', vars)
 
-@login_required	
+
+@login_required
 def mygroup(request):
 	'''
 		show topics in my group
@@ -294,7 +293,7 @@ def mygroup(request):
 	vars["mygroups"] = d
 	return render(request,'mygroup.html',vars)
 
-@login_required	
+@login_required
 def my_topics(request):
 	'''
 		display the topics published by the current login user
@@ -355,15 +354,15 @@ def mine(request):
 	vars['adminGroups'] = adminGroups
 	vars['joinGroups']  = joinGroups
 	return render(request,'mine.html',vars)
-	
+
 #func to view topic
 def topic(request,id):
 	vars = {}
-	
+
 	topic = Topic.objects.filter(id=id)
 	voteid = request.COOKIES.get('vote','')
 	vars["voteid"] = voteid
-	
+
 	action = request.GET.get("action","")
 	if request.method == "POST":
 		if action == "edit":
@@ -390,7 +389,7 @@ def topic(request,id):
 				elif action == "edit":
 					vars["topic"] = topic
 					return render(request,'edit_topic.html',vars)
-			
+
 			if action == "ding":
 				if voteid != id:
 					topic = Topic.objects.get(pk=id)
@@ -419,9 +418,9 @@ def topic(request,id):
 	vars["topic"] = topic
 	vars["reply"] = reply
 	vars["new_topic"] = five_new_topic
-	
+
 	return render(request,'topic_view.html',vars)
-	
+
 def remove_comment(request,id):
 	'''
 		remove a comment
@@ -435,7 +434,7 @@ def remove_comment(request,id):
 			return HttpResponse(0)
 		return HttpResponse(-2)
 	return HttpResponse("")
-	
+
 def admin_remove(request,id):
 	'''
 		remove a topic
@@ -446,8 +445,8 @@ def admin_remove(request,id):
 			topic.delete()
 			return redirect("showgroup",gname=topic.group.name)
 	return HttpResponse("")
-		
-	
+
+
 def add_comment(request,tid):
 	'''
 		func add comment
@@ -470,7 +469,7 @@ def add_comment(request,tid):
 	topic_reply_amount.amount  = F('amount') + 1
 	topic_reply_amount.save()
 	return redirect("topic",id=tid)
-	
+
 
 #@login_required
 def showgroup(request,gname,template='show_group.html'):
@@ -500,14 +499,14 @@ def showgroup(request,gname,template='show_group.html'):
 				return redirect('showgroup',gname=gname)
 	#to view a group by it's name ,so the group name is unique
 	#we should be check whether the group is exists when user create a group.
-	
-		
+
+
 	topics = Topic.objects.filter(group=group)
 	d = []
 	for topic in topics:
 		topic_reply = [(topic,rep) for rep in [Topic_reply_amount.objects.filter(topic=topic)]]
 		d.append(topic_reply)
-		
+
 	tp = request.GET.get("type","")
 	if tp != "":
 		if tp == "essence":
@@ -519,7 +518,7 @@ def showgroup(request,gname,template='show_group.html'):
 	vars["topics"] = d
 	vars["group"] = group
 	return render(request,template,vars)
-	
+
 #func to search groups or topics
 def search(request):
 	q = request.GET.get('q','')
@@ -536,7 +535,7 @@ def search(request):
 			groups = Group.objects.filter(name__icontains='%s'%q)
 			vars['groups'] = groups
 		elif cat == SEARCH_TOPIC:
-			#get name or content 
+			#get name or content
 			if group_name != "":
 				current_group_object = Group.objects.get(name=group_name)
 				vars["current_group"] = group_name
@@ -548,10 +547,10 @@ def search(request):
 				topic_reply = [(topic,rep) for rep in [Topic_reply_amount.objects.filter(topic=topic)]]
 				d.append(topic_reply)
 			vars["topics"] = d
-			
-		
+
+
 		return render(request,'search_rs.html',vars)
-	
+
 #func : to create a new group
 def new_group(request):
 	#use must be login
@@ -587,10 +586,10 @@ def new_group(request):
 			return redirect("showgroup",gname=grp_name)
 		return redirect("/group")
 		#create group begin
-		
+
 	return render(request,'new_group.html',vars)
 
-@login_required	
+@login_required
 def new_topic(request,gname):
 	'''
 		login user add a new topic
@@ -616,7 +615,7 @@ def new_topic(request,gname):
 		topic_amount.save()
 		return redirect("topic",id=topic.id)
 	return render(request,'new_topic.html',vars)
-	
+
 @login_required
 def group_edit(request,gname):
 	'''
@@ -624,7 +623,7 @@ def group_edit(request,gname):
 	'''
 	vars = {}
 	group = Group.objects.get(name=gname)
-	
+
 	vars["group"] = group
 	cats = Catelog.objects.filter(~Q(parent_id = -1) & ~Q(parent_id = -2))
 	vars["cats"] = cats
@@ -655,22 +654,22 @@ def group_edit(request,gname):
 				return render(request,'group_edit.html',vars)
 		#update group info
 		cate = Catelog.objects.get(cate_name=tags)
-		
+
 		Group.objects.filter(name=gname).update(name=grp_name,description=grp_intro,catelog=cate,member_nick=grp_role_mbr,modify_time=datetime.datetime.now())
 		return redirect('showgroup',gname=grp_name)
-	
+
 	return render(request,'group_edit.html',vars)
-	
+
 @login_required
 def members(request,gname):
 	'''
-		group admin show member info 
+		group admin show member info
 	'''
 	vars = {}
 	group = Group.objects.get(name=gname)
 	vars["group"] = group
 	return render(request,'members.html',vars)
-	
+
 @login_required
 def advance(request,gname):
 	'''
@@ -680,7 +679,7 @@ def advance(request,gname):
 	group = Group.objects.get(name=gname)
 	vars['group'] = group
 	return render(request,'advance.html',vars)
-	
+
 def add_friendgroup(request):
 	'''
 		add a friend group
@@ -699,10 +698,10 @@ def add_friendgroup(request):
 		user_group = Group.objects.get(name=current_group)
 		user_group.gfriend.add(group)
 		return HttpResponse(0)
-		
+
 def change_privacy(request):
 	'''
-		group privacy change 
+		group privacy change
 	'''
 	if not request.user.is_authenticated():
 		return HttpResponse(-1)
@@ -713,7 +712,7 @@ def change_privacy(request):
 		user_group.type=int(privacy)
 		user_group.save()
 		return HttpResponse(0)
-	
+
 def change_join(request):
 	'''
 		change group's join type
@@ -727,7 +726,7 @@ def change_join(request):
 		user_group.member_join=int(join_type)
 		user_group.save()
 		return HttpResponse(0)
-		
+
 def user_report(request):
 	'''
 		report handle
@@ -741,9 +740,9 @@ def user_report(request):
 		report = Report(rep_type=int(rep_type),beReported=rep_id,reason=reason)
 		report.save()
 		return HttpResponse(0)
-		
 
-		
+
+
 def upload_images(request):
 	"""
 		create topic upload image
@@ -764,16 +763,16 @@ def upload_images(request):
 	im = im.resize((width,height),Image.ANTIALIAS)
 	quality_val = 90
 	im.save(settings.MEDIA_ROOT+"/upload/"+filename, 'JPEG', quality=quality_val)
-	
+
 	#f = open(settings.MEDIA_ROOT+"/upload/"+filename,"wb")
 	#f.write(fs.file.getvalue())
 	#f.close()
 	return HttpResponse(filename)
-	
+
 def del_image(request):
 	"""
 		delete an upload image
-		
+
 	"""
 	if not request.user.is_authenticated():
 		return HttpResponse(-1)
@@ -785,8 +784,8 @@ def del_image(request):
 		os.remove(file)
 		return HttpResponse(0)
 	return HttpResponse(-3)
-	
-	
+
+
 def activate(request, activation_key):
     if SHA1_RE.search(activation_key):
         try:
@@ -800,7 +799,7 @@ def activate(request, activation_key):
             user.save()
         return render_to_response('activate_complete.html', RequestContext(request, locals()))
 
-def wait_activate(request):  
+def wait_activate(request):
     return render_to_response('wait_activate.html', RequestContext(request, locals()))
 
 

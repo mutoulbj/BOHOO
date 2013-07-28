@@ -21,7 +21,7 @@ EMAIL_HOST_PASSOWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = '@qq.com'
 
-LOGIN_URL = '/group/login'
+LOGIN_URL = '/accounts/login'
 
 ENDLESS_PAGINATION_PER_PAGE = 50
 
@@ -164,7 +164,7 @@ INSTALLED_APPS = (
     'compressor',
     'django.contrib.admin',
     'User',
-    'groups',
+    # 'groups',
     'accounts',
     'endless_pagination',
     # 'notification',

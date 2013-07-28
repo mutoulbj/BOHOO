@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}css/font-awesome.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/messenger/messenger.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/messenger/messenger-theme-block.css">
     <!-- bootstrap and awesome font end -->
     <style type="text/css">
     .input-append{
@@ -68,10 +70,10 @@
 
                 <ul class="nav pull-right">
                     <li>
-                        <a href="#"><i class="icon-fire"></i>登录</a>
+                        <a href="{% url 'login' %}"><i class="icon-fire"></i>登录</a>
                     </li>
                     <li>
-                        <a href="#"><i class="icon-lemon"></i>注册</a>
+                        <a href="{% url 'register' %}"><i class="icon-lemon"></i>注册</a>
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" role="button" data-toggle="dropdown">
@@ -98,6 +100,12 @@
 {% compress js %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/messenger.min.js"></script>
+    <script type="text/javascript">
+            $._messengerDefaults = {
+                extraClasses: 'messenger-fixed messenger-theme-block messenger-on-top'
+            }
+    </script>
 {% endcompress %}
 {% block js_other %}{% endblock %}
 </body>

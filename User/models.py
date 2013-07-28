@@ -12,29 +12,28 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 
 class MyUserManager(BaseUserManager):
     # 创建用户
-    def create_user(self, email, nickname, user_groups=None, image=None, password=None):
+    def create_user(self, email, username, password=None):
         if not email:
             raise ValueError('Users must have an email address')
 
-        if not nickname:
-            raise ValueError('Users must have an nickname')
+        if not username:
+            raise ValueError('Users must have a username')
+        if not password:
+            raise ValueError('Users must have a password')
 
         user = self.model(
             email=MyUserManager.normalize_email(email),
-            nickname=nickname,
-            user_groups=user_groups,
-            image=image,
+            username=username,
+            password=password
         )
-
-        user.set_password(password)
         user.save(using=self._db)
         return user
 
     # 创建超级用户
-    def create_superuser(self, email, nickname, password):
+    def create_superuser(self, email, username, password):
         user = self.create_user(email,
                                 password=password,
-                                nickname=nickname
+                                username=username
                                 )
         user.is_admin = True
         user.is_superuser = True
@@ -44,9 +43,9 @@ class MyUserManager(BaseUserManager):
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, verbose_name=u'邮箱', unique=True, db_index=True)
-    nickname = models.CharField(max_length=100, verbose_name=u'昵称', unique=True, db_index=True)
+    username = models.CharField(max_length=100, verbose_name=u'用户名', unique=True, db_index=True)
     sign = models.CharField(max_length=1024, verbose_name=u'签名', null=True, blank=True)
-    job = models.CharField(max_length=1024, verbose_name='职业', null=True, blank=True, default=None)
+    job = models.CharField(max_length=1024, verbose_name=u'职业', null=True, blank=True, default=None)
     activation_key = models.CharField(max_length=40, verbose_name=u'激活码', blank=True)
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name=u'注册时间')
     avatar = models.ImageField(upload_to='user_avatar/%Y/%m/%d', blank=True, null=True, verbose_name=u'头像')
@@ -61,10 +60,11 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     state = models.CharField(max_length=256, verbose_name=u'州省', null=True, blank=True)
     city = models.CharField(max_length=256, verbose_name=u'区县', null=True, blank=True)
     qq = models.IntegerField(verbose_name=u'qq', null=True, blank=True)
-    weibo = models.CharField(max_length=256,verbose_name=u'微博', null=True, blank=True)
+    weibo = models.CharField(max_length=256, verbose_name=u'微博', null=True, blank=True)
+    phone_number = models.IntegerField(verbose_name=u'手机', null=True, blank=True)
     objects = MyUserManager()
 
-    USERNAME_FIELD = 'nickname'
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
 
     def get_full_name(self):
@@ -75,12 +75,12 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         # 返回名字
         return self.first_name
 
-    def get_nickname(self):
-        # 返回昵称
-        return self.nickname
+    def get_username(self):
+        # 返回用户名
+        return self.username
 
     def __unicode__(self):
-        return self.nickname
+        return self.username
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"

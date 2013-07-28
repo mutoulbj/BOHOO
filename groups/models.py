@@ -41,6 +41,7 @@ class Group(models.Model):
     description     描述
     category        分类
     image           小组图片
+    creator         创建人
     member          成员
     gfriend         友情小组
     group_type      小组类型
