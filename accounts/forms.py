@@ -60,15 +60,15 @@ class register_form(forms.Form):
             }
         )
     )
-    phone_number = forms.IntegerField(
-        # required=False,
-        widget=forms.TextInput(
-            attrs={
-                'class': 'input-xxlarge',
-                'placeholder': u'手机(选填)'
-            }
-        )
-    )
+    # phone_number = forms.IntegerField(
+    #     # required=False,
+    #     widget=forms.TextInput(
+    #         attrs={
+    #             'class': 'input-xxlarge',
+    #             'placeholder': u'手机(选填)'
+    #         }
+    #     )
+    # )
 
     def clean_password1(self):
         data = self.cleaned_data

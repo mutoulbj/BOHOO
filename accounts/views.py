@@ -1,9 +1,12 @@
 #! -*- coding:utf-8 -*-
-
+import json
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.template import loader, RequestContext
 
 from accounts.forms import login_form, register_form
+
+from User.models import MyUser
 
 
 def login(request):
@@ -26,7 +29,6 @@ def register(request):
     # print request.POST
     if request.method == 'POST':
         form = register_form(request.POST)
-        print form.errors
         if form.is_valid():
             # print form.cleaned_data
             form.save()
@@ -50,3 +52,22 @@ def view_member_info(request):
         }
     )
     return HttpResponse(vt.render(c))
+
+
+def username_check(request):
+    """
+    用户名验证
+    """
+    res = {}
+    if request.method == 'POST':
+        username = request.POST['username']
+        try:
+            user = MyUser.objects.get(username=username)
+            res['error'] = 'error'
+            return HttpResponse(json.dumps(res))
+        except ObjectDoesNotExist:
+            if not username:
+                res['error'] = 'error'
+                return HttpResponse(json.dumps(res))
+            res['error'] = 'success'
+            return HttpResponse(json.dumps(res))
