@@ -42,7 +42,7 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length=255, verbose_name=u'邮箱', unique=True, db_index=True)
+    email = models.EmailField(max_length=255, verbose_name=u'邮箱', db_index=True)
     username = models.CharField(max_length=100, verbose_name=u'用户名', unique=True, db_index=True)
     sign = models.CharField(max_length=1024, verbose_name=u'签名', null=True, blank=True)
     job = models.CharField(max_length=1024, verbose_name=u'职业', null=True, blank=True, default=None)

@@ -70,6 +70,14 @@ class register_form(forms.Form):
     #     )
     # )
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        try:
+            MyUser.objects.get(email=email)
+        except ObjectDoesNotExist:
+            return email
+        raise forms.ValidationError(u'该邮箱已经存在')
+
     def clean_password1(self):
         data = self.cleaned_data
         password = data['password']

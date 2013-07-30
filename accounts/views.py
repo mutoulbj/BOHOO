@@ -29,6 +29,7 @@ def register(request):
     # print request.POST
     if request.method == 'POST':
         form = register_form(request.POST)
+        print form.errors
         if form.is_valid():
             # print form.cleaned_data
             form.save()
@@ -67,6 +68,27 @@ def username_check(request):
             return HttpResponse(json.dumps(res))
         except ObjectDoesNotExist:
             if not username:
+                res['error'] = 'error'
+                return HttpResponse(json.dumps(res))
+            res['error'] = 'success'
+            return HttpResponse(json.dumps(res))
+
+
+def email_check(request):
+    """
+    邮箱验证:是否已经被注册
+    """
+    res = {}
+    if request.method == 'POST':
+        email = request.POST['email']
+        print email
+        try:
+            user = MyUser.objects.get(email=email)
+            res['error'] = 'error'
+            print res
+            return HttpResponse(json.dumps(res))
+        except ObjectDoesNotExist:
+            if not email:
                 res['error'] = 'error'
                 return HttpResponse(json.dumps(res))
             res['error'] = 'success'
