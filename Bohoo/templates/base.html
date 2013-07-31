@@ -69,12 +69,19 @@
                 </ul>
 
                 <ul class="nav pull-right">
+                    {% if request.user.is_authenticated %}
+                        <li>
+                            <a href="#">{{ request.user.username }}</a>
+                        </li>
+                    {% else %}
                     <li>
                         <a href="{% url 'login' %}"><i class="icon-fire"></i>登录</a>
                     </li>
                     <li>
                         <a href="{% url 'register' %}"><i class="icon-lemon"></i>注册</a>
                     </li>
+                    {% endif %}
+                    {% if request.user.is_authenticated %}
                     <li class="dropdown">
                         <a class="dropdown-toggle" role="button" data-toggle="dropdown">
                             操作
@@ -83,9 +90,10 @@
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="#">我的帐号</a></li>
                             <li class="divider"></li>
-                            <li><a href="#">退出</a></li>
+                            <li><a href="{% url 'logout' %}">退出</a></li>
                         </ul>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

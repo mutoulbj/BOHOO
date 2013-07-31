@@ -1,6 +1,7 @@
 #! -*- coding:utf-8 -*-
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth import authenticate
 from User.models import MyUser
 
 
@@ -22,6 +23,37 @@ class login_form(forms.Form):
             }
         )
     )
+
+    def __init__(self, request=None, *args, **kwargs):
+        """
+        If request is passed in, the form will validate that cookies are
+        enabled. Note that the request (a HttpRequest object) must have set a
+        cookie with the key TEST_COOKIE_NAME and value TEST_COOKIE_VALUE before
+        running this validation.
+        """
+        self.request = request
+        self.user_cache = None
+        super(login_form, self).__init__(*args, **kwargs)
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        password = self.cleaned_data.get('password')
+
+        if email and password:
+            self.user_cache = authenticate(email=email, password=password)
+            if self.user_cache is None:
+                raise forms.ValidationError(u"邮箱或密码错误")
+            elif not self.user_cache.is_active:
+                raise forms.ValidationError(u"该帐号已被禁用")
+        return self.cleaned_data
+
+    def get_user_id(self):
+        if self.user_cache:
+            return self.user_cache.id
+        return None
+
+    def get_user(self):
+        return self.user_cache
 
 
 class register_form(forms.Form):
@@ -60,15 +92,6 @@ class register_form(forms.Form):
             }
         )
     )
-    # phone_number = forms.IntegerField(
-    #     # required=False,
-    #     widget=forms.TextInput(
-    #         attrs={
-    #             'class': 'input-xxlarge',
-    #             'placeholder': u'手机(选填)'
-    #         }
-    #     )
-    # )
 
     def clean_email(self):
         email = self.cleaned_data['email']

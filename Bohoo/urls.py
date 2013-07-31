@@ -11,8 +11,8 @@ urlpatterns = patterns('',
     url(r'^$', 'Bohoo.views.index', name='index'),
     url(r'^accounts/', include('accounts.urls')),
     # (r'^group/', include('groups.urls')),
-	url(r'^accounts/activate/(?P<activation_key>\w+)/$', 'groups.views.activate'), 
-	url(r'^accounts/wait_activate/$', 'groups.views.wait_activate'), 
+    url(r'^accounts/activate/(?P<activation_key>\w+)/$', 'groups.views.activate'),
+    url(r'^accounts/wait_activate/$', 'groups.views.wait_activate'),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
@@ -22,5 +22,5 @@ urlpatterns = patterns('',
     # url(r"^settings/$", notice_settings, name="notification_notice_settings"),
 )
 urlpatterns += patterns('',
-	url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 )

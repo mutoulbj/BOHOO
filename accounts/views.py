@@ -3,6 +3,8 @@ import json
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.template import loader, RequestContext
+from django.shortcuts import redirect
+from django.contrib.auth import logout
 
 from accounts.forms import login_form, register_form
 
@@ -13,10 +15,22 @@ def login(request):
     """
     登录
     """
+    if request.method == 'POST':
+        form = login_form(request, request.POST)
+        print form.errors
+        if form.is_valid():
+            from django.contrib.auth import login
+            login(request, form.get_user())
+            if request.session.test_cookie_worked():
+                request.session.delete_test_cookie()
+            return redirect("/")
+    else:
+        form = login_form(request)
+        request.session.set_test_cookie()
     vt = loader.get_template('login.html')
     c = RequestContext(
         request, {
-            'form': login_form(),
+            'form': form,
         }
     )
     return HttpResponse(vt.render(c))
@@ -26,13 +40,11 @@ def register(request):
     """
     注册
     """
-    # print request.POST
     if request.method == 'POST':
         form = register_form(request.POST)
-        print form.errors
         if form.is_valid():
-            # print form.cleaned_data
             form.save()
+            return redirect('login')   # 跳转到登录页面
     vt = loader.get_template('register.html')
     c = RequestContext(
         request, {
@@ -40,6 +52,15 @@ def register(request):
         }
     )
     return HttpResponse(vt.render(c))
+
+
+def log_out(request):
+    """
+    注销
+    """
+    logout(request)
+    return redirect('/')
+
 
 
 def view_member_info(request):
