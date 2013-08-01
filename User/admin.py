@@ -16,7 +16,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = MyUser
-        fields = ('email', 'username', 'groups', 'avatar')
+        fields = ('email', 'username', 'groups')
 
     def clean_password2(self):
         # Check that the two password entries match
@@ -41,10 +41,12 @@ class UserChangeForm(forms.ModelForm):
     password hash display field.
     """
     #password = ReadOnlyPasswordHashField()
-    password = ReadOnlyPasswordHashField(label= ("Password"),
-        help_text= ("Raw passwords are not stored, so there is no way to see "
-                    "this user's password, but you can change the password "
-                    "using <a href=\"password/\">this form</a>."))
+    password = ReadOnlyPasswordHashField(label=u"密码",
+                                         help_text=u'无法查看加密后的密码,可以通过<a href=\"password/\">这个表单</a>修改密码.'
+                                         # help_text=("Raw passwords are not stored, so there is no way to see "
+                                         #            "this user's password, but you can change the password "
+                                         #            "using <a href=\"password/\">this form</a>.")
+                                         )
 
     class Meta:
         model = MyUser
@@ -64,19 +66,21 @@ class MyUserAdmin(UserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'username', 'is_admin')
-    list_filter = ('is_admin',)
+    list_display = ('email', 'username', 'is_admin', 'date_joined', 'first_name', 'last_name', 'sex', 'birthday',
+                    'country', 'state', 'city')
+    list_filter = ('sex', 'country', 'state', 'city')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('username',)}),
+        ('Personal info', {'fields': ('username', 'first_name', 'last_name', 'sex', 'birthday',
+                                      'country', 'state', 'city')}),
         ('Permissions', {'fields': ('is_admin', 'is_active', 'groups', 'user_permissions',)}),
-        # ('Important dates', {'fields': ('last_login', 'date_joined',)}),
+        ('Important dates', {'fields': ('last_login',)}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'username', 'password1', 'password2')}
-        ),
+            'fields': ('email', 'username', 'password1', 'password2')
+        }),
     )
     search_fields = ('email',)
     ordering = ('email',)

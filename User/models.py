@@ -42,7 +42,8 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(max_length=255, verbose_name=u'邮箱', db_index=True)
+    SEX_CHOICES = (('M', u'男'), ('F', u'女'))
+    email = models.EmailField(max_length=255, verbose_name=u'邮箱', unique=True, db_index=True)
     username = models.CharField(max_length=100, verbose_name=u'用户名', unique=True, db_index=True)
     sign = models.CharField(max_length=1024, verbose_name=u'签名', null=True, blank=True)
     job = models.CharField(max_length=1024, verbose_name=u'职业', null=True, blank=True, default=None)
@@ -51,10 +52,10 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(upload_to='user_avatar/%Y/%m/%d', blank=True, null=True, verbose_name=u'头像')
     first_name = models.CharField(max_length=256, verbose_name=u'名', null=True, blank=True)
     last_name = models.CharField(max_length=256, verbose_name=u'姓', null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True, verbose_name=u'是否允许用户登录')
+    is_admin = models.BooleanField(default=False, verbose_name=u'是否管理员')
     follower = models.ManyToManyField('self')
-    sex = models.CharField(max_length=128, verbose_name=u'性别', null=True, blank=True)
+    sex = models.CharField(max_length=128, verbose_name=u'性别', null=True, blank=True, choices=SEX_CHOICES)
     birthday = models.DateField(verbose_name=u'生日', null=True, blank=True)
     country = models.CharField(max_length=256, verbose_name=u'国家', null=True, blank=True)
     state = models.CharField(max_length=256, verbose_name=u'州省', null=True, blank=True)
@@ -83,18 +84,18 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
+        """Does the user have a specific permission?"""
         # Simplest possible answer: Yes, always
         return True
 
     def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
+        """Does the user have permissions to view the app `app_label`?"""
         # Simplest possible answer: Yes, always
         return True
 
     @property
     def is_staff(self):
-        "Is the user a member of staff?"
+        """Is the user a member of staff?"""
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
