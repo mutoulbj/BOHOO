@@ -165,7 +165,7 @@ INSTALLED_APPS = (
     'compressor',
     'django.contrib.admin',
     'User',
-    # 'groups',
+    'groups',
     'accounts',
     'endless_pagination',
     # 'notification',

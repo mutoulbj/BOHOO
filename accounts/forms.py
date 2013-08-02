@@ -63,7 +63,6 @@ class register_form(forms.Form):
     email = forms.EmailField(
         widget=forms.TextInput(
             attrs={
-                'class': 'input-xxlarge',
                 'placeholder': u'邮件',
             }
         )
@@ -71,7 +70,6 @@ class register_form(forms.Form):
     password = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                'class': 'input-xxlarge',
                 'placeholder': u'密码',
             }
         )
@@ -79,7 +77,6 @@ class register_form(forms.Form):
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
-                'class': 'input-xxlarge',
                 'placeholder': u'重复密码',
             }
         )
@@ -87,11 +84,18 @@ class register_form(forms.Form):
     username = forms.CharField(
         widget=forms.TextInput(
             attrs={
-                'class': 'input-xxlarge',
                 'placeholder': u'用户名',
             }
         )
     )
+
+    def __init__(self, large_input=True):
+        super(register_form, self).__init__()
+        if large_input:
+            self.fields['email'].widget.attrs.update({'class': 'input-xxlarge'})
+            self.fields['password'].widget.attrs.update({'class': 'input-xxlarge'})
+            self.fields['password1'].widget.attrs.update({'class': 'input-xxlarge'})
+            self.fields['username'].widget.attrs.update({'class': 'input-xxlarge'})
 
     def clean_email(self):
         email = self.cleaned_data['email']

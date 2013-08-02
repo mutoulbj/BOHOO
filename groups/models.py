@@ -31,6 +31,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = u'分类'
         verbose_name_plural = u'分类'
+        db_table = 'group_category'
 
 
 class Group(models.Model):
@@ -73,6 +74,7 @@ class Group(models.Model):
     class Meta:
         verbose_name = u'小组'
         verbose_name_plural = u'小组'
+        db_table = 'group'
 
 
 class Topic(models.Model):
@@ -111,6 +113,7 @@ class Topic(models.Model):
     class Meta:
         verbose_name = u'话题'
         verbose_name_plural = u'话题'
+        db_table = 'topic'
 
 
     def save(self, *args, **kwargs):
@@ -151,6 +154,7 @@ class Reply(models.Model):
     class Meta:
         verbose_name = u'回应'
         verbose_name_plural = u'回应'
+        db_table = 'reply'
 
     def save(self, *args, **kwargs):
         self.topic.last_reply_add = datetime.datetime.now()  # 更新"话题的最新回复时间"
@@ -178,3 +182,4 @@ class Report(models.Model):
     class Meta:
         verbose_name = u'举报'
         verbose_name_plural = u'举报'
+        db_table = 'report'

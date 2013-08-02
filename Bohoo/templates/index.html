@@ -5,6 +5,24 @@
 {% block title %}Bohoo首页{% endblock %}
 
 {% block main %}
+    <div class="row-fluid">
+        <div class="span8">
+            {# 网站功能描述 #}
+           ttttttttttttttttt
+        </div>
+        <div class="span4">
+            <div class="control-group">
+                <form method="post" id="id_register_form">{% csrf_token %}
+                    <div class="input-prepend"><span class="add-on"><i class="icon-envelope"></i></span>{{ form.email }}</div>
+                    <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span>{{ form.username }}</div>
+                    <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span>{{ form.password }}</div>
+                    <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span>{{ form.password1 }}</div>
+                    <label class="checkbox"><input type="checkbox" id="id_terms">我已经阅读并同意<a href="">服务条款</a> </label>
+                    <button class="btn btn-primary btn-register">注册</button>
+                </form>
+            </div>
+        </div>
+    </div>
     <div class="container-fluid">
         <div class="row pull-left">
             <div class="span4">
