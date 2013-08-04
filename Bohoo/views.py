@@ -18,3 +18,4 @@ def index(request):
 
     )
     return HttpResponse(vt.render(c))
+

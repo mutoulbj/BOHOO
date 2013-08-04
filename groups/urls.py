@@ -2,7 +2,6 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns(
     'groups.views',
-    url(r'^register/$', 'register', name='register'),
     url(r'^guide/$', 'guide', name='guide'),
     url(r'^explore/$', 'home', name='home'),
     url(r'^explore_topic/$', 'explore_topic', name='explore_topic'),

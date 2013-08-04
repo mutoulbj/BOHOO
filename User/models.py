@@ -27,6 +27,7 @@ class MyUserManager(BaseUserManager):
         )
         user.set_password(password)
         user.save(using=self._db)
+        print 123, user
         return user
 
     # 创建超级用户
@@ -42,6 +43,29 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser, PermissionsMixin):
+    """
+    ``用户表``
+    email 邮件
+    username 用户名
+    sign  签名
+    job 工作
+    activation_key  激活码
+    date_joined  注册时间
+    avatar  头像
+    first_name 名
+    last_name 姓
+    is_active 允许登录
+    is_admin  管理员
+    follower  关注者
+    sex   性别
+    birthday  生日
+    country   国家
+    state     州省
+    city    区县
+    qq      qq号码
+    weibo   微博帐号
+    phone_number  电话号码
+    """
     SEX_CHOICES = (('M', u'男'), ('F', u'女'))
     email = models.EmailField(max_length=255, verbose_name=u'邮箱', unique=True, db_index=True)
     username = models.CharField(max_length=100, verbose_name=u'用户名', unique=True, db_index=True)
@@ -49,7 +73,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     job = models.CharField(max_length=1024, verbose_name=u'职业', null=True, blank=True, default=None)
     activation_key = models.CharField(max_length=40, verbose_name=u'激活码', blank=True)
     date_joined = models.DateTimeField(auto_now_add=True, verbose_name=u'注册时间')
-    avatar = models.ImageField(upload_to='user_avatar/%Y/%m/%d', blank=True, null=True, verbose_name=u'头像')
+    # avatar = models.ImageField(upload_to='user_avatar/%Y/%m/%d', blank=True, null=True, verbose_name=u'头像')
     first_name = models.CharField(max_length=256, verbose_name=u'名', null=True, blank=True)
     last_name = models.CharField(max_length=256, verbose_name=u'姓', null=True, blank=True)
     is_active = models.BooleanField(default=True, verbose_name=u'是否允许用户登录')
@@ -62,7 +86,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     city = models.CharField(max_length=256, verbose_name=u'区县', null=True, blank=True)
     qq = models.IntegerField(verbose_name=u'qq', null=True, blank=True)
     weibo = models.CharField(max_length=256, verbose_name=u'微博', null=True, blank=True)
-    phone_number = models.IntegerField(verbose_name=u'手机', null=True, blank=True)
+    phone_number = models.CharField(max_length=25, verbose_name=u'手机', null=True, blank=True)
     objects = MyUserManager()
 
     USERNAME_FIELD = 'username'

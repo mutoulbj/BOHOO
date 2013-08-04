@@ -89,8 +89,8 @@ class register_form(forms.Form):
         )
     )
 
-    def __init__(self, large_input=True):
-        super(register_form, self).__init__()
+    def __init__(self, large_input=True, *args, **kwargs):
+        super(register_form, self).__init__(*args, **kwargs)
         if large_input:
             self.fields['email'].widget.attrs.update({'class': 'input-xxlarge'})
             self.fields['password'].widget.attrs.update({'class': 'input-xxlarge'})

@@ -90,53 +90,53 @@ def explore_topic(request):
             return render(request, 'explore_topics.html', vars)
 
 
-def register(request):
-    vars = {}
-    if request.method == "POST":
-        form_email = request.POST.get("form_email", '')
-        form_password = request.POST.get("form_password", '')
-        form_name = request.POST.get("form_name", '')
-        captcha = request.POST.get('captcha-solution', '')
-        if form_email == "" or form_password == '' or form_name == '':
-            vars['msg'] = 'empty error!'
-            return render(request, 'join.html', vars)
-        if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", form_email) == None:
-            vars['msg'] = 'email 不合法!'
-            return render(request, 'join.html', vars)
-        if captcha == '':
-            vars['msg'] = 'captcha empty error!'
-            return render(request, 'join.html', vars)
-        if captcha.lower() != request.session.get("captcha_code", ""):
-            vars['msg'] = 'captcha  error!'
-            return render(request, 'join.html', vars)
-        user_indb = User.objects.filter(email=form_email).count()
-        #if len(user_indb) > 0:
-        if user_indb > 0:
-            vars['msg'] = 'user exists!'
-            return render(request, 'join.html', vars)
-        nickname_indb = User.objects.filter(nickname=form_name).count()
-        if nickname_indb > 0:
-            vars['msg'] = 'nickname exists!'
-            return render(request, 'join.html', vars)
-        user = User.objects.create_user(email=form_email, nickname=form_name, password=form_password)
-
-        salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
-        username = user.email
-        if isinstance(username, unicode):
-            username = username.encode('utf-8')
-        activation_key = hashlib.sha1(salt + username).hexdigest()
-        user.activation_key = activation_key
-        user.is_active = 0
-        user.save()
-        user_auth = authenticate(username=form_email, password=form_password)
-        django.contrib.auth.login(request, user_auth)
-        try:
-            user.send_activation_email(username, 'group')
-        except Exception:
-            return HttpResponse("发信失败，请重试或者联系管理员：xxx@ddd.com")
-
-        return redirect('/accounts/wait_activate')
-    return render_to_response('join.html', context_instance=RequestContext(request))
+# def register(request):
+#     vars = {}
+#     if request.method == "POST":
+#         form_email = request.POST.get("form_email", '')
+#         form_password = request.POST.get("form_password", '')
+#         form_name = request.POST.get("form_name", '')
+#         captcha = request.POST.get('captcha-solution', '')
+#         if form_email == "" or form_password == '' or form_name == '':
+#             vars['msg'] = 'empty error!'
+#             return render(request, 'join.html', vars)
+#         if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", form_email) == None:
+#             vars['msg'] = 'email 不合法!'
+#             return render(request, 'join.html', vars)
+#         if captcha == '':
+#             vars['msg'] = 'captcha empty error!'
+#             return render(request, 'join.html', vars)
+#         if captcha.lower() != request.session.get("captcha_code", ""):
+#             vars['msg'] = 'captcha  error!'
+#             return render(request, 'join.html', vars)
+#         user_indb = User.objects.filter(email=form_email).count()
+#         #if len(user_indb) > 0:
+#         if user_indb > 0:
+#             vars['msg'] = 'user exists!'
+#             return render(request, 'join.html', vars)
+#         nickname_indb = User.objects.filter(nickname=form_name).count()
+#         if nickname_indb > 0:
+#             vars['msg'] = 'nickname exists!'
+#             return render(request, 'join.html', vars)
+#         user = User.objects.create_user(email=form_email, nickname=form_name, password=form_password)
+#
+#         salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+#         username = user.email
+#         if isinstance(username, unicode):
+#             username = username.encode('utf-8')
+#         activation_key = hashlib.sha1(salt + username).hexdigest()
+#         user.activation_key = activation_key
+#         user.is_active = 0
+#         user.save()
+#         user_auth = authenticate(username=form_email, password=form_password)
+#         django.contrib.auth.login(request, user_auth)
+#         try:
+#             user.send_activation_email(username, 'group')
+#         except Exception:
+#             return HttpResponse("发信失败，请重试或者联系管理员：xxx@ddd.com")
+#
+#         return redirect('/accounts/wait_activate')
+#     return render_to_response('join.html', context_instance=RequestContext(request))
 
 
 def get_captcha(request):
@@ -146,62 +146,6 @@ def get_captcha(request):
     buf = cStringIO.StringIO()
     t[1].save(buf, 'gif')
     return HttpResponse(buf.getvalue(), 'image/gif')
-
-#print(t)
-
-
-def login(request):
-    vars = {}
-    if request.method == 'POST':
-        form_email = request.POST.get("form_email", '')
-        form_password = request.POST.get("form_password", '')
-        if form_email == '' or form_password == '':
-            vars['msg'] = 'empty error'
-            return render(request, 'login.html', vars)
-            #return HttpResponse(str([form_email,form_password]))
-        if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", form_email) == None:
-            vars['msg'] = 'email不合法'
-            return render(request, 'login.html', vars)
-        user = authenticate(username=form_email, password=form_password)
-
-        if user is not None:
-            user_activate = user.is_active
-            if user_activate == 0:
-                return redirect('/accounts/wait_activate')
-            django.contrib.auth.login(request, user)
-            member = Group_memeber.objects.filter(member=user)
-            next = request.META['HTTP_REFERER']
-            #print 'next:',next
-            #next is like http://localhost:8000/group/login?next=/group/name
-            if "?" in next:
-
-                next = next.split("?")[-1].split("=")[-1]
-                keys = urllib.unquote_plus(next.split("/")[-2])
-                if keys == "mygroup":
-                    #return redirect mygroup page
-                    return redirect("mygroup")
-                group_name = urllib.unquote_plus(keys)
-
-                try:
-                    group_db = Group.objects.get(name=group_name)
-                except ObjectDoesNotExist:
-                    raise Http404()
-                if request.user not in group_db.member.all():
-                    group_db.member.add(request.user)
-                return redirect(next)
-                #user has not join any group yet!
-            if len(member) == 0:
-                d = group_utils.getCatelogAndGroup()
-                vars['catelog'] = d
-                return render(request, 'guide.html', vars)
-                #return redirect('guide')
-            return redirect("mygroup")
-
-        else:
-            vars['msg'] = 'username or password incorrect'
-            return render(request, 'login.html', vars)
-            #return HttpResponse("login failed!")
-    return render(request, "login.html")
 
 
 @login_required
@@ -220,9 +164,6 @@ def groupjoin(request):
     return HttpResponse("-2")
 
 
-def logout(request):
-    django.contrib.auth.logout(request)
-    return redirect("home")
 
 #@login_required
 def guide(request):

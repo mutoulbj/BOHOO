@@ -41,7 +41,7 @@ def register(request):
     注册
     """
     if request.method == 'POST':
-        form = register_form(request.POST)
+        form = register_form(data=request.POST)
         if form.is_valid():
             form.save()
             return redirect('login')   # 跳转到登录页面
@@ -102,11 +102,9 @@ def email_check(request):
     res = {}
     if request.method == 'POST':
         email = request.POST['email']
-        print email
         try:
             user = MyUser.objects.get(email=email)
             res['error'] = 'error'
-            print res
             return HttpResponse(json.dumps(res))
         except ObjectDoesNotExist:
             if not email:

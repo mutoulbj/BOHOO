@@ -6,10 +6,12 @@ from django.contrib import admin
 admin.autodiscover()
 
 # from notification.views import *
-urlpatterns = patterns('',
-    # Examples:
+urlpatterns = patterns(
+    '',
     url(r'^$', 'Bohoo.views.index', name='index'),
+    url(r'^avatar/', include('avatar.urls')),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^people/', include('User.urls')),
     # (r'^group/', include('groups.urls')),
     url(r'^accounts/activate/(?P<activation_key>\w+)/$', 'groups.views.activate'),
     url(r'^accounts/wait_activate/$', 'groups.views.wait_activate'),
