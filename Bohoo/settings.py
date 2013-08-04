@@ -45,17 +45,6 @@ DATABASES = {
        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
    }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-#         'NAME': '/Users/mac/Downloads/eclipse/Project/BohooV10/sqlite.db', # Or path to database file if using sqlite3.
-#         # The following settings are not used with sqlite3:
-#         'USER': '',
-#         'PASSWORD': '',
-#         'HOST': '', # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-#         'PORT': '', # Set to empty string for default.
-#     }
-# }
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -82,12 +71,12 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media').replace("\\", '/')
-
+# MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media').replace("\\", '/')
+MEDIA_ROOT = '/home/fan/media/'
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
 # Examples: "http://media.lawrence.com/media/", "http://example.com/media/"
-MEDIA_URL = ''
+MEDIA_URL = '/media/'
 
 # Absolute path to the directory static files should be collected to.
 # Don't put anything in this directory yourself; store your static files
@@ -98,6 +87,10 @@ STATIC_ROOT = ROOT_PATH + '/static'
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
+
+# django-avatar 设定
+AVATAR_STORAGE_DIR = 'avatars/'
+# AVATAR_STORAGE = MEDIA_ROOT
 
 # Additional locations of static files
 STATICFILES_DIRS = (

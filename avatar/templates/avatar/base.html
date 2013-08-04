@@ -1,8 +1,7 @@
-<html>
-    <head>
-        <title>{% block title %}django-avatar{% endblock %}</title>
-    </head>
-    <body>
-        {% block content %}{% endblock %}
-    </body>
-</html>
+{% extends 'base.html' %}
+    {% block title %}头像管理{% endblock %}
+    {% block descrition %}头像管理{% endblock %}
+
+    {% block main %}
+         {% block content %}{% endblock %}
+    {% endblock %}

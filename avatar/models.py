@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 import datetime
 import os
 import hashlib
@@ -57,8 +58,9 @@ def avatar_file_path(instance=None, filename=None, size=None, ext=None):
             (root, ext) = os.path.splitext(filename)
             filename = hashlib.md5(force_bytes(filename)).hexdigest()
             filename = filename + ext
-    if size:
-        tmppath.extend(['resized', str(size)])
+    # TODO: 下面两行被注释了
+    # if size:
+    #     tmppath.extend(['resized', str(size)])
     tmppath.append(os.path.basename(filename))
     return os.path.join(*tmppath)
 
