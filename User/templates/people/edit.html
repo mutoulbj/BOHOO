@@ -64,6 +64,143 @@
             </div>
         </div>
     </div>
+
+    <div class="profile-box">
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.last_name.label }}
+                        </div>
+                        <div class="span8">
+                            {{ form.last_name }}
+                        </div>
+                    </div>
+                </div>
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.first_name.label }}
+                        </div>
+                        <div class="span8">
+                            {{ form.first_name }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.sex.label }}
+                        </div>
+                        <div class="span8">
+{#                            {{ form.sex }}#}
+                        </div>
+                    </div>
+                </div>
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.job.label }}
+                        </div>
+                        <div class="span8">
+{#                            {{ form.job }}#}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.birthday.label }}
+                        </div>
+                        <div class="span8">
+                            {{ form.birthday }}
+                        </div>
+                    </div>
+                </div>
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.phone_number.label }}
+                        </div>
+                        <div class="span8">
+                            {{ form.phone_number }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.qq.label }}
+                        </div>
+                        <div class="span8">
+                            {{ form.qq }}
+                        </div>
+                    </div>
+                </div>
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.weibo.label }}
+                        </div>
+                        <div class="span8">
+                            {{ form.weibo }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span4">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.country.label }}
+                        </div>
+                        <div class="span8">
+                            {{ form.country }}
+                        </div>
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.state.label }}
+                        </div>
+                        <div class="span8">
+                            {{ form.state }}
+                        </div>
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            {{ form.city.label }}
+                        </div>
+                        <div class="span8">
+                            {{ form.city }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block right_content %}

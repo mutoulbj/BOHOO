@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.contrib.auth import logout
 
 from User.models import MyUser
+from User.forms import UserInfo
 
 
 def edit(request):
@@ -16,6 +17,8 @@ def edit(request):
     """
     vt = loader.get_template("people/edit.html")
     c = RequestContext(
-        request,
+        request, {
+            'form': UserInfo()
+        }
     )
     return HttpResponse(vt.render(c))
