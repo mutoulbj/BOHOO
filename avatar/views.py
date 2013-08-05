@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.utils import six
@@ -70,7 +71,8 @@ def add(request, extra_context=None, next_override=None,
             avatar.save()
             messages.success(request, _("Successfully uploaded a new avatar."))
             avatar_updated.send(sender=Avatar, user=request.user, avatar=avatar)
-            return redirect(next_override or _get_next(request))
+            # return redirect(next_override or _get_next(request))
+            return redirect(reverse('profile_edit'))
     context = {
         'avatar': avatar,
         'avatars': avatars,
@@ -106,8 +108,8 @@ def change(request, extra_context=None, next_override=None,
             messages.success(request, _("Successfully updated your avatar."))
         if updated:
             avatar_updated.send(sender=Avatar, user=request.user, avatar=avatar)
-        return redirect(next_override or _get_next(request))
-
+        # return redirect(next_override or _get_next(request))
+        return redirect(reverse('profile_edit'))
     context = {
         'avatar': avatar,
         'avatars': avatars,
@@ -139,7 +141,8 @@ def delete(request, extra_context=None, next_override=None, *args, **kwargs):
                         break
             Avatar.objects.filter(id__in=ids).delete()
             messages.success(request, _("Successfully deleted the requested avatars."))
-            return redirect(next_override or _get_next(request))
+            # return redirect(next_override or _get_next(request))
+            return redirect(reverse('profile_edit'))
     context = {
         'avatar': avatar,
         'avatars': avatars,

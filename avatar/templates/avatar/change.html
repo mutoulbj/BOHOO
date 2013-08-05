@@ -8,6 +8,9 @@
         display: inline-table;
         margin-left: 5px;
     }
+    .avatar img{
+        padding-bottom: 14px;
+    }
     </style>
 {% endblock %}
 
@@ -17,16 +20,16 @@
             <div class="span5">
                 <div class="row-fluid">
                     <div class="span4"><span class="text-info ">当前头像</span></div>
-                    <div class="span8">{% avatar user %}</div>
+                    <div class="span8 avatar">{% avatar user %}</div>
                 </div>
             </div>
             <div class="span7">
                 <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
                     <div class="row-fluid">
                         <div class="span6">{{ upload_avatar_form.avatar }}</div>
-                        <div class="span6"><input class="btn btn-primary" type="submit" value="上传头像" /></div>
+                        <div class="span6">{% csrf_token %}<input class="btn btn-primary" type="submit" value="上传头像" /></div>
                     </div>
-                </form>{% csrf_token %}
+                </form>
             </div>
         </div>
     </div>
@@ -43,9 +46,9 @@
                                     <span>{{ avatar }}</span>
                                 {% endfor %}
                             </div>
-                            <div class="span4"><input class="btn btn-primary" type="submit" value="选择为默认头像" /></div>
+                            <div class="span4">{% csrf_token %}<input class="btn btn-primary" type="submit" value="选择为默认头像" /></div>
                         </div>
-                    </form>{% csrf_token %}
+                    </form>
                 {% endif %}
             </div>
         </div>
