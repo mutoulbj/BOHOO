@@ -1,6 +1,10 @@
 #! -*- coding:utf-8 -*-
 from django import forms
+from django.forms.extras import SelectDateWidget
+
 from User.models import MyUser
+
+from User.utils import get_last_70_year_range
 
 
 class UserInfo(forms.ModelForm):
@@ -25,23 +29,24 @@ class UserInfo(forms.ModelForm):
         label=u'签名',
         widget=forms.Textarea(
             attrs={
-                'class': 'input-medium'
+                'class': 'span11',
+                'rows': '4',
             }
         )
     )
     job = forms.ChoiceField(
         label=u'职业',
         widget=forms.Select(
-            # attrs={
-            #     'class': ''
-            # }
+            attrs={
+                'class': 'span10'
+            }
         )
     )
     first_name = forms.CharField(
         label=u'名',
         widget=forms.TextInput(
             attrs={
-                'class': 'input-medium'
+                'class': 'span10'
             }
         )
     )
@@ -49,7 +54,7 @@ class UserInfo(forms.ModelForm):
         label=u'姓',
         widget=forms.TextInput(
             attrs={
-                'class': 'input-medium'
+                'class': 'span10'
             }
         )
     )
@@ -57,14 +62,17 @@ class UserInfo(forms.ModelForm):
         label=u'性别',
         choices=SEX_CHOICES,
         widget=forms.RadioSelect(
-
+            attrs={
+                'class': 'text-info'
+            }
         )
     )
-    birthday = forms.DateField(
+    birthday = forms.DateTimeField(
         label=u'生日',
-        widget=forms.DateInput(
+        widget=SelectDateWidget(
+            years=get_last_70_year_range(),
             attrs={
-                'class': ''
+                'class': 'span10'
             }
         )
     )
@@ -72,7 +80,7 @@ class UserInfo(forms.ModelForm):
         label=u'国家',
         widget=forms.TextInput(
             attrs={
-                'class': ''
+                'class': 'input-small'
             }
         )
     )
@@ -80,7 +88,7 @@ class UserInfo(forms.ModelForm):
         label=u'州省',
         widget=forms.TextInput(
             attrs={
-                'class': ''
+                'class': 'input-small'
             }
         )
     )
@@ -88,7 +96,7 @@ class UserInfo(forms.ModelForm):
         label=u'市县',
         widget=forms.TextInput(
             attrs={
-                'class': ''
+                'class': 'input-small'
             }
         )
     )
@@ -96,7 +104,7 @@ class UserInfo(forms.ModelForm):
         label=u'QQ',
         widget=forms.TextInput(
             attrs={
-                'class': 'input-medium'
+                'class': 'span10'
             }
         )
     )
@@ -104,7 +112,7 @@ class UserInfo(forms.ModelForm):
         label=u'微博',
         widget=forms.TextInput(
             attrs={
-                'class': 'input-medium'
+                'class': 'span10'
             }
         )
     )
@@ -112,10 +120,12 @@ class UserInfo(forms.ModelForm):
         label=u'手机号码',
         widget=forms.TextInput(
             attrs={
-                'class': 'input-medium'
+                'class': 'span10'
             }
         )
     )
 
     class Meta:
         model = MyUser
+        fields = ('sign', 'job', 'first_name', 'last_name', 'sex', 'birthday', 'country', 'state', 'city', 'qq',
+                  'weibo', 'phone_number')

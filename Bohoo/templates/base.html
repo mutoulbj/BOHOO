@@ -1,4 +1,4 @@
-{% load compress %}
+{% load compress avatar_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,6 +81,9 @@
 
                 <ul class="nav pull-right">
                     {% if request.user.is_authenticated %}
+                        <li>
+                            <a href="">{% avatar request.user 45 %}</a>
+                        </li>
                         <li>
                             <a href="#">{{ request.user.username }}</a>
                         </li>
