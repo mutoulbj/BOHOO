@@ -1,9 +1,9 @@
 {% extends 'people_base.html' %}
 {% load avatar_tags %}
 
-{% block title %}编辑个人资料-BOHOO{% endblock %}
+{% block title %}{{ request.user.username }}--个人资料{% endblock %}
 
-{% block description %}编辑用户资料{% endblock %}
+{% block descrition %}{{ request.user.username }}--个人资料{% endblock %}
 
 {% block head_other %}
     <style type="text/css">
@@ -19,18 +19,10 @@
         padding: 20px 12px;
     }
     .profile-box-module+.profile-box-module{
-        border-top: 1px solid #ddd;;
+        border-top:1px solid #ddd;
     }
     .avatar img{
         padding-bottom: 14px;
-    }
-    .sex ul{
-        list-style-type: none;
-    }
-    .sex ul li{
-        display: inline-block;
-        margin-left: 5px;
-        margin-right: 10px;
     }
     </style>
 {% endblock %}
@@ -51,42 +43,31 @@
 
     <div class="row-fluid profile-box">
         <div class="profile-box-module">
-            <div class="span6">
-                <span class="pull-left"><a href="#">{{ request.user.username }}</a>
-                    <i class="icon-double-angle-right"></i>编辑个人资料</span>
+            <div class="span4">
+                <span class="pull-left"><a href="#">{{ user.username }}</a>
+                    <i class="icon-double-angle-right"></i>个人资料</span>
             </div>
-            <div class="span6">
-                <span class="pull-right"><a href="#">返回个人主页</a></span>
+            <div class="span4 avatar">
+                {% avatar user %}
             </div>
-        </div>
-    </div>
-
-    <div class="row-fluid profile-box">
-        <div class="profile-box-module">
-            <div class="span3">
-                <span class="text-info">头像</span>
-            </div>
-            <div class="span3 avatar">
-                {% avatar request.user %}
-            </div>
-            <div class="span6">
-                <span><a href="{% url 'avatar_change' %}">修改头像</a></span>
-                <span><a href="{% url 'avatar_delete' %}">删除头像</a></span>
+            <div class="span4">
+                <span class="pull-right"><a href="{% url 'profile_edit' %}">编辑个人资料</a></span>
             </div>
         </div>
     </div>
 
-<form method="post">
     <div class="profile-box">
         <div class="profile-box-module">
             <div class="row-fluid">
                 <div class="span12">
                     <div class="row-fluid">
                         <div class="span2">
-                            <span class="text-info">{{ form.sign.label }}</span>
+                            <span class="text-info">签名</span>
                         </div>
                         <div class="span10">
-                            {{ form.sign }}
+                            {% if user.sign %}
+                                {{ user.sign }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -98,20 +79,24 @@
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.last_name.label }}</span>
+                            <span class="text-info">姓</span>
                         </div>
                         <div class="span8">
-                            {{ form.last_name }}
+                            {% if user.last_name %}
+                                {{ user.last_name }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.first_name.label }}</span>
+                            <span class="text-info">名</span>
                         </div>
                         <div class="span8">
-                            {{ form.first_name }}
+                            {% if user.first_name %}
+                                {{ user.first_name }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -123,45 +108,24 @@
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.sex.label }}</span>
+                            <span class="text-info">性别</span>
                         </div>
                         <div class="span8 sex">
-                            {{ form.sex }}
+                            {% if user.sex %}
+                                {{ user.sex }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.birthday.label }}</span>
+                            <span class="text-info">生日</span>
                         </div>
                         <div class="span8">
-                            {{ form.birthday }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-box-module">
-            <div class="row-fluid">
-                <div class="span6">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <span class="text-info">{{ form.job.label }}</span>
-                        </div>
-                        <div class="span8">
-                            {{ form.job }}
-                        </div>
-                    </div>
-                </div>
-                <div class="span6">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <span class="text-info">{{ form.phone_number.label }}</span>
-                        </div>
-                        <div class="span8">
-                            {{ form.phone_number }}
+                            {% if user.birthday %}
+                                {{ user.birthday }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -173,20 +137,53 @@
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.qq.label }}</span>
+                            <span class="text-info">职业</span>
                         </div>
                         <div class="span8">
-                            {{ form.qq }}
+                            {% if user.job %}
+                                {{ user.job }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.weibo.label }}</span>
+                            <span class="text-info">电话号码</span>
                         </div>
                         <div class="span8">
-                            {{ form.weibo }}
+                            {% if user.phone_number %}
+                                {{ user.phone_number }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <span class="text-info">QQ</span>
+                        </div>
+                        <div class="span8">
+                            {% if user.qq %}
+                                {{ user.qq }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="span6">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <span class="text-info">微博</span>
+                        </div>
+                        <div class="span8">
+                            {% if user.weibo %}
+                                {{ user.weibo }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -198,47 +195,45 @@
                 <div class="span4">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.country.label }}</span>
+                            <span class="text-info">国家</span>
                         </div>
                         <div class="span8">
-                            {{ form.country }}
+                            {% if user.country %}
+                                {{ user.country }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 <div class="span4">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.state.label }}</span>
+                            <span class="text-info">州省</span>
                         </div>
                         <div class="span8">
-                            {{ form.state }}
+                            {% if user.state %}
+                                {{ user.state }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
                 <div class="span4">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.city.label }}</span>
+                            <span class="text-info">市县</span>
                         </div>
                         <div class="span8">
-                            {{ form.city }}
+                            {% if user.city %}
+                                {{ user.city }}
+                            {% endif %}
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-box-module">
-            <div class="row-fluid">
-                <div class="span12">
-                    {% csrf_token %}<input class="btn btn-primary btn-block" type="submit" value="保存">
                 </div>
             </div>
         </div>
     </div>
-</form>
 {% endblock %}
 
 {% block right_content %}
-<!-- TODO: 右边栏 -->
+    <!-- TODO: 右边栏 -->
 {% endblock %}
+

@@ -14,11 +14,27 @@ from User.forms import UserInfo
 def edit(request):
     """
     编辑个人资料
+    @fanlintao
     """
     vt = loader.get_template("people/edit.html")
     c = RequestContext(
         request, {
             'form': UserInfo()
+        }
+    )
+    return HttpResponse(vt.render(c))
+
+
+def view_profile(request, tid):
+    """
+    查看个人资料
+    @fanlintao
+    """
+    user = MyUser.objects.get(id=tid)
+    vt = loader.get_template("people/profile.html")
+    c = RequestContext(
+        request, {
+            'user': user
         }
     )
     return HttpResponse(vt.render(c))

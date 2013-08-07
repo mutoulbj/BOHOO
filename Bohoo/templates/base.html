@@ -82,10 +82,10 @@
                 <ul class="nav pull-right">
                     {% if request.user.is_authenticated %}
                         <li>
-                            <a href="">{% avatar request.user 45 %}</a>
+                            <a href="{% url 'profile_view' request.user.id %}">{% avatar request.user 45 %}</a>
                         </li>
                         <li>
-                            <a href="#">{{ request.user.username }}</a>
+                            <a href="{% url 'profile_view' request.user.id %}">{{ request.user.username }}</a>
                         </li>
                     {% else %}
                     <li>
