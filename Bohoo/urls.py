@@ -20,6 +20,7 @@ urlpatterns = patterns(
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^group/', include('groups.urls')),
     
     # url(r"^settings/$", notice_settings, name="notification_notice_settings"),
 )

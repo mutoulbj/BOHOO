@@ -9,12 +9,10 @@ import time
 import cStringIO
 import urllib
 from PIL import Image
-import django
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect, render
 from django.template import RequestContext
 
-from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
@@ -25,12 +23,26 @@ from django.db.models import F, Q
 from models import Category, Group, Topic, Reply, Report
 import group_utils
 
+from django.template import loader
+
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 User = get_user_model()
 
 SEARCH_GROUP = '9999'
 SEARCH_TOPIC = '8888'
+
+
+def my_groups(request):
+    """
+    我的群组
+    @fanlintao
+    """
+    vt = loader.get_template('groups/my.html')
+    c = RequestContext(
+        request,
+    )
+    return HttpResponse(vt.render(c))
 
 
 def explore_topic(request):
