@@ -78,7 +78,7 @@ class UserInfo(forms.ModelForm):
     )
     country = forms.CharField(
         label=u'国家',
-        widget=forms.TextInput(
+        widget=forms.Select(
             attrs={
                 'class': 'input-small'
             }
@@ -86,7 +86,7 @@ class UserInfo(forms.ModelForm):
     )
     state = forms.CharField(
         label=u'州省',
-        widget=forms.TextInput(
+        widget=forms.Select(
             attrs={
                 'class': 'input-small'
             }
@@ -94,7 +94,7 @@ class UserInfo(forms.ModelForm):
     )
     city = forms.CharField(
         label=u'市县',
-        widget=forms.TextInput(
+        widget=forms.Select(
             attrs={
                 'class': 'input-small'
             }
