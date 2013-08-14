@@ -1,5 +1,5 @@
 django
 django-endless-pagination
 south
-compress
+django_compressor
 django-avatar

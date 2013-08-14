@@ -22,6 +22,9 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^group/', include('groups.urls')),
     
+    url(r'^relation/', include('friends.urls')),
+    url(r'^message/', include('django_messages.urls')),
+    
     # url(r"^settings/$", notice_settings, name="notification_notice_settings"),
 )
 urlpatterns += patterns('',
