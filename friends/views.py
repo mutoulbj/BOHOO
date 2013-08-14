@@ -7,8 +7,9 @@ from django.views.generic.edit import BaseUpdateView
 from django.http.response import HttpResponseForbidden, HttpResponse
 
 from friends.models import FriendShip
+from User.models import MyUser
 
-class Following(ListView):
+class MyFollow(ListView):
     template_name = 'follow.html'
     context_object_name = 'users'
     
@@ -17,10 +18,10 @@ class Following(ListView):
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(Following, self).dispatch(*args, **kwargs)
-following = Following.as_view()
+        return super(MyFollow, self).dispatch(*args, **kwargs)
+myfollow = MyFollow.as_view()
 
-class Followed(ListView):
+class MyFans(ListView):
     template_name = 'follow.html'
     context_object_name = 'users'
     
@@ -29,8 +30,26 @@ class Followed(ListView):
     
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(Followed, self).dispatch(*args, **kwargs)
-followed = Followed.as_view()
+        return super(MyFans, self).dispatch(*args, **kwargs)
+myfans = MyFans.as_view()
+
+class UserFollow(ListView):
+    template_name = 'follow.html'
+    context_object_name = 'users'
+    
+    def get_queryset(self):
+        user = MyUser.objects.get(pk = self.kwargs.get('user_id', None))
+        return FriendShip.objects.get_following(user)
+userfollow = UserFollow.as_view()
+
+class UserFans(ListView):
+    template_name = 'follow.html'
+    context_object_name = 'users'
+    
+    def get_queryset(self):
+        user = MyUser.objects.get(pk = self.kwargs.get('user_id', None))
+        return FriendShip.objects.get_followed(user)
+userfans = UserFans.as_view()
 
 class Action(BaseUpdateView):
     
