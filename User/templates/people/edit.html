@@ -37,6 +37,33 @@
 
 {% block js_other %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.chained.min.js"></script>
+    <script type="text/javascript" src={{ STATIC_URL }}js/cities.js></script>  //引进cities数据
+    <script type="text/javascript">
+    // 国家-州省-市县 的三级联动
+    $(document).ready(function(){
+        $("#id_country").append(
+                "<option value='中国' class='china'>中国</option>"+
+                "<option value='其他' class='china'>其他</option>"
+        );
+        var provinces = eval(cities.provinces);
+        for (var i = 0; i < provinces.length; i++){
+            if (provinces[i].name != "海外"){
+                $('#id_state').append("<option value='"+ provinces[i].name + "' class='中国'>" + provinces[i].name + "</option>");
+            }else{
+                $('#id_state').append("<option value='"+ provinces[i].name + "' class='其他'>" + provinces[i].name + "</option>");
+
+            }
+            $('#id_state').append("<option value='"+ provinces[i].name + "' class='" + provinces[i].name + "'>" + provinces[i].name + "</option>");
+            var city = eval(provinces[i].citys);
+            for (var j = 0; j < city.length; j ++){
+                $("#id_city").append("<option value='"+ city[j].city + "' class='" + provinces[i].name + "'>" + city[j].city + "</option>");
+            }
+        }
+        $("#id_state").chained("#id_country");
+        $("#id_city").chained("#id_state");
+
+    })
+    </script>
 {% endblock %}
 
 {% block left_content %}
