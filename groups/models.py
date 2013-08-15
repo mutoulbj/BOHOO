@@ -51,6 +51,14 @@ class Group(models.Model):
     is_closed       是否关闭
     last_topic_add  上一话题创建的时间
     topic_amount    话题总数
+    
+    -----------------
+    add by lazytifer
+    
+    place   群组地点
+    flag    区别某些特别群组的标志,初始化时会被赋值
+    -----------------
+    
     """
     name = models.CharField(max_length=255, verbose_name=u'名称',unique=True,db_index=True)
     description = models.TextField(blank=True, verbose_name=u'描述')
@@ -66,7 +74,12 @@ class Group(models.Model):
     is_closed = models.BooleanField(default=False, verbose_name=u'是否关闭')
     last_topic_add = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'上一个话题创建的时间')
     topic_amount = models.IntegerField(default=0, verbose_name=u'话题总量')
-
+    
+    #add by lazytiger
+    place = models.CharField(max_length=30, verbose_name=u'地点')
+    flag = models.IntegerField(default=0, verbose_name=u'群组级别')
+    #end add 
+    
     def __unicode__(self):
         return self.name
 
@@ -92,6 +105,10 @@ class Topic(models.Model):
     dislike         不喜欢
     last_reply_add  最新回复时间
     reply_amount    回复总数
+    
+    #add by lazytiger
+    type      话题类型 : 1类是系统自动发布的，没有作者 ，另一类是用户发表的，需要有作者
+    
     """
     name = models.CharField(max_length=1024, verbose_name=u'名称')
     content = models.TextField(verbose_name=u'内容')
@@ -105,7 +122,9 @@ class Topic(models.Model):
     dislike = models.IntegerField(default=0, verbose_name=u'踩')
     last_reply_add = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'最新回复时间')
     reply_amount = models.IntegerField(default=0, verbose_name=u'回复总数')
-
+    
+    type = models.IntegerField(default=0, verbose_name=u'话题类型')
+    
     def __unicode__(self):
         return self.name
 
