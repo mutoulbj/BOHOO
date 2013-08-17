@@ -34,9 +34,10 @@ class UserInfo(forms.ModelForm):
             }
         )
     )
-    job = forms.ChoiceField(
+    job = forms.CharField(
         label=u'职业',
         widget=forms.Select(
+            choices=(("", "---"),),
             attrs={
                 'class': 'span10'
             }

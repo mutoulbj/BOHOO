@@ -16,10 +16,14 @@ def edit(request):
     编辑个人资料
     @fanlintao
     """
+    if request.method == "POST":
+        form = UserInfo(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
     vt = loader.get_template("people/edit.html")
     c = RequestContext(
         request, {
-            'form': UserInfo()
+            'form': UserInfo(instance=request.user)
         }
     )
     return HttpResponse(vt.render(c))

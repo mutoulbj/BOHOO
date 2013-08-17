@@ -37,7 +37,8 @@
 
 {% block js_other %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.chained.min.js"></script>
-    <script type="text/javascript" src={{ STATIC_URL }}js/cities.js></script>  //引进cities数据
+    <script type="text/javascript" src={{ STATIC_URL }}js/cities.js></script>  {# 引进cities数据 #}
+    <script type="text/javascript" src={{ STATIC_URL }}js/job_category.js></script>  {# 引进job_category数据 #}
     <script type="text/javascript">
     // 国家-州省-市县 的三级联动
     $(document).ready(function(){
@@ -62,6 +63,33 @@
         $("#id_state").chained("#id_country");
         $("#id_city").chained("#id_state");
 
+        // 职业的联动处理
+        var job_category = eval(job_categories.job_category);
+        for (var k = 0;k < job_category.length; k++){
+            var jobs = eval(job_category[k].jobs);
+            for (var l = 0; l < jobs.length; l++){
+                $("#id_job").append("<option value='"+ jobs[l].job + "' class='" + job_category[k].category + "'>" + jobs[l].job + "</option>")
+            }
+        }
+        $("#id_job").chained("#job_category");
+
+        // 给初始值
+        var $job = "{{ request.user.job }}";
+        if ($job.length){
+            $("#id_job").append("<option value='" + $job + "' class='" + $job + "' selected='selected'>" + $job +"</option>");
+        }
+        var $country = "{{ request.user.country }}";
+        if($country.length){
+            $("#id_country").append("<option value='" + $country + "' class='" + $country + "' selected='selected'>" + $country +"</option>");
+        }
+        var $state = "{{ request.user.state }}";
+        if($state.length){
+            $("#id_state").append("<option value='" + $state + "' class='" + $state + "' selected='selected'>" + $state +"</option>");
+        }
+        var $city = "{{ request.user.city }}";
+        if($city.length){
+            $("#id_city").append("<option value='" + $city + "' class='" + $city + "' selected='selected'>" + $city +"</option>");
+        }
     })
     </script>
 {% endblock %}
@@ -164,10 +192,10 @@
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.birthday.label }}</span>
+                            <span class="text-info">{{ form.phone_number.label }}</span>
                         </div>
                         <div class="span8">
-                            {{ form.birthday }}
+                            {{ form.phone_number }}
                         </div>
                     </div>
                 </div>
@@ -179,20 +207,37 @@
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.job.label }}</span>
+                            <span class="text-info">{{ form.birthday.label }}</span>
                         </div>
                         <div class="span8">
-                            {{ form.job }}
+                            {{ form.birthday }}
                         </div>
                     </div>
                 </div>
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">{{ form.phone_number.label }}</span>
+                            <span class="text-info">{{ form.job.label }}</span>
                         </div>
                         <div class="span8">
-                            {{ form.phone_number }}
+                            <select class="span10" id="job_category">
+                                <option class="">---</option>
+                                <option value="it" class="it">计算机软件/互联网</option>
+                                <option value="elec" class="elec">通信/电子</option>
+                                <option value="trade" class="trade">贸易/批发/零售</option>
+                                <option value="finance" class="finance">会计/金融</option>
+                                <option value="medical" class="medical">制药/生物/医疗</option>
+                                <option value="culture" class="culture">文化/广告/媒体</option>
+                                <option value="building" class="building">房地产/建筑</option>
+                                <option value="education" class="education">教育/培训/科研</option>
+                                <option value="professional" class="professional">专业服务</option>
+                                <option value="machine" class="machine">加工/机械/制造</option>
+                                <option value="traffic" class="traffic">物流/运输</option>
+                                <option value="services" class="services">服务行业</option>
+                                <option value="energy" class="energy">能源/化工/原材料</option>
+                                <option value="government" class="government">政府/其他</option>
+                            </select>
+                            {{ form.job }}
                         </div>
                     </div>
                 </div>
