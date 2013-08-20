@@ -1,6 +1,7 @@
 # coding=utf-8
 # -*- coding:utf-8 -*-
 import json
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.template import loader, RequestContext
@@ -11,6 +12,7 @@ from User.models import MyUser
 from User.forms import UserInfo
 
 
+@login_required()
 def edit(request):
     """
     编辑个人资料

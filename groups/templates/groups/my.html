@@ -7,6 +7,7 @@
     .left-list{
         border: 1px solid #ddd;
         border-radius: 5px;
+        margin: 10px 0 10px 0;
     }
     </style>
 {% endblock %}
@@ -15,16 +16,28 @@
     <ul class="nav nav-list left-list">
         <li class="nav-header">群组</li>
         <li><a href="">我管理的群组<i class="icon-chevron-right pull-right"></i></a></li>
-        <li class="divider"></li>
         <li><a href="">我加入的群组<i class="icon-chevron-right pull-right"></i></a></li>
-        <li class="divider"></li>
         <li class="nav-header">话题</li>
         <li><a href="">我的最新话题<i class="icon-chevron-right pull-right"></i></a></li>
-        <li class="divider"></li>
         <li><a href="">我回复的话题<i class="icon-chevron-right pull-right"></i></a></li>
-        <li class="divider"></li>
         <li><a href="">我发表的话题<i class="icon-chevron-right pull-right"></i></a></li>
     </ul>
+    <ul class="nav nav-list left-list">
+        <li class="nav-header">常去的群组</li>
+        <li>群组头像</li>
+        <li>群组头像</li>
+        <li>群组头像</li>
+    </ul>
+    <ul class="nav nav-list left-list">
+        <li class="nav-header">为你推荐</li>
+        <li>群组头像</li>
+        <li>群组头像</li>
+        <li>群组头像</li>
+    </ul>
+
+    <div class="create-group">
+    <a href=""><i class="icon-plus"></i>申请创建群组</a>
+    </div>
 {% endblock %}
 
 {% block right_content %}

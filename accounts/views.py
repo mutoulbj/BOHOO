@@ -1,5 +1,6 @@
 #! -*- coding:utf-8 -*-
 import json
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.template import loader, RequestContext
@@ -54,13 +55,13 @@ def register(request):
     return HttpResponse(vt.render(c))
 
 
+@login_required()
 def log_out(request):
     """
     注销
     """
     logout(request)
     return redirect('/')
-
 
 
 def view_member_info(request):

@@ -34,4 +34,5 @@ from django.conf.urls import patterns, include, url
 urlpatterns = patterns(
     'groups.views',
     url(r'^my_groups/$', 'my_groups', name='my_groups'),
+    url(r'^new_group/$', 'new_group', name='new_group'),
 )

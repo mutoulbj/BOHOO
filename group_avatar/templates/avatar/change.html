@@ -1,0 +1,56 @@
+{% extends "avatar/base.html" %}
+{% load i18n avatar_tags %}
+{% load url from future %}
+
+{% block head_other %}
+    <style type="text/css">
+    .choices span{
+        display: inline-table;
+        margin-left: 5px;
+    }
+    .avatar img{
+        padding-bottom: 14px;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row-fluid profile-box">
+        <div class="profile-box-module">
+            <div class="span5">
+                <div class="row-fluid">
+                    <div class="span4"><span class="text-info ">当前头像</span></div>
+                    <div class="span8 avatar">{% avatar user %}</div>
+                </div>
+            </div>
+            <div class="span7">
+                <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
+                    <div class="row-fluid">
+                        <div class="span6">{{ upload_avatar_form.avatar }}</div>
+                        <div class="span6">{% csrf_token %}<input class="btn btn-primary" type="submit" value="上传头像" /></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row-fluid profile-box">
+        <div class="profile-box-module">
+            <div class="span12">
+                {% if not avatars %}
+                    <p class="text-info">你还没有上传头像.现在就上传一个吧!</p>
+                {% else %}
+                    <form method="POST" action="{% url 'avatar_change' %}">
+                        <div class="row-fluid">
+                            <div class="span8 choices">
+                                {% for avatar in primary_avatar_form.choice %}
+                                    <span>{{ avatar }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="span4">{% csrf_token %}<input class="btn btn-primary" type="submit" value="选择为默认头像" /></div>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

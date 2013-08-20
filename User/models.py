@@ -10,7 +10,6 @@ from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 
-
 class MyUserManager(BaseUserManager):
     # 创建用户
     def create_user(self, email, username, password=None):
