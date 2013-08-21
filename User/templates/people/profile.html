@@ -124,7 +124,7 @@
                         </div>
                         <div class="span8">
                             {% if user.birthday %}
-                                {{ user.birthday }}
+                                {{ user.birthday|date:"Y-m-d" }}
                             {% endif %}
                         </div>
                     </div>
@@ -182,7 +182,7 @@
                         </div>
                         <div class="span8">
                             {% if user.weibo %}
-                                {{ user.weibo }}
+                                 {{ user.weibo }}
                             {% endif %}
                         </div>
                     </div>

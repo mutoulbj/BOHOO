@@ -34,9 +34,10 @@ class UserInfo(forms.ModelForm):
             }
         )
     )
-    job = forms.ChoiceField(
+    job = forms.CharField(
         label=u'职业',
         widget=forms.Select(
+            choices=(("", "---"),),
             attrs={
                 'class': 'span10'
             }
@@ -79,6 +80,7 @@ class UserInfo(forms.ModelForm):
     country = forms.CharField(
         label=u'国家',
         widget=forms.Select(
+            choices=(("", "---"),),
             attrs={
                 'class': 'input-small'
             }
@@ -87,6 +89,7 @@ class UserInfo(forms.ModelForm):
     state = forms.CharField(
         label=u'州省',
         widget=forms.Select(
+            choices=(("", "---"),),
             attrs={
                 'class': 'input-small'
             }
@@ -95,6 +98,7 @@ class UserInfo(forms.ModelForm):
     city = forms.CharField(
         label=u'市县',
         widget=forms.Select(
+            choices=(("", "---"),),
             attrs={
                 'class': 'input-small'
             }

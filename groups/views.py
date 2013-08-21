@@ -25,6 +25,8 @@ import group_utils
 
 from django.template import loader
 
+from groups.forms import category, group
+
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
 User = get_user_model()
@@ -34,17 +36,23 @@ SEARCH_TOPIC = '8888'
 
 
 def my_groups(request):
-    """
-    我的群组
-    @fanlintao
-    """
+    """  我的群组 @fanlintao """
     vt = loader.get_template('groups/my.html')
-    c = RequestContext(
-        request,
-    )
+    c = RequestContext(request, )
     return HttpResponse(vt.render(c))
 
 
+def new_group(request):
+    """ 创建群组 @fanlintao """
+    vt = loader.get_template('groups/new/group.html')
+    c = RequestContext(request, {'category': category(), 'group': group()})
+    return HttpResponse(vt.render(c))
+
+
+
+
+
+##################################    below   to check ####################
 def explore_topic(request):
     """
     explore topics

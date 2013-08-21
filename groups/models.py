@@ -6,10 +6,10 @@ from django.db import models
 
 import datetime
 
-GROUP_TYPE_CHOICES = ((0, 'Open'), (1, 'Private'))
+GROUP_TYPE_CHOICES = (('open', 'Open'), ('private', 'Private'))
 MEMBER_ROLE_CHOICES = ((0, 'Member'), (1, 'Manager'), (2, 'Owner'))
-MEMBER_JOIN_CHOICES = ((0, 'Everyone can join'), (1, 'Need check'))
-REPORT_TYPE_CHOICES = ((0, u'话题'), (1, u'回复'))
+MEMBER_JOIN_CHOICES = (('everyone_can_join', 'Everyone can join'), ('need_check', 'Need check'))
+REPORT_TYPE_CHOICES = (('topic', u'话题'), ('reply', u'回复'))
 REASON_CHOICES = ((0, u'广告或垃圾信息'), (1, u'色情、淫秽或低俗内容'),(2, u'激进时政或意识形态话题'),(3, u'其他原因'))
 
 
@@ -51,22 +51,29 @@ class Group(models.Model):
     is_closed       是否关闭
     last_topic_add  上一话题创建的时间
     topic_amount    话题总数
+    place   群组地点
+    flag    区别某些特别群组的标志,初始化时会被赋值
     """
     name = models.CharField(max_length=255, verbose_name=u'名称',unique=True,db_index=True)
-    description = models.TextField(blank=True, verbose_name=u'描述')
+    description = models.TextField(blank=True, null=True, verbose_name=u'描述')
     category = models.ForeignKey(Category,related_name='category_group',verbose_name=u'小组分类')
     image = models.ImageField(upload_to='group_images/%Y%m%d', blank=True, null=True, verbose_name=u'图片')
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='creator_group', verbose_name=u'创建人')
     member  = models.ManyToManyField(settings.AUTH_USER_MODEL)
     gfriend  = models.ManyToManyField('self',symmetrical = False,verbose_name=u'友情小组')
-    group_type = models.SmallIntegerField(default=0, choices=GROUP_TYPE_CHOICES, verbose_name=u'类型')
-    member_join = models.SmallIntegerField(default=0, choices=MEMBER_JOIN_CHOICES, verbose_name=u'加入方式')
+    group_type = models.CharField(default='open', max_length=256, choices=GROUP_TYPE_CHOICES, verbose_name=u'类型')
+    member_join = models.CharField(default='everyone_can_join', max_length=256, choices=MEMBER_JOIN_CHOICES, verbose_name=u'加入方式')
     create_time = models.DateTimeField(auto_now_add=True, verbose_name=u'创建时间')
     modify_time = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'修改时间')
     is_closed = models.BooleanField(default=False, verbose_name=u'是否关闭')
-    last_topic_add = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'上一个话题创建的时间')
+    last_topic_add = models.DateTimeField(default=datetime.datetime.now, null=True, blank=True, verbose_name=u'上一个话题创建的时间')
     topic_amount = models.IntegerField(default=0, verbose_name=u'话题总量')
-
+    
+    #add by lazytiger
+    place = models.CharField(max_length=30, verbose_name=u'地点')
+    flag = models.IntegerField(default=0, verbose_name=u'群组级别')
+    #end add 
+    
     def __unicode__(self):
         return self.name
 
@@ -92,6 +99,10 @@ class Topic(models.Model):
     dislike         不喜欢
     last_reply_add  最新回复时间
     reply_amount    回复总数
+    
+    #add by lazytiger
+    topic_type      话题类型 : 1类是系统自动发布的，没有作者 ，另一类是用户发表的，需要有作者
+    
     """
     name = models.CharField(max_length=1024, verbose_name=u'名称')
     content = models.TextField(verbose_name=u'内容')
@@ -105,7 +116,9 @@ class Topic(models.Model):
     dislike = models.IntegerField(default=0, verbose_name=u'踩')
     last_reply_add = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'最新回复时间')
     reply_amount = models.IntegerField(default=0, verbose_name=u'回复总数')
-
+    
+    topic_type = models.IntegerField(default=0, verbose_name=u'话题类型')
+    
     def __unicode__(self):
         return self.name
 

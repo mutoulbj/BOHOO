@@ -1,0 +1,35 @@
+{% extends "avatar/base.html" %}
+{% load i18n avatar_tags %}
+{% load url from future %}
+
+{% block head_other %}
+    <style type="text/css">
+    .avatar img{
+        padding-bottom: 14px;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row-fluid profile-box">
+        <div class="profile-box-module">
+            <div class="span5">
+                <div class="row-fluid">
+                    <div class="span4"><span class="text-info ">当前头像</span></div>
+                    <div class="span8 avatar">{% avatar user %}</div>
+                </div>
+            </div>
+            <div class="span7">
+                {% if not avatars %}
+                    <p class="text-info">你还没有上传头像.现在就上传一个吧!</p>
+                {% endif %}
+                <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
+                    <div class="row-fluid">
+                        <div class="span6">{{ upload_avatar_form.avatar }}</div>
+                        <div class="span6">{% csrf_token %}<input class="btn btn-primary" type="submit" value="上传头像" /></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
