@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     'endless_pagination',
     'friends',
     'django_messages',
+    'social',
     # 'notification',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
@@ -196,3 +197,69 @@ LOGGING = {
         },
     }
 }
+
+#SITE = 'http://127.0.0.1:8000' if DEBUG else 'http://qinxuye.me'
+SITE = 'http://127.0.0.1:8000'
+
+ENABLE_GOOGLE_ACCOUNT = False
+GOOGLE_API = {
+    'client_id': '',
+    'client_secret': '',
+    'redirect_urls': '',
+    'refresh_token': '',
+}
+GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
+GOOGLE_ACCESS_TOKEN_ENDPOINT = 'https://accounts.google.com/o/oauth2/token'
+GOOGLE_USERINFO_ENDPOINT = 'https://www.googleapis.com/oauth2/v1/userinfo'
+GOOGLE_REDIRECT_URI = '%s/accounts/google/login/done/' % SITE
+
+GOOGLE_SIMPLE_API_KEY = ''
+# Google CustomSearch api
+GOOGLE_SEARCH_ENGINE_UNIQUE_ID = ''
+GOOGLE_CUSTOM_SEARCH_ENDPOINT = 'https://www.googleapis.com/customsearch/v1'
+# Google Url Shortener api
+GOOGLE_URL_SHORTENER_ENDPOINT = 'https://www.googleapis.com/urlshortener/v1/url'
+                        
+# Weibo
+ENABLE_WEIBO_ACCOUNT = False
+WEIBO_API = {
+    'app_key': '1387478159',
+    'app_secret': '44cb8e49ef1e8260a8215c5e82c006b4',
+    'redirect_urls': '/',
+}
+WEIBO_AUTH_ENDPOINT = 'https://api.weibo.com/oauth2/authorize'
+WEIBO_ACCESS_TOKEN_ENDPOINT = 'https://api.weibo.com/oauth2/access_token'
+WEIBO_REDIRECT_URI = '%s/accounts/weibo/login/done/' % SITE
+WEIBO_OAUTH_VERSION = 2
+WEIBO_API_ENDPOINT = 'https://api.weibo.com/%d/' % WEIBO_OAUTH_VERSION
+
+# Renren
+ENABLE_RENREN_ACCOUNT = False
+RENREN_API = {
+    'api_key': '',
+    'secret_key': '',
+    'redirect_urls': '',
+    'refresh_token': '' # use to sync data when a post is created or else
+}
+RENREN_AUTH_ENDPOINT = 'https://graph.renren.com/oauth/authorize'
+RENREN_ACCESS_TOKEN_ENDPOINT = 'https://graph.renren.com/oauth/token'
+RENREN_REDIRECT_URI = '%s/accounts/renren/login/done/' % SITE
+RENREN_API_ENDPOINT = 'http://api.renren.com/restserver.do'
+
+# QQWeibo
+ENABLE_QQWEIBO_ACCOUNT = False
+QQWEIBO_API = {
+    'app_key': '',
+    'app_secret': '',
+    'redirect_urls': '',
+    'access_token_key': '', # use for oauth1 to sync data when a post is created or else
+    'access_token_secret': '' # use for oauth1 to sync data when a post is created or else
+}
+QQWEIBO_REDIRECT_URI = '%s/accounts/qqweibo/login/done/' % SITE
+
+
+# Email
+ENABLE_EMAIL = False
+
+# Comment must contans Chinese
+ENABLE_COMMENT_CHN = False
