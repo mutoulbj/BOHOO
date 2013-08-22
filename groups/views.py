@@ -10,7 +10,7 @@ import cStringIO
 import urllib
 from PIL import Image
 from django.http import HttpResponse, Http404
-from django.shortcuts import render_to_response, redirect, render
+from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
 from django.contrib.auth.decorators import login_required
@@ -24,6 +24,8 @@ from models import Category, Group, Topic, Reply, Report
 import group_utils
 
 from django.template import loader
+from django.shortcuts import render
+from django.core.urlresolvers import reverse
 
 from groups.forms import category, group
 
@@ -44,9 +46,14 @@ def my_groups(request):
 
 def new_group(request):
     """ 创建群组 @fanlintao """
-    vt = loader.get_template('groups/new/group.html')
-    c = RequestContext(request, {'category': category(), 'group': group()})
-    return HttpResponse(vt.render(c))
+    if request.method == 'POST':
+        form = group(request.POST)
+        if form.is_valid():
+            g = form.save(commit=False)
+            g.creator = request.user
+            g.save()
+            return redirect(reverse("my_groups"))
+    return render(request, 'groups/new/group.html', {'form': group()})
 
 
 
@@ -486,42 +493,42 @@ def search(request):
         return render(request, 'search_rs.html', vars)
 
 #func : to create a new group
-def new_group(request):
-    #use must be login
-    if not request.user.is_authenticated():
-        return redirect("/group")
-    vars = {}
-    if request.method == 'POST':
-        ck = request.POST.get("ck", "")
-        #we need to get another page for create group form
-        if ck == 'first':
-            #get group catelog parent_id = -1 (we defined)
-            #cats = Catelog.objects.filter(parent_id =-1)
-            cats = Catelog.objects.filter(~Q(parent_id=-1) & ~Q(parent_id=-2))
-            #cats = Catelog.objects.filter(~Q(parent_id = -2))
-            vars["cats"] = cats
-            return render(request, 'new_group2.html', vars)
-        elif ck == 'second':
-            site_type = request.POST.get("site_type", "")
-            grp_name = request.POST.get("grp_name", "")
-            grp_content = request.POST.get("grp_content", "")
-            tags = request.POST.get("tags", "")
-            if site_type == '' or grp_name == '' or grp_content == '' or tags == '':
-                vars["msg"] = "empty error"
-                return render(request, 'new_group2.html', vars)
-            group_indb = Group.objects.filter(name=grp_name).count()
-            if group_indb > 0:
-                vars["msg"] = "group already exists! please use another name"
-                return render(request, 'new_group2.html', vars)
-            cate = Catelog.objects.get(cate_name=tags)
-            group = Group(name=grp_name, description=grp_content, catelog=cate, creator=request.user, type=site_type)
-            group.save()
-            group.member.add(request.user)
-            return redirect("showgroup", gname=grp_name)
-        return redirect("/group")
-    #create group begin
-
-    return render(request, 'new_group.html', vars)
+# def new_group(request):
+#     #use must be login
+#     if not request.user.is_authenticated():
+#         return redirect("/group")
+#     vars = {}
+#     if request.method == 'POST':
+#         ck = request.POST.get("ck", "")
+#         #we need to get another page for create group form
+#         if ck == 'first':
+#             #get group catelog parent_id = -1 (we defined)
+#             #cats = Catelog.objects.filter(parent_id =-1)
+#             cats = Catelog.objects.filter(~Q(parent_id=-1) & ~Q(parent_id=-2))
+#             #cats = Catelog.objects.filter(~Q(parent_id = -2))
+#             vars["cats"] = cats
+#             return render(request, 'new_group2.html', vars)
+#         elif ck == 'second':
+#             site_type = request.POST.get("site_type", "")
+#             grp_name = request.POST.get("grp_name", "")
+#             grp_content = request.POST.get("grp_content", "")
+#             tags = request.POST.get("tags", "")
+#             if site_type == '' or grp_name == '' or grp_content == '' or tags == '':
+#                 vars["msg"] = "empty error"
+#                 return render(request, 'new_group2.html', vars)
+#             group_indb = Group.objects.filter(name=grp_name).count()
+#             if group_indb > 0:
+#                 vars["msg"] = "group already exists! please use another name"
+#                 return render(request, 'new_group2.html', vars)
+#             cate = Catelog.objects.get(cate_name=tags)
+#             group = Group(name=grp_name, description=grp_content, catelog=cate, creator=request.user, type=site_type)
+#             group.save()
+#             group.member.add(request.user)
+#             return redirect("showgroup", gname=grp_name)
+#         return redirect("/group")
+#     #create group begin
+#
+#     return render(request, 'new_group.html', vars)
 
 
 @login_required

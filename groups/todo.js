@@ -6,5 +6,5 @@
  * To change this template use File | Settings | File Templates.
  */
 
-// TODO: 新建群组
+// 20130822 @fanlintao 新建群组
 // TODO: 修改avatar 为 group_avatar 用于群组的头像

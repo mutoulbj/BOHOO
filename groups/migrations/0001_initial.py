@@ -12,7 +12,7 @@ class Migration(SchemaMigration):
         db.create_table('group_category', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=200, db_index=True)),
-            ('parent', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['groups.Category'])),
+            ('parent', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='category_parent', null=True, to=orm['groups.Category'])),
         ))
         db.send_create_signal(u'groups', ['Category'])
 
@@ -20,16 +20,16 @@ class Migration(SchemaMigration):
         db.create_table('group', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255, db_index=True)),
-            ('description', self.gf('django.db.models.fields.TextField')(blank=True)),
+            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('category', self.gf('django.db.models.fields.related.ForeignKey')(related_name='category_group', to=orm['groups.Category'])),
             ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100, null=True, blank=True)),
             ('creator', self.gf('django.db.models.fields.related.ForeignKey')(related_name='creator_group', to=orm['User.MyUser'])),
-            ('group_type', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
-            ('member_join', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
+            ('group_type', self.gf('django.db.models.fields.CharField')(default='open', max_length=256)),
+            ('member_join', self.gf('django.db.models.fields.CharField')(default='everyone_can_join', max_length=256)),
             ('create_time', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('modify_time', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
             ('is_closed', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('last_topic_add', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
+            ('last_topic_add', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now, null=True, blank=True)),
             ('topic_amount', self.gf('django.db.models.fields.IntegerField')(default=0)),
             ('place', self.gf('django.db.models.fields.CharField')(max_length=30)),
             ('flag', self.gf('django.db.models.fields.IntegerField')(default=0)),
@@ -171,23 +171,23 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Category', 'db_table': "'group_category'"},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '200', 'db_index': 'True'}),
-            'parent': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['groups.Category']"})
+            'parent': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'category_parent'", 'null': 'True', 'to': u"orm['groups.Category']"})
         },
         u'groups.group': {
             'Meta': {'object_name': 'Group', 'db_table': "'group'"},
             'category': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'category_group'", 'to': u"orm['groups.Category']"}),
             'create_time': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             'creator': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'creator_group'", 'to': u"orm['User.MyUser']"}),
-            'description': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
+            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'flag': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'gfriend': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['groups.Group']", 'symmetrical': 'False'}),
-            'group_type': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'group_type': ('django.db.models.fields.CharField', [], {'default': "'open'", 'max_length': '256'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
             'is_closed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'last_topic_add': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
+            'last_topic_add': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now', 'null': 'True', 'blank': 'True'}),
             'member': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['User.MyUser']", 'symmetrical': 'False'}),
-            'member_join': ('django.db.models.fields.SmallIntegerField', [], {'default': '0'}),
+            'member_join': ('django.db.models.fields.CharField', [], {'default': "'everyone_can_join'", 'max_length': '256'}),
             'modify_time': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
             'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '255', 'db_index': 'True'}),
             'place': ('django.db.models.fields.CharField', [], {'max_length': '30'}),

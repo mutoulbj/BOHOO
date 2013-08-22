@@ -75,19 +75,19 @@
 
         // 给初始值
         var $job = "{{ request.user.job }}";
-        if ($job.length){
+        if ($job != 'None'){
             $("#id_job").append("<option value='" + $job + "' class='" + $job + "' selected='selected'>" + $job +"</option>");
         }
         var $country = "{{ request.user.country }}";
-        if($country.length){
+        if($country != 'None'){
             $("#id_country").append("<option value='" + $country + "' class='" + $country + "' selected='selected'>" + $country +"</option>");
         }
         var $state = "{{ request.user.state }}";
-        if($state.length){
+        if($state != 'None'){
             $("#id_state").append("<option value='" + $state + "' class='" + $state + "' selected='selected'>" + $state +"</option>");
         }
         var $city = "{{ request.user.city }}";
-        if($city.length){
+        if($city != 'None'){
             $("#id_city").append("<option value='" + $city + "' class='" + $city + "' selected='selected'>" + $city +"</option>");
         }
     })
