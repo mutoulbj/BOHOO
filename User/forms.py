@@ -27,6 +27,7 @@ class UserInfo(forms.ModelForm):
     SEX_CHOICES = (('M', u'男'), ('F', u'女'))
     sign = forms.CharField(
         label=u'签名',
+        required=False,
         widget=forms.Textarea(
             attrs={
                 'class': 'span11',
@@ -34,9 +35,11 @@ class UserInfo(forms.ModelForm):
             }
         )
     )
-    job = forms.ChoiceField(
+    job = forms.CharField(
         label=u'职业',
+        required=False,
         widget=forms.Select(
+            choices=(("", "---"),),
             attrs={
                 'class': 'span10'
             }
@@ -44,6 +47,7 @@ class UserInfo(forms.ModelForm):
     )
     first_name = forms.CharField(
         label=u'名',
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'span10'
@@ -52,6 +56,7 @@ class UserInfo(forms.ModelForm):
     )
     last_name = forms.CharField(
         label=u'姓',
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'span10'
@@ -60,6 +65,7 @@ class UserInfo(forms.ModelForm):
     )
     sex = forms.ChoiceField(
         label=u'性别',
+        required=False,
         choices=SEX_CHOICES,
         widget=forms.RadioSelect(
             attrs={
@@ -69,6 +75,7 @@ class UserInfo(forms.ModelForm):
     )
     birthday = forms.DateTimeField(
         label=u'生日',
+        required=False,
         widget=SelectDateWidget(
             years=get_last_70_year_range(),
             attrs={
@@ -78,6 +85,7 @@ class UserInfo(forms.ModelForm):
     )
     country = forms.CharField(
         label=u'国家',
+        required=False,
         widget=forms.Select(
             choices=(("", "---"),),
             attrs={
@@ -87,6 +95,7 @@ class UserInfo(forms.ModelForm):
     )
     state = forms.CharField(
         label=u'州省',
+        required=False,
         widget=forms.Select(
             choices=(("", "---"),),
             attrs={
@@ -96,6 +105,7 @@ class UserInfo(forms.ModelForm):
     )
     city = forms.CharField(
         label=u'市县',
+        required=False,
         widget=forms.Select(
             choices=(("", "---"),),
             attrs={
@@ -105,6 +115,7 @@ class UserInfo(forms.ModelForm):
     )
     qq = forms.IntegerField(
         label=u'QQ',
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'span10'
@@ -113,6 +124,7 @@ class UserInfo(forms.ModelForm):
     )
     weibo = forms.CharField(
         label=u'微博',
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'span10'
@@ -121,6 +133,7 @@ class UserInfo(forms.ModelForm):
     )
     phone_number = forms.CharField(
         label=u'手机号码',
+        required=False,
         widget=forms.TextInput(
             attrs={
                 'class': 'span10'
