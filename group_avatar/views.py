@@ -7,12 +7,13 @@ from django.utils.translation import ugettext as _
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from avatar.forms import PrimaryAvatarForm, DeleteAvatarForm, UploadAvatarForm
-from avatar.models import Avatar
-from avatar.settings import AVATAR_MAX_AVATARS_PER_USER, AVATAR_DEFAULT_SIZE
-from avatar.signals import avatar_updated
-from avatar.util import (get_primary_avatar, get_default_avatar_url,
-                         get_user_model, get_user)
+from group_avatar.forms import PrimaryGroupAvatarForm, DeleteGroupAvatarForm, UploadGroupAvatarForm
+from group_avatar.models import GroupAvatar
+from group_avatar.settings import GROUP_AVATAR_MAX_AVATARS_PER_USER, GROUP_AVATAR_DEFAULT_SIZE
+from group_avatar.signals import group_avatar_updated
+from group_avatar.util import (get_primary_group_avatar, get_default_group_avatar_url, get_group)
+
+from groups.models import Group
 
 
 def _get_next(request):
@@ -36,189 +37,189 @@ def _get_next(request):
     return next
 
 
-def _get_avatars(user):
+def _get_group_avatars(group):
     # Default set. Needs to be sliced, but that's it. Keep the natural order.
-    avatars = user.avatar_set.all()
+    group_avatars = group.group_avatar_set.all()
 
     # Current avatar
-    primary_avatar = avatars.order_by('-primary')[:1]
-    if primary_avatar:
-        avatar = primary_avatar[0]
+    primary_group_avatar = group_avatars.order_by('-primary')[:1]
+    if primary_group_avatar:
+        group_avatar = primary_group_avatar[0]
     else:
-        avatar = None
+        group_avatar = None
 
-    if AVATAR_MAX_AVATARS_PER_USER == 1:
-        avatars = primary_avatar
+    if GROUP_AVATAR_MAX_AVATARS_PER_USER == 1:
+        group_avatars = primary_group_avatar
     else:
         # Slice the default set now that we used the queryset for the primary avatar
-        avatars = avatars[:AVATAR_MAX_AVATARS_PER_USER]
-    return (avatar, avatars)
+        group_avatars = group_avatars[:GROUP_AVATAR_MAX_AVATARS_PER_USER]
+    return (group_avatar, group_avatars)
 
 
 @login_required
-def add(request, extra_context=None, next_override=None,
-        upload_form=UploadAvatarForm, *args, **kwargs):
+def group_add(request, group, extra_context=None, next_override=None,
+        upload_form=UploadGroupAvatarForm, *args, **kwargs):
     if extra_context is None:
         extra_context = {}
-    avatar, avatars = _get_avatars(request.user)
-    upload_avatar_form = upload_form(request.POST or None,
-        request.FILES or None, user=request.user)
-    if request.method == "POST" and 'avatar' in request.FILES:
-        if upload_avatar_form.is_valid():
-            avatar = Avatar(user=request.user, primary=True)
-            image_file = request.FILES['avatar']
-            avatar.avatar.save(image_file.name, image_file)
-            avatar.save()
+    group_avatar, group_avatars = _get_group_avatars(group)
+    upload_group_avatar_form = upload_form(request.POST or None,
+        request.FILES or None, group=group)
+    if request.method == "POST" and 'group_avatar' in request.FILES:
+        if upload_group_avatar_form.is_valid():
+            group_avatar = GroupAvatar(group=group, primary=True)
+            image_file = request.FILES['group_avatar']
+            group_avatar.group_avatar.save(image_file.name, image_file)
+            group_avatar.save()
             messages.success(request, _("Successfully uploaded a new avatar."))
-            avatar_updated.send(sender=Avatar, user=request.user, avatar=avatar)
+            group_avatar_updated.send(sender=GroupAvatar, group=group, group_avatar=group_avatar)
+            # TODO: 添加群组头像后跳转的位置
             # return redirect(next_override or _get_next(request))
             return redirect(reverse('profile_edit'))
     context = {
-        'avatar': avatar,
-        'avatars': avatars,
-        'upload_avatar_form': upload_avatar_form,
+        'group_avatar': group_avatar,
+        'group_avatars': group_avatars,
+        'upload_group_avatar_form': upload_group_avatar_form,
         'next': next_override or _get_next(request),
     }
     context.update(extra_context)
-    return render(request, 'avatar/add.html', context)
+    return render(request, 'group_avatar/add.html', context)
 
 
 @login_required
-def change(request, extra_context=None, next_override=None,
-           upload_form=UploadAvatarForm, primary_form=PrimaryAvatarForm,
-           *args, **kwargs):
+def group_change(request, group, extra_context=None, next_override=None,
+           upload_form=UploadGroupAvatarForm, primary_form=PrimaryGroupAvatarForm, *args, **kwargs):
     if extra_context is None:
         extra_context = {}
-    avatar, avatars = _get_avatars(request.user)
-    if avatar:
-        kwargs = {'initial': {'choice': avatar.id}}
+    group_avatar, group_avatars = _get_group_avatars(group)
+    if group_avatar:
+        kwargs = {'initial': {'choice': group_avatar.id}}
     else:
         kwargs = {}
-    upload_avatar_form = upload_form(user=request.user, **kwargs)
-    primary_avatar_form = primary_form(request.POST or None,
-        user=request.user, avatars=avatars, **kwargs)
+    upload_group_avatar_form = upload_form(group=group, **kwargs)
+    primary_group_avatar_form = primary_form(request.POST or None, group=group, group_avatars=group_avatars, **kwargs)
     if request.method == "POST":
         updated = False
-        if 'choice' in request.POST and primary_avatar_form.is_valid():
-            avatar = Avatar.objects.get(
-                id=primary_avatar_form.cleaned_data['choice'])
-            avatar.primary = True
-            avatar.save()
+        if 'choice' in request.POST and primary_group_avatar_form.is_valid():
+            group_avatar = GroupAvatar.objects.get(
+                id=primary_group_avatar_form.cleaned_data['choice'])
+            group_avatar.primary = True
+            group_avatar.save()
             updated = True
             messages.success(request, _("Successfully updated your avatar."))
         if updated:
-            avatar_updated.send(sender=Avatar, user=request.user, avatar=avatar)
+            group_avatar_updated.send(sender=GroupAvatar, group=group, group_avatar=group_avatar)
+        # TODO: 修改小组头像后跳转
         # return redirect(next_override or _get_next(request))
         return redirect(reverse('profile_edit'))
     context = {
-        'avatar': avatar,
-        'avatars': avatars,
-        'upload_avatar_form': upload_avatar_form,
-        'primary_avatar_form': primary_avatar_form,
+        'group_avatar': group_avatar,
+        'group_avatars': group_avatars,
+        'upload_avatar_form': upload_group_avatar_form,
+        'primary_avatar_form': primary_group_avatar_form,
         'next': next_override or _get_next(request)
     }
     context.update(extra_context)
-    return render(request, 'avatar/change.html', context)
+    return render(request, 'group_avatar/change.html', context)
 
 
 @login_required
-def delete(request, extra_context=None, next_override=None, *args, **kwargs):
+def group_delete(request, group, extra_context=None, next_override=None, *args, **kwargs):
     if extra_context is None:
         extra_context = {}
-    avatar, avatars = _get_avatars(request.user)
-    delete_avatar_form = DeleteAvatarForm(request.POST or None,
-        user=request.user, avatars=avatars)
+    group_avatar, group_avatars = _get_group_avatars(group)
+    delete_group_avatar_form = DeleteGroupAvatarForm(request.POST or None, group=group, group_avatars=group_avatars)
     if request.method == 'POST':
-        if delete_avatar_form.is_valid():
-            ids = delete_avatar_form.cleaned_data['choices']
-            if six.text_type(avatar.id) in ids and avatars.count() > len(ids):
+        if delete_group_avatar_form.is_valid():
+            ids = delete_group_avatar_form.cleaned_data['choices']
+            if six.text_type(group_avatar.id) in ids and group_avatars.count() > len(ids):
                 # Find the next best avatar, and set it as the new primary
-                for a in avatars:
+                for a in group_avatars:
                     if six.text_type(a.id) not in ids:
                         a.primary = True
                         a.save()
-                        avatar_updated.send(sender=Avatar, user=request.user, avatar=avatar)
+                        group_avatar_updated.send(sender=GroupAvatar, group=group, group_avatar=group_avatar)
                         break
-            Avatar.objects.filter(id__in=ids).delete()
+            GroupAvatar.objects.filter(id__in=ids).delete()
             messages.success(request, _("Successfully deleted the requested avatars."))
+            # TODO: 成功删除小组头像后页面跳转
             # return redirect(next_override or _get_next(request))
             return redirect(reverse('profile_edit'))
     context = {
-        'avatar': avatar,
-        'avatars': avatars,
-        'delete_avatar_form': delete_avatar_form,
+        'group_avatar': group_avatar,
+        'group_avatars': group_avatars,
+        'delete_avatar_form': delete_group_avatar_form,
         'next': next_override or _get_next(request),
     }
     context.update(extra_context)
 
-    return render(request, 'avatar/confirm_delete.html', context)
+    return render(request, 'group_avatar/confirm_delete.html', context)
 
 
-def avatar_gallery(request, username, template_name="avatar/gallery.html"):
+def group_avatar_gallery(request, group_name, template_name="group_avatar/gallery.html"):
     try:
-        user = get_user(username)
-    except get_user_model().DoesNotExist:
+        group = get_group(group_name)
+    except Group.DoesNotExist:
         raise Http404
     return render(request, template_name, {
-        "other_user": user,
-        "avatars": user.avatar_set.all(),
+        "other_group": group,
+        "group_avatars": group.group_avatar_set.all(),
     })
 
 
-def avatar(request, username, id, template_name="avatar/avatar.html"):
+def group_avatar(request, group_name, id, template_name="group_avatar/avatar.html"):
     try:
-        user = get_user(username)
-    except get_user_model().DoesNotExist:
+        group = get_group(group_name)
+    except Group.DoesNotExist:
         raise Http404
-    avatars = user.avatar_set.order_by("-date_uploaded")
+    group_avatars = group.group_avatar_set.order_by("-date_uploaded")
     index = None
-    avatar = None
-    if avatars:
-        avatar = avatars.get(pk=id)
-        if not avatar:
+    group_avatar = None
+    if group_avatars:
+        group_avatar = group_avatars.get(pk=id)
+        if not group_avatar:
             return Http404
 
-        index = avatars.filter(date_uploaded__gt=avatar.date_uploaded).count()
-        count = avatars.count()
+        index = group_avatars.filter(date_uploaded__gt=group_avatar.date_uploaded).count()
+        count = group_avatars.count()
 
         if index == 0:
-            prev = avatars.reverse()[0]
+            prev = group_avatars.reverse()[0]
             if count <= 1:
-                next = avatars[0]
+                next = group_avatars[0]
             else:
-                next = avatars[1]
+                next = group_avatars[1]
         else:
-            prev = avatars[index - 1]
+            prev = group_avatars[index - 1]
 
         if (index + 1) >= count:
-            next = avatars[0]
+            next = group_avatars[0]
             prev_index = index - 1
             if prev_index < 0:
                 prev_index = 0
-            prev = avatars[prev_index]
+            prev = group_avatars[prev_index]
         else:
-            next = avatars[index + 1]
+            next = group_avatars[index + 1]
 
     return render(request, template_name, {
-        "other_user": user,
-        "avatar": avatar,
+        "other_group": group,
+        "group_avatar": group_avatar,
         "index": index + 1,
-        "avatars": avatars,
+        "group_avatars": group_avatars,
         "next": next,
         "prev": prev,
         "count": count,
     })
 
 
-def render_primary(request, extra_context={}, user=None, size=AVATAR_DEFAULT_SIZE, *args, **kwargs):
+def group_render_primary(request, extra_context={}, group=None, size=GROUP_AVATAR_DEFAULT_SIZE, *args, **kwargs):
     size = int(size)
-    avatar = get_primary_avatar(user, size=size)
-    if avatar:
+    group_avatar = get_primary_group_avatar(group, size=size)
+    if group_avatar:
         # FIXME: later, add an option to render the resized avatar dynamically
         # instead of redirecting to an already created static file. This could
         # be useful in certain situations, particulary if there is a CDN and
         # we want to minimize the storage usage on our static server, letting
         # the CDN store those files instead
-        return redirect(avatar.avatar_url(size))
+        return redirect(group_avatar.avatar_url(size))
     else:
-        return redirect(get_default_avatar_url())
+        return redirect(get_default_group_avatar_url())

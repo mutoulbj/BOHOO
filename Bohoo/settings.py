@@ -156,6 +156,7 @@ INSTALLED_APPS = (
     'south',
     'compressor',
     'avatar',
+    # 'group_avatar',
     'django.contrib.admin',
     'User',
     'groups',
