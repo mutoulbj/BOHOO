@@ -21,7 +21,7 @@ class Category(models.Model):
     parent  父分类
     """
     name = models.CharField(max_length=200, verbose_name=u'分类',unique=True,db_index=True)
-    parent = models.ForeignKey('self', verbose_name=u'父分类')
+    parent = models.ForeignKey('self', related_name="category_parent", verbose_name=u'父分类', blank=True, null=True)
 
     def __unicode__(self):
         return self.name
@@ -31,6 +31,7 @@ class Category(models.Model):
         verbose_name = u'分类'
         verbose_name_plural = u'分类'
         db_table = 'group_category'
+
 
 
 class Group(models.Model):
@@ -66,7 +67,7 @@ class Group(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, verbose_name=u'创建时间')
     modify_time = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'修改时间')
     is_closed = models.BooleanField(default=False, verbose_name=u'是否关闭')
-    last_topic_add = models.DateTimeField(default=datetime.datetime.now, null=True, blank=True, verbose_name=u'上一个话题创建的时间')
+    last_topic_add = models.DateTimeField(null=True, blank=True, verbose_name=u'上一个话题创建的时间')
     topic_amount = models.IntegerField(default=0, verbose_name=u'话题总量')
     
     #add by lazytiger

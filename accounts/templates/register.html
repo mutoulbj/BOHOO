@@ -88,7 +88,6 @@
                             var res = JSON.parse(res);  // 将字符串转化为字典
                             if (res['error'] == 'error'){
                                 pass_check = false;
-                                console.log('error');
                                 return {type:'error', message:" 该邮箱已经被注册"};
                             }
                             return false;
