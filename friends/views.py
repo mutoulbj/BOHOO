@@ -57,7 +57,8 @@ class Action(BaseUpdateView):
         return HttpResponseForbidden()
     
     def post(self, request, *args, **kwargs):
-        to_user = request.body.get('to_user')
+        to_user = request.POST.get('to_user', None)
+        to_user = MyUser.objects.get(pk = to_user)
         from_user = request.user
         relation = FriendShip.objects.filter(from_user = from_user, to_user = to_user).exists()
         if relation:
@@ -69,5 +70,5 @@ class Action(BaseUpdateView):
         
     @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
-        return super(Followed, self).dispatch(*args, **kwargs)    
+        return super(Action, self).dispatch(*args, **kwargs)    
 action = Action.as_view()

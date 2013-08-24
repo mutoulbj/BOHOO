@@ -1,5 +1,5 @@
 {% extends "people_base.html" %}
-{% load compress avatar_tags friends_tags %}
+{% load compress avatar_tags friends_tags i18n %}
 {% load url from future %}
 
 {% block descrition %}Bohoo首页{% endblock %}
@@ -21,7 +21,19 @@
     	<ul class="media-list" style="margin-top: 40px;">
     	{% for user in users %}
 		  	<li class="media">
-			    <a href="#" class="pull-left">
+			    <a href="#" class="pull-left user-img" data-html="true" data-content="
+			    	<div class='inline'>
+			    		<div>{% trans 'following' %}:<span class='badge badge-success'>{{ user|followingcount }}</span></div>
+			    		<div>{% trans 'followed' %}:<span class='badge badge-info'>{{ user|followedcount }}</span></div>
+		    		</div>
+		    		<div style='margin-top: 3px;'>
+			    		<button class='btn btn-small btn-primary friend' username='{{user.id}}'>
+			    			{% if request.user|following:user %}{% trans 'Cancel following' %}
+			    			{% else %}{% trans 'following' %}
+			    			{% endif %}
+			    		</button>
+		    		</div>" 
+	    		data-original-title="<strong>{{ user }}</strong>">
 			    	<img src="{% avatar_url user 64 %}" />
 				</a>
 			    <div class="media-body">
@@ -35,4 +47,9 @@
 		{% endfor %}
 		</ul>
     </div>
+    
+{% endblock %}
+
+{% block js_other %}
+	<script type="text/javascript" src="{{ STATIC_URL }}js/friends.js"></script>
 {% endblock %}
