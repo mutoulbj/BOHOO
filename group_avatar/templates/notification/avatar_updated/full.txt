@@ -1,4 +1,4 @@
-{% load i18n %}{% blocktrans with avatar.get_absolute_url as avatar_url %}Your avatar has been updated.  {{ avatar }}
+{% load i18n %}{% blocktrans with group_avatar.get_absolute_url as group_avatar_url %}The group avatar has been updated.  {{ group_avatar }}
 
-http://{{ current_site }}{{ avatar_url }}
+http://{{ current_site }}{{ group_avatar_url }}
 {% endblocktrans %}
