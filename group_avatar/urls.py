@@ -5,8 +5,8 @@ except ImportError:
     from django.conf.urls.defaults import patterns, url
 
 urlpatterns = patterns('group_avatar.views',
-                       url(r'^group_add/$', 'group_add', name='group_avatar_add'),
-                       url(r'^group_change/$', 'group_change', name='group_avatar_change'),
+                       url(r'^group_add/(?P<group_id>\d+)/$', 'group_add', name='group_avatar_add'),
+                       url(r'^group_change/(?P<group_id>\d+)/$', 'group_change', name='group_avatar_change'),
                        url(r'^group_delete/$', 'group_delete', name='group_avatar_delete'),
                        url(r'^group_render_primary/(?P<group>[\w\d\.\-_]{3,30})/(?P<size>[\d]+)/$',
                            'group_render_primary', name='group_avatar_render_primary'),

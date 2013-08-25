@@ -8,7 +8,7 @@ from groups.models import Group
 
 
 class GroupAvatarAdmin(admin.ModelAdmin):
-    list_display = ('get_avatar', 'user', 'primary', "date_uploaded")
+    list_display = ('get_group_avatar', 'group', 'primary', "date_uploaded")
     list_filter = ('primary',)
     search_fields = ('user__%s' % getattr(Group, 'GROUP_NAME_FIELD', 'group_name'),)
     list_per_page = 50

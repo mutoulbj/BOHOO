@@ -99,7 +99,7 @@ def get_primary_group_avatar(group, size=GROUP_AVATAR_DEFAULT_SIZE):
         # it will be first, and then ordered by date uploaded, otherwise a
         # primary=False avatar will be first.  Exactly the fallback behavior we
         # want.
-        group_avatar = group.avatar_set.order_by("-primary", "-date_uploaded")[0]
+        group_avatar = group.groupavatar_set.order_by("-primary", "-date_uploaded")[0]
     except IndexError:
         group_avatar = None
     if group_avatar:

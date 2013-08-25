@@ -101,7 +101,7 @@ class GroupAvatar(models.Model):
         super(GroupAvatar, self).save(*args, **kwargs)
 
     def thumbnail_exists(self, size):
-        return self.group_avatar.storage.exists(self.avatar_name(size))
+        return self.group_avatar.storage.exists(self.group_avatar_name(size))
 
     def create_thumbnail(self, size, quality=None):
         # invalidate the cache of the thumbnail with the given size first

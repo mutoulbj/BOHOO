@@ -52,8 +52,14 @@ def new_group(request):
             g = form.save(commit=False)
             g.creator = request.user
             g.save()
-            return redirect(reverse("my_groups"))
+            return redirect(reverse("add_group_avatar", args=[g.id]))
     return render(request, 'groups/new/group.html', {'form': group()})
+
+
+def add_group_avatar(request, group_id):
+    """ 添加小组头像 """
+    group = Group.objects.get(id=group_id)
+    return render(request, 'groups/new/add_avatar.html', {'group': group})
 
 
 

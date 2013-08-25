@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.shortcuts import render, redirect
@@ -39,7 +40,7 @@ def _get_next(request):
 
 def _get_group_avatars(group):
     # Default set. Needs to be sliced, but that's it. Keep the natural order.
-    group_avatars = group.group_avatar_set.all()
+    group_avatars = group.groupavatar_set.all()
 
     # Current avatar
     primary_group_avatar = group_avatars.order_by('-primary')[:1]
@@ -57,8 +58,13 @@ def _get_group_avatars(group):
 
 
 @login_required
-def group_add(request, group, extra_context=None, next_override=None,
+def group_add(request, group_id, extra_context=None, next_override=None,
         upload_form=UploadGroupAvatarForm, *args, **kwargs):
+    print 111
+    print group_id
+    group = Group.objects.get(id=group_id)
+    print 222
+    print group
     if extra_context is None:
         extra_context = {}
     group_avatar, group_avatars = _get_group_avatars(group)
@@ -76,6 +82,7 @@ def group_add(request, group, extra_context=None, next_override=None,
             # return redirect(next_override or _get_next(request))
             return redirect(reverse('profile_edit'))
     context = {
+        'group': group,
         'group_avatar': group_avatar,
         'group_avatars': group_avatars,
         'upload_group_avatar_form': upload_group_avatar_form,
@@ -86,8 +93,13 @@ def group_add(request, group, extra_context=None, next_override=None,
 
 
 @login_required
-def group_change(request, group, extra_context=None, next_override=None,
+def group_change(request, group_id, extra_context=None, next_override=None,
            upload_form=UploadGroupAvatarForm, primary_form=PrimaryGroupAvatarForm, *args, **kwargs):
+    """ 需要传入 group_id 变量 """
+    print 333
+    print group_id
+    group = Group.objects.get(id=group_id)
+    print group
     if extra_context is None:
         extra_context = {}
     group_avatar, group_avatars = _get_group_avatars(group)
@@ -112,10 +124,11 @@ def group_change(request, group, extra_context=None, next_override=None,
         # return redirect(next_override or _get_next(request))
         return redirect(reverse('profile_edit'))
     context = {
+        'group': group,
         'group_avatar': group_avatar,
         'group_avatars': group_avatars,
-        'upload_avatar_form': upload_group_avatar_form,
-        'primary_avatar_form': primary_group_avatar_form,
+        'upload_group_avatar_form': upload_group_avatar_form,
+        'primary_group_avatar_form': primary_group_avatar_form,
         'next': next_override or _get_next(request)
     }
     context.update(extra_context)
@@ -162,7 +175,7 @@ def group_avatar_gallery(request, group_name, template_name="group_avatar/galler
         raise Http404
     return render(request, template_name, {
         "other_group": group,
-        "group_avatars": group.group_avatar_set.all(),
+        "group_avatars": group.groupavatar_set.all(),
     })
 
 
@@ -171,7 +184,7 @@ def group_avatar(request, group_name, id, template_name="group_avatar/avatar.htm
         group = get_group(group_name)
     except Group.DoesNotExist:
         raise Http404
-    group_avatars = group.group_avatar_set.order_by("-date_uploaded")
+    group_avatars = group.groupavatar_set.order_by("-date_uploaded")
     index = None
     group_avatar = None
     if group_avatars:

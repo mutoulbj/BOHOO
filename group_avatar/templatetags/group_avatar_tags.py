@@ -48,6 +48,7 @@ def group_avatar_url(group, size=GROUP_AVATAR_DEFAULT_SIZE):
 @cache_result
 @register.simple_tag
 def group_avatar(group, size=GROUP_AVATAR_DEFAULT_SIZE, **kwargs):
+    print 111
     if not isinstance(group, Group):
         try:
             group = get_group(group)
@@ -65,7 +66,7 @@ def group_avatar(group, size=GROUP_AVATAR_DEFAULT_SIZE, **kwargs):
         'alt': alt,
         'size': size,
     })
-    return render_to_string('group_avatar/group_avatar_tag.html', context)
+    return render_to_string('group_avatar/avatar_tag.html', context)
 
 
 @register.filter

@@ -1,0 +1,27 @@
+{% extends "group_base.html" %}
+{% load group_avatar_tags %}
+
+{% block head_other %}
+    <style type="text/css">
+    .avatar img{
+        padding-bottom: 14px;
+    }
+    </style>
+{% endblock %}
+
+{% block right_content %}
+    <div class="row-fluid profile-box">
+        <div class="profile-box-module">
+            <div class="span3">
+                <span class="text-info">头像</span>
+            </div>
+            <div class="span3 group_avatar">
+                {% group_avatar group %}
+            </div>
+            <div class="span6">
+                <span><a href="{% url 'group_avatar_change' group_id=group.id %}">修改头像</a></span>
+                <span><a href="{% url 'group_avatar_delete' %}">删除头像</a></span>
+            </div>
+        </div>
+    </div>
+{% endblock %}

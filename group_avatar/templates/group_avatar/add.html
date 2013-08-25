@@ -23,7 +23,7 @@
                 {% if not group_avatars %}
                     <p class="text-info">群组还没有上传头像.现在就上传一个吧!</p>
                 {% endif %}
-                <form enctype="multipart/form-data" method="POST" action="{% url 'group_avatar_add' %}">
+                <form enctype="multipart/form-data" method="POST" action="{% url 'group_avatar_add' group_id=group.id %}">
                     <div class="row-fluid">
                         <div class="span6">{{ upload_group_avatar_form.group_avatar }}</div>
                         <div class="span6">{% csrf_token %}<input class="btn btn-primary" type="submit" value="上传头像" /></div>
