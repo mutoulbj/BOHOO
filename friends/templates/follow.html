@@ -1,0 +1,55 @@
+{% extends "people_base.html" %}
+{% load compress avatar_tags friends_tags i18n %}
+{% load url from future %}
+
+{% block descrition %}Bohoo首页{% endblock %}
+{% block title %}Bohoo首页{% endblock %}
+
+{% block head_other %}
+    <style type="text/css">
+    .btn-register, .btn-signup-weibo, .btn-signup-qq{
+        width: 247px;
+    }
+    .btn-signup-weibo{
+        margin-bottom: 20px;
+    }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid">
+    	<ul class="media-list" style="margin-top: 40px;">
+    	{% for user in users %}
+		  	<li class="media">
+			    <a href="#" class="pull-left user-img" data-html="true" data-content="
+			    	<div class='inline'>
+			    		<div>{% trans 'following' %}:<span class='badge badge-success'>{{ user|followingcount }}</span></div>
+			    		<div>{% trans 'followed' %}:<span class='badge badge-info'>{{ user|followedcount }}</span></div>
+		    		</div>
+		    		<div style='margin-top: 3px;'>
+			    		<button class='btn btn-small btn-primary friend' username='{{user.id}}'>
+			    			{% if request.user|following:user %}{% trans 'Cancel following' %}
+			    			{% else %}{% trans 'following' %}
+			    			{% endif %}
+			    		</button>
+		    		</div>" 
+	    		data-original-title="<strong>{{ user }}</strong>">
+			    	<img src="{% avatar_url user 64 %}" />
+				</a>
+			    <div class="media-body">
+			      	<h4 class="media-heading">{{ user }}</h4>
+			      	<p>关注：<a href="{% url 'uerfollow' user.id %}">{{ user|followingcount }}</a>   
+			      		粉丝：<a href="{% url 'userfans' user.id %}">{{ user|followedcount }}</a>
+			      	</p>
+			      	<p>{{ user.sign }}</p>
+			    </div>
+		  	</li>
+		{% endfor %}
+		</ul>
+    </div>
+    
+{% endblock %}
+
+{% block js_other %}
+	<script type="text/javascript" src="{{ STATIC_URL }}js/friends.js"></script>
+{% endblock %}

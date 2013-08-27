@@ -12,6 +12,7 @@ urlpatterns = patterns(
     url(r'^avatar/', include('avatar.urls')),
     url(r'^group_avatar/', include('group_avatar.urls')),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^accounts/', include('social.urls')),
     url(r'^people/', include('User.urls')),
     url(r'^accounts/activate/(?P<activation_key>\w+)/$', 'groups.views.activate'),
     url(r'^accounts/wait_activate/$', 'groups.views.wait_activate'),
@@ -21,6 +22,13 @@ urlpatterns = patterns(
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+#     url(r'^admin/check_weibo_auth/$', 'blog.admin_views.check_weibo_auth'),
+#     url(r'^admin/weibo/auth/$', 'blog.admin_views.admin_weibo_auth'),
+#     url(r'^admin/weibo/auth/done/$', 'blog.admin_views.admin_weibo_auth_deal'),
+    url(r'^group/', include('groups.urls')),
+    
+    url(r'^relation/', include('friends.urls')),
+    url(r'^message/', include('django_messages.urls')),
     # url(r"^settings/$", notice_settings, name="notification_notice_settings"),
 )
 urlpatterns += patterns('',
