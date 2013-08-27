@@ -6,8 +6,11 @@
 
 {% block head_other %}
     <style type="text/css">
-    .btn-register, .btn-signup-weibo, .btn-signup-qq{
+    .btn-register{
         width: 247px;
+    }
+    .btn-signup-weibo,.btn-signup-qq{
+        width: 222px;
     }
     .btn-signup-weibo{
         margin-bottom: 20px;
@@ -36,8 +39,8 @@
                         <label class="checkbox"><input type="checkbox" id="id_terms">我已经阅读并同意<a href="">服务条款</a> </label>
                         <button class="btn btn-primary btn-register">注册</button>
                     </form>
-                        <a href="/accounts/weibo/login/" class="btn btn-primary btn-signup-weibo">微博帐号注册</a>
-                        <a href="/accounts/qqweibo/login/" class="btn btn-primary btn-signup-qq">qq帐号注册</a>
+                        <a href="{% url 'social_weibo_login' %}" class="btn btn-primary btn-signup-weibo">微博帐号注册</a>
+                        <a href="{% url 'social_qqweibo_login' %}" class="btn btn-primary btn-signup-qq">qq帐号注册</a>
                 </div>
             </div>
         </div>
