@@ -1,4 +1,5 @@
 {% extends 'group_base.html' %}
+{% load group_avatar_tags %}
 
 {% block title %}我的群组{% endblock %}
 
@@ -41,5 +42,14 @@
 {% endblock %}
 
 {% block right_content %}
-    右侧显示对应的群组或者话题
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span4">
+                {% group_avatar g %}
+            </div>
+            <div class="span8">
+
+            </div>
+        </div>
+    </div>
 {% endblock %}

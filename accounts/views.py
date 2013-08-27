@@ -18,7 +18,6 @@ def login(request):
     """
     if request.method == 'POST':
         form = login_form(request, request.POST)
-        print form.errors
         if form.is_valid():
             from django.contrib.auth import login
             login(request, form.get_user())
