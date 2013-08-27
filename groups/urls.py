@@ -35,4 +35,5 @@ urlpatterns = patterns(
     'groups.views',
     url(r'^my_groups/$', 'my_groups', name='my_groups'),
     url(r'^new_group/$', 'new_group', name='new_group'),
+    url(r'^add_avatar/(?P<group_id>\d+)/$', 'add_group_avatar', name='add_group_avatar'),
 )

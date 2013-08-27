@@ -1,24 +1,28 @@
 {% extends "group_base.html" %}
+{% load group_avatar_tags %}
 
 {% block head_other %}
     <style type="text/css">
-    .box{
-        margin: 0 0 25px;
-        clear: both;
-        border-radius: 4px;
-        border: 2px solid #ddd;
-        box-shadow: 0 1px 0 #f2f4f5;
-    }
-    .box-module{
-        position: relative;
-        padding: 20px 12px;
-    }
-    .box-module+.box-module{
-        border-top: 1px solid #ddd;;
-    }
-    .empty-error{
-        background-color: #da4f49;
-    }
+        .box {
+            margin: 0 0 25px;
+            clear: both;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+            box-shadow: 0 1px 0 #f2f4f5;
+        }
+
+        .box-module {
+            position: relative;
+            padding: 20px 12px;
+        }
+
+        .box-module+.box-module {
+            border-top: 1px solid #ddd;;
+        }
+
+        .empty-error {
+            background-color: #da4f49;
+        }
     </style>
 {% endblock %}
 
@@ -27,115 +31,115 @@
 
 
 {% block right_content %}
-<form method="post" id="new-group-form">
-    <div class="row-fluid box">
-        <div class="box-module">
-            <div class="row-fluid">
-                <div class="span3">
-                    <span class="text-info"><span class="mustin">*</span>{{ form.group_type.label }}</span>
-                </div>
-                <div class="span9">
-                    {{ form.group_type }}
+    <form method="post" id="new-group-form">
+        <div class="row-fluid box">
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <span class="text-info"><span class="mustin">*</span>{{ form.group_type.label }}</span>
+                    </div>
+                    <div class="span9">
+                        {{ form.group_type }}
                     <span class="help-inline">
-                        <span class="text-warning">公开:任何人可见;秘密:需群组成员发出邀请才可加入.<br />创建后类型不能修改</span>
+                        <span class="text-warning">公开:任何人可见;秘密:需群组成员发出邀请才可加入.<br/>创建后类型不能修改</span>
                     </span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="box-module">
-            <div class="row-fluid">
-                <div class="span3">
-                    <span class="text-info"><span class="mustin">*</span>{{ form.member_join.label }}</span>
-                </div>
-                <div class="span9">
-                    {{ form.member_join }}
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <span class="text-info"><span class="mustin">*</span>{{ form.member_join.label }}</span>
+                    </div>
+                    <div class="span9">
+                        {{ form.member_join }}
                     <span class="help-inline">
-                        <span class="text-warning">任何人:任何用户都可以加入,无需验证<br />需要验证:需群组管理员同意后才能加入群组</span>
+                        <span class="text-warning">任何人:任何用户都可以加入,无需验证<br/>需要验证:需群组管理员同意后才能加入群组</span>
                     </span>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="box-module">
-            <div class="row-fluid">
-                <div class="span3">
-                    <span class="text-info"><span class="mustin">*</span>{{ form.name.label }}</span>
-                </div>
-                <div class="span9">
-                    {{ form.name }}
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <span class="text-info"><span class="mustin">*</span>{{ form.name.label }}</span>
+                    </div>
+                    <div class="span9">
+                        {{ form.name }}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="box-module">
-            <div class="row-fluid">
-                <div class="span3">
-                    <span class="text-info"><span class="mustin">*</span>{{ form.category.label }}</span>
-                </div>
-                <div class="span9">
-                    {{ form.category }}
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <span class="text-info"><span class="mustin">*</span>{{ form.category.label }}</span>
+                    </div>
+                    <div class="span9">
+                        {{ form.category }}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="box-module">
-            <div class="row-fluid">
-                <div class="span3">
-                    <span class="text-info"><span class="mustin">*</span>{{ form.place.label }}</span>
-                </div>
-                <div class="span9">
-                    {{ form.place }}
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <span class="text-info"><span class="mustin">*</span>{{ form.place.label }}</span>
+                    </div>
+                    <div class="span9">
+                        {{ form.place }}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="box-module">
-            <div class="row-fluid">
-                <div class="span3">
-                    <span class="text-info"><span class="mustin">*</span>{{ form.description.label }}</span>
-                </div>
-                <div class="span9">
-                    {{ form.description }}
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <span class="text-info"><span class="mustin">*</span>{{ form.description.label }}</span>
+                    </div>
+                    <div class="span9">
+                        {{ form.description }}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="box-module">
-            <div class="row-fluid">
-                <div class="span6">
-                    {% csrf_token %}<input type="submit" class="btn btn-primary btn-block" id="id-submit">
-                </div>
-                <div class="span6">
-                    <input type="reset" class="btn btn-info btn-block">
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span6">
+                        {% csrf_token %}<input type="submit" class="btn btn-primary btn-block" id="id-submit">
+                    </div>
+                    <div class="span6">
+                        <input type="reset" class="btn btn-info btn-block">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</form>
+    </form>
 {% endblock %}
 
 {% block js_other %}
     <script type="text/javascript">
-    $("#id-submit").on('click', function(e){
-        e.preventDefault();
-        var pass_check = true;
-        $('.required').each(function(){
-            if (!$(this).val()){
-                $(this).parents('.box-module').addClass("empty-error");
-                $.globalMessenger().post({
-                    message: "以*号标注的项不能为空!",
-                    hideAfter: 2,
-                    type: 'error',
-                    showCloseButton: true
-                });
-                pass_check = false;
-                return false;
+        $("#id-submit").on('click', function (e) {
+            e.preventDefault();
+            var pass_check = true;
+            $('.required').each(function () {
+                if (!$(this).val()) {
+                    $(this).parents('.box-module').addClass("empty-error");
+                    $.globalMessenger().post({
+                        message: "以*号标注的项不能为空!",
+                        hideAfter: 2,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                    pass_check = false;
+                    return false;
+                }
+            });
+            if (pass_check) {
+                $("#new-group-form").submit();
             }
-        });
-        if(pass_check){
-            $("#new-group-form").submit();
-        }
-    })
+        })
     </script>
 {% endblock %}

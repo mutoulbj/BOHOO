@@ -1,2 +1,2 @@
-{% load i18n %}{% load url from future %}{% url 'profile_detail' username=user.username as user_url %}{# TODO: support custom user models via get_username; actually, is this template even used anymore? #}
-{% blocktrans with user as avatar_creator and avatar.get_absolute_url as avatar_url %}<a href="{{ user_url }}">{{ avatar_creator }}</a> has updated their avatar <a href="{{ avatar_url }}">{{ avatar }}</a>.{% endblocktrans %}
+{% load i18n %}{% load url from future %}{% url 'group_detail' group_name=group.name as group_url %}{# TODO: support custom user models via get_username; actually, is this template even used anymore? #}
+{% blocktrans with group as group_avatar_creator and group_avatar.get_absolute_url as group_avatar_url %}<a href="{{ group_url }}">{{ group_avatar_creator }}</a> has updated the group avatar <a href="{{ group_avatar_url }}">{{ group_avatar }}</a>.{% endblocktrans %}

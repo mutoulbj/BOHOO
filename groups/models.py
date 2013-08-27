@@ -83,6 +83,9 @@ class Group(models.Model):
         verbose_name_plural = u'小组'
         db_table = 'group'
 
+    def get_group_name(self):
+        return self.name
+
 
 class Topic(models.Model):
     """

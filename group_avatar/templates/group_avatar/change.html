@@ -1,5 +1,5 @@
-{% extends "avatar/base.html" %}
-{% load i18n avatar_tags %}
+{% extends "group_avatar/base.html" %}
+{% load i18n group_avatar_tags %}
 {% load url from future %}
 
 {% block head_other %}
@@ -8,7 +8,7 @@
         display: inline-table;
         margin-left: 5px;
     }
-    .avatar img{
+    .group_avatar img{
         padding-bottom: 14px;
     }
     </style>
@@ -20,13 +20,13 @@
             <div class="span5">
                 <div class="row-fluid">
                     <div class="span4"><span class="text-info ">当前头像</span></div>
-                    <div class="span8 avatar">{% avatar user %}</div>
+                    <div class="span8 group_avatar">{% group_avatar group %}</div>
                 </div>
             </div>
             <div class="span7">
-                <form enctype="multipart/form-data" method="POST" action="{% url 'avatar_add' %}">
+                <form enctype="multipart/form-data" method="POST" action="{% url 'group_avatar_add' group_id=group.id %}">
                     <div class="row-fluid">
-                        <div class="span6">{{ upload_avatar_form.avatar }}</div>
+                        <div class="span6">{{ upload_group_avatar_form.group_avatar }}</div>
                         <div class="span6">{% csrf_token %}<input class="btn btn-primary" type="submit" value="上传头像" /></div>
                     </div>
                 </form>
@@ -36,14 +36,14 @@
     <div class="row-fluid profile-box">
         <div class="profile-box-module">
             <div class="span12">
-                {% if not avatars %}
-                    <p class="text-info">你还没有上传头像.现在就上传一个吧!</p>
+                {% if not group_avatars %}
+                    <p class="text-info">群组还没有上传头像.现在就上传一个吧!</p>
                 {% else %}
-                    <form method="POST" action="{% url 'avatar_change' %}">
+                    <form method="POST" action="{% url 'group_avatar_change' group_id=group.id %}">
                         <div class="row-fluid">
                             <div class="span8 choices">
-                                {% for avatar in primary_avatar_form.choice %}
-                                    <span>{{ avatar }}</span>
+                                {% for group_avatar in primary_group_avatar_form.choice %}
+                                    <span>{{ group_avatar }}</span>
                                 {% endfor %}
                             </div>
                             <div class="span4">{% csrf_token %}<input class="btn btn-primary" type="submit" value="选择为默认头像" /></div>

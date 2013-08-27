@@ -24,8 +24,8 @@ DEFAULT_FROM_EMAIL = '@qq.com'
 
 LOGIN_URL = '/accounts/login'
 
+# 分页
 ENDLESS_PAGINATION_PER_PAGE = 50
-
 ENDLESS_PAGINATION_NEXT_LABEL = "Next"
 ENDLESS_PAGINATION_DEFAULT_CALLABLE_AROUNDS = 5
 ENDLESS_PAGINATION_DEFAULT_CALLABLE_ARROWS = True
@@ -88,9 +88,12 @@ STATIC_ROOT = ROOT_PATH + '/static'
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
-# django-avatar 设定
+# django-avatar 设置
 AVATAR_STORAGE_DIR = 'avatars/'
 # AVATAR_STORAGE = MEDIA_ROOT
+
+# group_avatar 设置,基本与django-avatar相同,在`avatar`前加`group`前缀,`AVATAR`前加`GROUP`前缀,下划线连接
+GROUP_AVATAR_STORAGE_DIR = 'group_avatars/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
@@ -156,6 +159,7 @@ INSTALLED_APPS = (
     'south',
     'compressor',
     'avatar',
+    'group_avatar',
     'django.contrib.admin',
     'User',
     'groups',

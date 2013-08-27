@@ -1,2 +1,2 @@
 {% load i18n %}
-{% blocktrans with user as avatar_creator and avatar.get_absolute_url as avatar_url %}You have updated your avatar <a href="{{ avatar_url }}">{{ avatar }}</a>.{% endblocktrans %}
+{% blocktrans with group as group_avatar_creator and group_avatar.get_absolute_url as group_avatar_url %}The group avatar has been updated <a href="{{ group_avatar_url }}">{{ group_avatar }}</a>.{% endblocktrans %}

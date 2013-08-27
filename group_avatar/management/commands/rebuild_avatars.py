@@ -1,7 +1,7 @@
 from django.core.management.base import NoArgsCommand
 
-from avatar.models import Avatar
-from avatar.settings import AUTO_GENERATE_AVATAR_SIZES
+from group_avatar.models import GroupAvatar
+from group_avatar.settings import GROUP_AUTO_GENERATE_AVATAR_SIZES
 
 
 class Command(NoArgsCommand):
@@ -9,7 +9,7 @@ class Command(NoArgsCommand):
             "settings.AUTO_GENERATE_AVATAR_SIZES.")
 
     def handle_noargs(self, **options):
-        for avatar in Avatar.objects.all():
-            for size in AUTO_GENERATE_AVATAR_SIZES:
-                print("Rebuilding Avatar id=%s at size %s." % (avatar.id, size))
-                avatar.create_thumbnail(size)
+        for group_avatar in GroupAvatar.objects.all():
+            for size in GROUP_AUTO_GENERATE_AVATAR_SIZES:
+                print("Rebuilding Group Avatar id=%s at size %s." % (group_avatar.id, size))
+                group_avatar.create_thumbnail(size)
