@@ -11,6 +11,7 @@ urlpatterns = patterns(
     url(r'^$', 'Bohoo.views.index', name='index'),
     url(r'^avatar/', include('avatar.urls')),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^accounts/', include('social.urls')),
     url(r'^people/', include('User.urls')),
     # (r'^group/', include('groups.urls')),
     url(r'^accounts/activate/(?P<activation_key>\w+)/$', 'groups.views.activate'),
@@ -20,7 +21,13 @@ urlpatterns = patterns(
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+#     url(r'^admin/check_weibo_auth/$', 'blog.admin_views.check_weibo_auth'),
+#     url(r'^admin/weibo/auth/$', 'blog.admin_views.admin_weibo_auth'),
+#     url(r'^admin/weibo/auth/done/$', 'blog.admin_views.admin_weibo_auth_deal'),
     url(r'^group/', include('groups.urls')),
+    
+    url(r'^relation/', include('friends.urls')),
+    url(r'^message/', include('django_messages.urls')),
     
     # url(r"^settings/$", notice_settings, name="notification_notice_settings"),
 )
