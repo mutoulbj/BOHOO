@@ -20,6 +20,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from django.db.models import F, Q
+from django.utils import simplejson
 from models import Category, Group, Topic, Reply, Report
 import group_utils
 
@@ -39,9 +40,8 @@ SEARCH_TOPIC = '8888'
 
 def my_groups(request):
     """  我的群组 @fanlintao """
-    vt = loader.get_template('groups/my.html')
-    c = RequestContext(request, )
-    return HttpResponse(vt.render(c))
+    groups = Group.objects.all()
+    return render(request, 'groups/my.html', {'groups': groups})
 
 
 def new_group(request):
@@ -60,6 +60,25 @@ def add_group_avatar(request, group_id):
     """ 添加小组头像 """
     group = Group.objects.get(id=group_id)
     return render(request, 'groups/new/add_avatar.html', {'group': group})
+
+
+def group_detail(request, group_id):
+    """ 群组详细页 @fanlintao"""
+    group = Group.objects.get(id=group_id)
+    return render(request, 'groups/detail.html', {'g': group})
+
+
+def ajax_join_group(request):
+    """ 加入群组  ajax @fanlintao """
+    error = {"success":"", "error": ""}
+    if request.method == 'POST':
+        group = Group.objects.get(id=request.POST.get("group_id"))
+        print group
+        group.member.add(request.user)
+        error["success"] = "success"
+        return HttpResponse(simplejson.dumps(error, ensure_ascii=False), mimetype="application/json")
+    else:
+        print 22
 
 
 

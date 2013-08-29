@@ -58,7 +58,7 @@ class Group(models.Model):
     name = models.CharField(max_length=255, verbose_name=u'名称',unique=True,db_index=True)
     description = models.TextField(blank=True, null=True, verbose_name=u'描述')
     category = models.ForeignKey(Category,related_name='category_group',verbose_name=u'小组分类')
-    image = models.ImageField(upload_to='group_images/%Y%m%d', blank=True, null=True, verbose_name=u'图片')
+    # image = models.ImageField(upload_to='group_images/%Y%m%d', blank=True, null=True, verbose_name=u'图片')
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='creator_group', verbose_name=u'创建人')
     member  = models.ManyToManyField(settings.AUTH_USER_MODEL)
     gfriend  = models.ManyToManyField('self',symmetrical = False,verbose_name=u'友情小组')

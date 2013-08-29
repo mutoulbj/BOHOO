@@ -10,6 +10,23 @@
         border-radius: 5px;
         margin: 10px 0 10px 0;
     }
+    .right_content{
+        margin: 10px 0 10px 0;
+    }
+    .box{
+        margin: 0 0 25px;
+        clear: both;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        box-shadow: 0 1px 0 #f2f4f5;
+    }
+    .box-module{
+        position: relative;
+        padding: 20px 12px;
+    }
+    .avatar img{
+        padding-left: 20px;
+    }
     </style>
 {% endblock %}
 
@@ -42,14 +59,34 @@
 {% endblock %}
 
 {% block right_content %}
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span4">
-                {% group_avatar g %}
-            </div>
-            <div class="span8">
-
+    <div class="container-fluid right_content">
+        {% for g in groups %}
+        <div class="row-fluid box">
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3 avatar">
+                    <a href="{% url 'group_detail' group_id=g.id %}">{% group_avatar g %}</a>
+                    </div>
+                    <div class="span9">
+                        <div class="row-fluid">
+                            <div class="span4 text-info">群组名称</div>
+                            <div class="span8">{{ g.name }}</div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span4 text-info">分类</div>
+                            <div class="span8">{{ g.category }}</div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span4 text-info">群组地点</div>
+                            <div class="span8">{{ g.name }}</div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span12 text-warning">{{ g.description }}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 {% endblock %}

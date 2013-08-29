@@ -48,7 +48,6 @@ def group_avatar_url(group, size=GROUP_AVATAR_DEFAULT_SIZE):
 @cache_result
 @register.simple_tag
 def group_avatar(group, size=GROUP_AVATAR_DEFAULT_SIZE, **kwargs):
-    print 111
     if not isinstance(group, Group):
         try:
             group = get_group(group)

@@ -1,0 +1,118 @@
+{% extends 'group_base.html' %}
+{% load group_avatar_tags group_tags %}
+
+{% block title %}{{ g.name }}--详情{% endblock %}
+
+{% block head_other %}
+    <style type="text/css">
+    .right_content{
+        margin: 10px 0 10px 0;
+    }
+    .left-list{
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin: 10px 0 10px 0;
+    }
+    .box{
+        margin: 0 0 25px;
+        clear: both;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        box-shadow: 0 1px 0 #f2f4f5;
+    }
+    .box-module{
+        position: relative;
+        padding: 20px 12px;
+    }
+    .avatar img{
+        padding-left: 30px;
+    }
+    .avatar button{
+        margin-top: 10px;
+    }
+    </style>
+{% endblock %}
+
+{% block left_content %}
+    <div class="container-fluid left_content">
+        <ul class="nav nav-list left-list">
+            <li class="nav-header">友情群组</li>
+                <li><a href="">1<i class="icon-chevron-right pull-right"></i></a></li>
+                <li><a href="">2<i class="icon-chevron-right pull-right"></i></a></li>
+            </ul>
+        <ul class="nav nav-list left-list">
+            <li class="nav-header">为你推荐</li>
+            <li>群组头像</li>
+            <li>群组头像</li>
+            <li>群组头像</li>
+        </ul>
+    </div>
+
+{% endblock %}
+
+{% block right_content %}
+    <div class="container-fluid right_content">
+        <div class="row-fluid box">
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3 avatar">
+                        <div class="row-fluid">
+                             <a href="">{% group_avatar g %}</a>
+                        </div>
+                        <div class="row-fluid">
+                            <button id="join_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>加入该群组</button>
+                        </div>
+                    </div>
+                    <div class="span9">
+                        <div class="row-fluid">
+                            <div class="span3 text-info">名称</div>
+                            <div class="span9">{{ g.name }}</div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span3 text-info">分类</div>
+                            <div class="span9">{{ g.category }}</div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span3 text-info">地点</div>
+                            <div class="span9">{{ g.name }}</div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span3 text-info">类型</div>
+                            <div class="span9">{% group_type g.group_type %}</div>
+                        </div>
+                        <div class="row-fluid">
+                            <div class="span12 text-warning">{{ g.description }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_other %}
+    <script type="text/javascript">
+        function join_success() {
+            $("#join_group").html("已加入").removeClass("btn-primary").addClass("disabled");
+            $.globalMessenger().post({
+                message: "成功加入",
+                hideAfter: 2,
+                type: 'success',
+                showCloseButton: true
+            })
+        }
+    $(document).ready(function(){
+        $("#join_group").click(function () {
+            $.ajax({
+                async: false,
+                url: "{% url 'ajax_join_group' %}",
+                type: "POST",
+                data: {"group_id": $(this).data("group-id")},
+                dataType: "json",
+                success: join_success()
+            })
+        })
+
+    })
+    </script>
+{% endblock %}
