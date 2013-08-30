@@ -1,5 +1,6 @@
 # Create your views here.
 #coding=utf-8
+import json
 import random, hashlib
 #from itertools import chain
 import re
@@ -14,7 +15,7 @@ from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
+# from django.contrib.auth import get_user_model
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
@@ -32,7 +33,7 @@ from groups.forms import category, group
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
-User = get_user_model()
+# User = get_user_model()
 
 SEARCH_GROUP = '9999'
 SEARCH_TOPIC = '8888'
@@ -70,15 +71,12 @@ def group_detail(request, group_id):
 
 def ajax_join_group(request):
     """ 加入群组  ajax @fanlintao """
-    error = {"success":"", "error": ""}
+    error = {"success": "", "error": ""}
     if request.method == 'POST':
         group = Group.objects.get(id=request.POST.get("group_id"))
-        print group
         group.member.add(request.user)
         error["success"] = "success"
-        return HttpResponse(simplejson.dumps(error, ensure_ascii=False), mimetype="application/json")
-    else:
-        print 22
+        return HttpResponse(json.dump(error, ensure_ascii=False), mimetype="application/json")
 
 
 

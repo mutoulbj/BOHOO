@@ -54,6 +54,7 @@ class Group(models.Model):
     topic_amount    话题总数
     place   群组地点
     flag    区别某些特别群组的标志,初始化时会被赋值
+    manager         管理者
     """
     name = models.CharField(max_length=255, verbose_name=u'名称',unique=True,db_index=True)
     description = models.TextField(blank=True, null=True, verbose_name=u'描述')
@@ -69,6 +70,7 @@ class Group(models.Model):
     is_closed = models.BooleanField(default=False, verbose_name=u'是否关闭')
     last_topic_add = models.DateTimeField(null=True, blank=True, verbose_name=u'上一个话题创建的时间')
     topic_amount = models.IntegerField(default=0, verbose_name=u'话题总量')
+    manager = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_manager", verbose_name="管理员")
     
     #add by lazytiger
     place = models.CharField(max_length=30, verbose_name=u'地点')

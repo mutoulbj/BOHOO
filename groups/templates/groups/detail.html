@@ -93,7 +93,7 @@
 {% block js_other %}
     <script type="text/javascript">
         function join_success() {
-            $("#join_group").html("已加入").removeClass("btn-primary").addClass("disabled");
+            $("#join_group").html("已加入").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
             $.globalMessenger().post({
                 message: "成功加入",
                 hideAfter: 2,
@@ -109,7 +109,13 @@
                 type: "POST",
                 data: {"group_id": $(this).data("group-id")},
                 dataType: "json",
-                success: join_success()
+                success: join_success(),
+{#                fail: $.globalMessenger().post({#}
+{#                    message: "服务器错误,请稍后再试",#}
+{#                    hideAfter: 2,#}
+{#                    type: 'error',#}
+{#                    showCloseButton: true#}
+{#                })#}
             })
         })
 

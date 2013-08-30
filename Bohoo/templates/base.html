@@ -45,6 +45,9 @@
     .mustin{
         color: red;
     }
+    .action:hover{
+        cursor: pointer;
+    }
     </style>
 {% endcompress %}
 {% block head_other %}{% endblock %}
@@ -75,10 +78,7 @@
                         <a href="#"><i class="icon-leaf"></i>推荐</a>
                     </li>
                     <li>
-                        <a href="{% url 'my_groups' %}"><i class="icon-comments"></i>我的群组</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="icon-phone"></i>我的话题</a>
+                        <a href="{% url 'my_groups' %}"><i class="icon-comments"></i>我的伯虎</a>
                     </li>
                 </ul>
 
@@ -99,7 +99,7 @@
                     </li>
                     {% endif %}
                     {% if request.user.is_authenticated %}
-                    <li class="dropdown">
+                    <li class="dropdown action">
                         <a class="dropdown-toggle" role="button" data-toggle="dropdown">
                             操作
                             <i class="icon-caret-down"></i>
