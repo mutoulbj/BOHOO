@@ -33,9 +33,12 @@ from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns(
     'groups.views',
-    url(r'^my_groups/$', 'my_groups', name='my_groups'),
-    url(r'^new_group/$', 'new_group', name='new_group'),
+    url(r'^new/$', 'new_group', name='new_group'),
+    url(r'^edit/(?P<group_id>\d+)/$', 'edit_group', name='edit_group'),
     url(r'^add_avatar/(?P<group_id>\d+)/$', 'add_group_avatar', name='add_group_avatar'),
-    url(r'^group/detail/(?P<group_id>\d+)/$', 'group_detail', name='group_detail'),
-    url(r'^ajax_join_group/$', 'ajax_join_group', name='ajax_join_group')
+    url(r'^detail/(?P<group_id>\d+)/$', 'group_detail', name='group_detail'),
+    url(r'^ajax_join_group/$', 'ajax_join_group', name='ajax_join_group'),
+    url(r'^ajax_quite_group/$', 'ajax_quite_group', name='ajax_quite_group'),
+    url(r'^my_manager/$', 'manage', name='group_my_manage'),
+    url(r'^joined/$', 'joined', name='group_joined'),
 )

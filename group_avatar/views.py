@@ -60,11 +60,7 @@ def _get_group_avatars(group):
 @login_required
 def group_add(request, group_id, extra_context=None, next_override=None,
         upload_form=UploadGroupAvatarForm, *args, **kwargs):
-    print 111
-    print group_id
     group = Group.objects.get(id=group_id)
-    print 222
-    print group
     if extra_context is None:
         extra_context = {}
     group_avatar, group_avatars = _get_group_avatars(group)
@@ -78,9 +74,8 @@ def group_add(request, group_id, extra_context=None, next_override=None,
             group_avatar.save()
             messages.success(request, _("Successfully uploaded a new avatar."))
             group_avatar_updated.send(sender=GroupAvatar, group=group, group_avatar=group_avatar)
-            # TODO: 添加群组头像后跳转的位置
             # return redirect(next_override or _get_next(request))
-            return redirect(reverse('profile_edit'))
+            return redirect(reverse('group_my_manage'))
     context = {
         'group': group,
         'group_avatar': group_avatar,

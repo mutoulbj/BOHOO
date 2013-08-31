@@ -1,16 +1,13 @@
 {% extends 'group_base.html' %}
 {% load group_avatar_tags %}
 
-{% block title %}我的管理群组{% endblock %}
+{% block title %}我的群组{% endblock %}
 
 {% block head_other %}
     {{ block.super }}
     <style type="text/css">
     .right_content{
         margin: 10px 0 10px 0;
-    }
-    #group_managed{
-        background: #eeeeee repeat-x;
     }
     .box{
         margin: 0 0 25px;
@@ -26,7 +23,7 @@
     .avatar img{
         padding-left: 30px;
     }
-    .avatar .edit-group{
+    .avatar button{
         margin-top: 10px;
     }
     </style>
@@ -50,7 +47,7 @@
                             <a href="{% url 'group_detail' group_id=g.id %}">{% group_avatar g %}</a>
                         </div>
                         <div class="row-fluid">
-                            <a href="{% url 'edit_group' group_id=g.id %}" class="btn btn-primary btn-block edit-group">修改群组资料</a>
+                            <button id="quit_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>退出群组</button>
                         </div>
                     </div>
                     <div class="span9">
@@ -77,7 +74,7 @@
         {% empty %}
             <div class="row-fluid">
                 <div class="span12">
-                    <p class="text-info">Ooops!你还没有管理的群组哦!</p>
+                    <p class="text-info">Ooops!你还没有加入过群组哦!</p>
                 </div>
             </div>
         {% endfor %}
@@ -85,8 +82,10 @@
 {% endblock %}
 
 {% block js_other %}
-    {{ block.super }}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/quit_group.js"></script>
     <script type="text/javascript">
-    $("#group_managed").addClass("active");
+    $(document).ready(function(){
+        $("#group_joined").addClass("active");
+    })
     </script>
 {% endblock %}

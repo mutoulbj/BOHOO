@@ -39,12 +39,6 @@ SEARCH_GROUP = '9999'
 SEARCH_TOPIC = '8888'
 
 
-def my_groups(request):
-    """  我的群组 @fanlintao """
-    groups = Group.objects.all()
-    return render(request, 'groups/my.html', {'groups': groups})
-
-
 def new_group(request):
     """ 创建群组 @fanlintao """
     if request.method == 'POST':
@@ -53,8 +47,25 @@ def new_group(request):
             g = form.save(commit=False)
             g.creator = request.user
             g.save()
+            g.manager.add(request.user)   # 创建者默认是管理员
             return redirect(reverse("add_group_avatar", args=[g.id]))
     return render(request, 'groups/new/group.html', {'form': group()})
+
+
+def edit_group(request, group_id):
+    """ 修改群组 @fanlintao """
+    try:
+        t_group = Group.objects.get(id=group_id)
+        if request.method == 'POST':
+            form = group(request.POST, instance=t_group)
+            if form.is_valid():
+                g = form.save(commit=False)
+                g.modify_time = datetime.datetime.now()
+                g.save()
+                return redirect(reverse("group_my_manage"))
+        return render(request, 'groups/new/group.html', {'form': group(instance=t_group)})
+    except ObjectDoesNotExist:
+        pass
 
 
 def add_group_avatar(request, group_id):
@@ -66,7 +77,11 @@ def add_group_avatar(request, group_id):
 def group_detail(request, group_id):
     """ 群组详细页 @fanlintao"""
     group = Group.objects.get(id=group_id)
-    return render(request, 'groups/detail.html', {'g': group})
+    if request.user in group.member.all():   # 判断当前用户是不是小组成员
+        is_member = True
+    else:
+        is_member = False
+    return render(request, 'groups/detail.html', {'g': group, 'is_member': is_member})
 
 
 def ajax_join_group(request):
@@ -76,10 +91,32 @@ def ajax_join_group(request):
         group = Group.objects.get(id=request.POST.get("group_id"))
         group.member.add(request.user)
         error["success"] = "success"
-        return HttpResponse(json.dump(error, ensure_ascii=False), mimetype="application/json")
+        return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 
+def ajax_quite_group(request):
+    error = {"success": "", "error": ""}
+    if request.method == 'POST':
+        try:
+            group = Group.objects.get(id=request.POST.get("group_id"))
+            group.member.remove(request.user)
+            error["success"] = "success"
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+        except ObjectDoesNotExist:
+            error["success"] = "error"
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
+
+def manage(request):
+    """ 我管理的群组 @fanlintao """
+    groups = Group.objects.filter(manager=request.user)
+    return render(request, 'groups/managed.html', {'groups': groups})
+
+
+def joined(request):
+    """  我加入的群组 @fanlintao """
+    groups = Group.objects.filter(member=request.user)
+    return render(request, 'groups/joined.html', {'groups': groups})
 
 
 ##################################    below   to check ####################

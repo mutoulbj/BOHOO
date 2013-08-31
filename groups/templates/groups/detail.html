@@ -33,23 +33,6 @@
     </style>
 {% endblock %}
 
-{% block left_content %}
-    <div class="container-fluid left_content">
-        <ul class="nav nav-list left-list">
-            <li class="nav-header">友情群组</li>
-                <li><a href="">1<i class="icon-chevron-right pull-right"></i></a></li>
-                <li><a href="">2<i class="icon-chevron-right pull-right"></i></a></li>
-            </ul>
-        <ul class="nav nav-list left-list">
-            <li class="nav-header">为你推荐</li>
-            <li>群组头像</li>
-            <li>群组头像</li>
-            <li>群组头像</li>
-        </ul>
-    </div>
-
-{% endblock %}
-
 {% block right_content %}
     <div class="container-fluid right_content">
         <div class="row-fluid box">
@@ -60,7 +43,8 @@
                              <a href="">{% group_avatar g %}</a>
                         </div>
                         <div class="row-fluid">
-                            <button id="join_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>加入该群组</button>
+                            <button id="quit_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>退出群组</button>
+                            <button id="join_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>加入群组</button>
                         </div>
                     </div>
                     <div class="span9">
@@ -81,44 +65,29 @@
                             <div class="span9">{% group_type g.group_type %}</div>
                         </div>
                         <div class="row-fluid">
-                            <div class="span12 text-warning">{{ g.description }}</div>
+                            <div class="span3 text-info">简介</div>
+                            <div class="span9 text-warning">{{ g.description }}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row-fluid friend-group">
+    {# TODO:友情小组 #}
+    </div>
 {% endblock %}
 
 {% block js_other %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/join_group_detail.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/quit_group_detail.js"></script>
     <script type="text/javascript">
-        function join_success() {
-            $("#join_group").html("已加入").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
-            $.globalMessenger().post({
-                message: "成功加入",
-                hideAfter: 2,
-                type: 'success',
-                showCloseButton: true
-            })
-        }
-    $(document).ready(function(){
-        $("#join_group").click(function () {
-            $.ajax({
-                async: false,
-                url: "{% url 'ajax_join_group' %}",
-                type: "POST",
-                data: {"group_id": $(this).data("group-id")},
-                dataType: "json",
-                success: join_success(),
-{#                fail: $.globalMessenger().post({#}
-{#                    message: "服务器错误,请稍后再试",#}
-{#                    hideAfter: 2,#}
-{#                    type: 'error',#}
-{#                    showCloseButton: true#}
-{#                })#}
-            })
+        $(document).ready(function () {
+            {% if is_member %}
+                $("#join_group").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
+            {% else %}
+                $("#quit_group").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
+            {% endif %}
         })
-
-    })
     </script>
 {% endblock %}
