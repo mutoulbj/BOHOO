@@ -8,7 +8,6 @@ import os
 import datetime
 import time
 import cStringIO
-import urllib
 from PIL import Image
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response, redirect
@@ -21,15 +20,14 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 
 from django.db.models import F, Q
-from django.utils import simplejson
-from models import Category, Group, Topic, Reply, Report
+from models import Group, Topic, Reply, Report, Applicant
 import group_utils
 
 from django.template import loader
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 
-from groups.forms import category, group
+from groups.forms import group
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
@@ -76,12 +74,23 @@ def add_group_avatar(request, group_id):
 
 def group_detail(request, group_id):
     """ 群组详细页 @fanlintao"""
-    group = Group.objects.get(id=group_id)
-    if request.user in group.member.all():   # 判断当前用户是不是小组成员
-        is_member = True
-    else:
-        is_member = False
-    return render(request, 'groups/detail.html', {'g': group, 'is_member': is_member})
+    try:
+        group = Group.objects.get(id=group_id)
+        # 判断当前用户是不是小组成员
+        if request.user in group.member.all():
+            is_member = True
+        else:
+            is_member = False
+        # 判断当前用户申请加入该小组的请求是否正在处理中,若正在处理中,不允许重复申请
+        try:
+            apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing")
+            is_processing = True
+        except ObjectDoesNotExist:
+            is_processing = False
+        return render(request, 'groups/detail.html', {'g': group, 'is_member': is_member,
+                                                      'is_processing': is_processing})
+    except ObjectDoesNotExist:
+        pass
 
 
 def ajax_join_group(request):
@@ -92,6 +101,23 @@ def ajax_join_group(request):
         group.member.add(request.user)
         error["success"] = "success"
         return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+
+
+def ajax_apply_join_group(request):
+    """ 申请加入群组 ajax @fanlintao """
+    error = {"success": "", "error": ""}
+    if request.method == 'POST':
+        try:
+            group = Group.objects.get(id=request.POST.get("group_id"))
+            reason = request.POST.get("apply_reason")
+            print reason
+            applicant = Applicant(applicant=request.user, group=group, reason=reason)
+            applicant.save()
+            error["success"] = "success"
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+        except ObjectDoesNotExist:
+            error["success"] = "error"
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 
 def ajax_quite_group(request):

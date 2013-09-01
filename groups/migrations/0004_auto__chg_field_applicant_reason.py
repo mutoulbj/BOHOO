@@ -8,126 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Category'
-        db.create_table('group_category', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=200, db_index=True)),
-            ('parent', self.gf('django.db.models.fields.related.ForeignKey')(blank=True, related_name='category_parent', null=True, to=orm['groups.Category'])),
-        ))
-        db.send_create_signal(u'groups', ['Category'])
 
-        # Adding model 'Group'
-        db.create_table('group', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(unique=True, max_length=255, db_index=True)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('category', self.gf('django.db.models.fields.related.ForeignKey')(related_name='category_group', to=orm['groups.Category'])),
-            ('creator', self.gf('django.db.models.fields.related.ForeignKey')(related_name='creator_group', to=orm['User.MyUser'])),
-            ('group_type', self.gf('django.db.models.fields.CharField')(default='open', max_length=256)),
-            ('member_join', self.gf('django.db.models.fields.CharField')(default='everyone_can_join', max_length=256)),
-            ('create_time', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('modify_time', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('is_closed', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('last_topic_add', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('topic_amount', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('place', self.gf('django.db.models.fields.CharField')(max_length=30)),
-            ('flag', self.gf('django.db.models.fields.IntegerField')(default=0)),
-        ))
-        db.send_create_signal(u'groups', ['Group'])
-
-        # Adding M2M table for field member on 'Group'
-        m2m_table_name = db.shorten_name('group_member')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('group', models.ForeignKey(orm[u'groups.group'], null=False)),
-            ('myuser', models.ForeignKey(orm[u'User.myuser'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['group_id', 'myuser_id'])
-
-        # Adding M2M table for field gfriend on 'Group'
-        m2m_table_name = db.shorten_name('group_gfriend')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('from_group', models.ForeignKey(orm[u'groups.group'], null=False)),
-            ('to_group', models.ForeignKey(orm[u'groups.group'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['from_group_id', 'to_group_id'])
-
-        # Adding M2M table for field manager on 'Group'
-        m2m_table_name = db.shorten_name('group_manager')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('group', models.ForeignKey(orm[u'groups.group'], null=False)),
-            ('myuser', models.ForeignKey(orm[u'User.myuser'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['group_id', 'myuser_id'])
-
-        # Adding model 'Topic'
-        db.create_table('topic', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=1024)),
-            ('content', self.gf('django.db.models.fields.TextField')()),
-            ('group', self.gf('django.db.models.fields.related.ForeignKey')(related_name='group_topic', to=orm['groups.Group'])),
-            ('creator', self.gf('django.db.models.fields.related.ForeignKey')(related_name='creator_topic', to=orm['User.MyUser'])),
-            ('create_time', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('modify_time', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('is_closed', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('is_top', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('ilike', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('dislike', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('last_reply_add', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-            ('reply_amount', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('topic_type', self.gf('django.db.models.fields.IntegerField')(default=0)),
-        ))
-        db.send_create_signal(u'groups', ['Topic'])
-
-        # Adding model 'Reply'
-        db.create_table('reply', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('content', self.gf('django.db.models.fields.TextField')()),
-            ('creator', self.gf('django.db.models.fields.related.ForeignKey')(related_name='creator_reply', to=orm['User.MyUser'])),
-            ('topic', self.gf('django.db.models.fields.related.ForeignKey')(related_name='topic_replies', to=orm['groups.Topic'])),
-            ('create_time', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime.now)),
-        ))
-        db.send_create_signal(u'groups', ['Reply'])
-
-        # Adding model 'Report'
-        db.create_table('report', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('report_type', self.gf('django.db.models.fields.SmallIntegerField')(default=1)),
-            ('topic', self.gf('django.db.models.fields.related.ForeignKey')(related_name='topic_report', to=orm['groups.Topic'])),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='user_report', to=orm['User.MyUser'])),
-            ('reason', self.gf('django.db.models.fields.SmallIntegerField')(default=0)),
-            ('is_handle', self.gf('django.db.models.fields.BooleanField')(default=False)),
-        ))
-        db.send_create_signal(u'groups', ['Report'])
-
+        # Changing field 'Applicant.reason'
+        db.alter_column('applicant', 'reason', self.gf('django.db.models.fields.TextField')(null=True))
 
     def backwards(self, orm):
-        # Deleting model 'Category'
-        db.delete_table('group_category')
 
-        # Deleting model 'Group'
-        db.delete_table('group')
-
-        # Removing M2M table for field member on 'Group'
-        db.delete_table(db.shorten_name('group_member'))
-
-        # Removing M2M table for field gfriend on 'Group'
-        db.delete_table(db.shorten_name('group_gfriend'))
-
-        # Removing M2M table for field manager on 'Group'
-        db.delete_table(db.shorten_name('group_manager'))
-
-        # Deleting model 'Topic'
-        db.delete_table('topic')
-
-        # Deleting model 'Reply'
-        db.delete_table('reply')
-
-        # Deleting model 'Report'
-        db.delete_table('report')
-
+        # Changing field 'Applicant.reason'
+        db.alter_column('applicant', 'reason', self.gf('django.db.models.fields.TextField')(default=datetime.datetime(2013, 9, 1, 0, 0)))
 
     models = {
         u'User.myuser': {
@@ -177,6 +65,14 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'groups.applicant': {
+            'Meta': {'object_name': 'Applicant', 'db_table': "'applicant'"},
+            'applicant': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'applicant_user'", 'to': u"orm['User.MyUser']"}),
+            'group': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'apply_group'", 'to': u"orm['groups.Group']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'reason': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'status': ('django.db.models.fields.CharField', [], {'default': "'processing'", 'max_length': '256'})
         },
         u'groups.category': {
             'Meta': {'object_name': 'Category', 'db_table': "'group_category'"},

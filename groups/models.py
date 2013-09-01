@@ -10,7 +10,7 @@ GROUP_TYPE_CHOICES = (('open', 'Open'), ('private', 'Private'))
 MEMBER_ROLE_CHOICES = ((0, 'Member'), (1, 'Manager'), (2, 'Owner'))
 MEMBER_JOIN_CHOICES = (('everyone_can_join', 'Everyone can join'), ('need_check', 'Need check'))
 REPORT_TYPE_CHOICES = (('topic', u'话题'), ('reply', u'回复'))
-REASON_CHOICES = ((0, u'广告或垃圾信息'), (1, u'色情、淫秽或低俗内容'),(2, u'激进时政或意识形态话题'),(3, u'其他原因'))
+REASON_CHOICES = ((0, u'广告或垃圾信息'), (1, u'色情、淫秽或低俗内容'), (2, u'激进时政或意识形态话题'), (3, u'其他原因'))
 
 
 class Category(models.Model):
@@ -20,7 +20,7 @@ class Category(models.Model):
     name    分类名称
     parent  父分类
     """
-    name = models.CharField(max_length=200, verbose_name=u'分类',unique=True,db_index=True)
+    name = models.CharField(max_length=200, verbose_name=u'分类', unique=True, db_index=True)
     parent = models.ForeignKey('self', related_name="category_parent", verbose_name=u'父分类', blank=True, null=True)
 
     def __unicode__(self):
@@ -31,7 +31,6 @@ class Category(models.Model):
         verbose_name = u'分类'
         verbose_name_plural = u'分类'
         db_table = 'group_category'
-
 
 
 class Group(models.Model):
@@ -55,26 +54,27 @@ class Group(models.Model):
     flag    区别某些特别群组的标志,初始化时会被赋值
     manager         管理者
     """
-    name = models.CharField(max_length=255, verbose_name=u'名称',unique=True,db_index=True)
+    name = models.CharField(max_length=255, verbose_name=u'名称', unique=True, db_index=True)
     description = models.TextField(blank=True, null=True, verbose_name=u'描述')
-    category = models.ForeignKey(Category,related_name='category_group',verbose_name=u'小组分类')
+    category = models.ForeignKey(Category, related_name='category_group', verbose_name=u'小组分类')
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='creator_group', verbose_name=u'创建人')
-    member  = models.ManyToManyField(settings.AUTH_USER_MODEL)
-    gfriend  = models.ManyToManyField('self',symmetrical = False,verbose_name=u'友情小组')
+    member = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    gfriend = models.ManyToManyField('self', symmetrical=False, verbose_name=u'友情小组')
     group_type = models.CharField(default='open', max_length=256, choices=GROUP_TYPE_CHOICES, verbose_name=u'类型')
-    member_join = models.CharField(default='everyone_can_join', max_length=256, choices=MEMBER_JOIN_CHOICES, verbose_name=u'加入方式')
+    member_join = models.CharField(default='everyone_can_join', max_length=256, choices=MEMBER_JOIN_CHOICES,
+                                   verbose_name=u'加入方式')
     create_time = models.DateTimeField(auto_now_add=True, verbose_name=u'创建时间')
     modify_time = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'修改时间')
     is_closed = models.BooleanField(default=False, verbose_name=u'是否关闭')
     last_topic_add = models.DateTimeField(null=True, blank=True, verbose_name=u'上一个话题创建的时间')
     topic_amount = models.IntegerField(default=0, verbose_name=u'话题总量')
-    manager = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_manager", verbose_name="管理员")
-    
+    manager = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="user_manager", verbose_name=u"管理员")
+
     #add by lazytiger
     place = models.CharField(max_length=30, verbose_name=u'地点')
     flag = models.IntegerField(default=0, verbose_name=u'群组级别')
     #end add 
-    
+
     def __unicode__(self):
         return self.name
 
@@ -115,14 +115,14 @@ class Topic(models.Model):
     create_time = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'创建时间')
     modify_time = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'修改时间')
     is_closed = models.BooleanField(default=False, verbose_name=u'话题是否被关闭')
-    is_top = models.BooleanField(default=False,verbose_name=u'是否置顶')
+    is_top = models.BooleanField(default=False, verbose_name=u'是否置顶')
     ilike = models.IntegerField(default=0, verbose_name=u'顶')
     dislike = models.IntegerField(default=0, verbose_name=u'踩')
     last_reply_add = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'最新回复时间')
     reply_amount = models.IntegerField(default=0, verbose_name=u'回复总数')
-    
+
     topic_type = models.IntegerField(default=0, verbose_name=u'话题类型')
-    
+
     def __unicode__(self):
         return self.name
 
@@ -146,7 +146,7 @@ class Topic(models.Model):
     def get_topic_content(self):
         #TODO 不知道什么意思
         if self.content.find(">>>>||>>>>") != -1:
-            return self.content[self.content.find(">>>>||>>>>")+10:]
+            return self.content[self.content.find(">>>>||>>>>") + 10:]
         return self.content
 
 
@@ -189,13 +189,35 @@ class Report(models.Model):
     reason        原因
     is_handle     处理情况
     """
-    report_type = models.SmallIntegerField(default=1,choices=REPORT_TYPE_CHOICES,verbose_name=u'举报类型')
+    report_type = models.SmallIntegerField(default=1, choices=REPORT_TYPE_CHOICES, verbose_name=u'举报类型')
     topic = models.ForeignKey(Topic, related_name='topic_report')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_report')
-    reason     = models.SmallIntegerField(default=0,choices=REASON_CHOICES,verbose_name=u'举报原因')
+    reason = models.SmallIntegerField(default=0, choices=REASON_CHOICES, verbose_name=u'举报原因')
     is_handle = models.BooleanField(default=False, verbose_name=u'处理情况')
 
     class Meta:
         verbose_name = u'举报'
         verbose_name_plural = u'举报'
         db_table = 'report'
+
+
+APPLY_STATUS = (('processing', u'处理中'), ('pass', u'通过'), ('rejected', u'未通过'))
+
+
+class Applicant(models.Model):
+    """
+    `用户申请加入群组表(group_type为private的群组加入需要通过申请)`
+    applicant    申请人
+    group        申请加入的小组
+    reason       申请理由
+    status       状态(处理中,通过,未通过)
+    """
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='applicant_user', verbose_name=u'申请人')
+    group = models.ForeignKey(Group, related_name='apply_group', verbose_name=u'申请加入的小组')
+    reason = models.TextField(verbose_name=u'理由', blank=True, null=True)
+    status = models.CharField(max_length=256, default='processing', verbose_name=u'状态')
+
+    class Meta:
+        verbose_name = u'申请加入群组'
+        verbose_name_plural = u'申请加入群组'
+        db_table = 'applicant'

@@ -1,9 +1,11 @@
 {% extends 'group_base.html' %}
+{% load compress %}
 {% load group_avatar_tags group_tags %}
 
 {% block title %}{{ g.name }}--详情{% endblock %}
 
 {% block head_other %}
+    {% compress css %}
     <style type="text/css">
     .right_content{
         margin: 10px 0 10px 0;
@@ -30,7 +32,14 @@
     .avatar button{
         margin-top: 10px;
     }
+    #apply_join_modal_trigger{
+        margin-top: 10px;
+    }
+    #apply_reason{
+        width: 98%;
+    }
     </style>
+    {% endcompress %}
 {% endblock %}
 
 {% block right_content %}
@@ -43,8 +52,15 @@
                              <a href="">{% group_avatar g %}</a>
                         </div>
                         <div class="row-fluid">
-                            <button id="quit_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>退出群组</button>
-                            <button id="join_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>加入群组</button>
+                            {% if g.group_type == 'open' %}
+                                <button id="join_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>加入群组</button>
+                            {% elif g.group_type == 'private' %}
+                                <!-- button to tigger modal -->
+                                <button id="apply_join_modal_trigger" class="btn btn-primary btn-block">申请加入群组</button>
+                            {% endif %}
+                            {% if is_member %}
+                                <button id="quit_group" class="btn btn-danger btn-block" data-group-id={{ g.id }}>退出群组</button>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="span9">
@@ -76,6 +92,21 @@
     <div class="row-fluid friend-group">
     {# TODO:友情小组 #}
     </div>
+
+    <!-- modal for apply reason -->
+    <div class="modal hide fade" id="apply_join_group_modal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>理由</h3>
+        </div>
+        <div class="modal-body">
+            <textarea id="apply_reason" placeholder="不说几句很难通过申请哦......"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button id="apply_modal_close" class="btn">取消</button>
+            <button id="apply_join_group" class="btn btn-primary" data-group-id={{ g.id }}>发送请求</button>
+        </div>
+    </div>
 {% endblock %}
 
 {% block js_other %}
@@ -83,11 +114,27 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/quit_group_detail.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
+            // 当前用户是否已经是该小组成员
             {% if is_member %}
                 $("#join_group").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
+                $("#apply_join_group").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
             {% else %}
                 $("#quit_group").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
             {% endif %}
+
+            // 当前用户的申请加入该群组的请求是否正在处理中
+            {% if g.group_type == "private" and is_processing %}
+                $("#apply_join_modal_trigger").html("处理中...").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
+            {% endif %}
+
+            //  点击打开modal
+            $("#apply_join_modal_trigger").click(function(){
+                $("#apply_join_group_modal").modal("show");
+            });
+            // 点击取消关闭modal
+            $("#apply_modal_close").click(function(){
+                $("#apply_join_group_modal").modal("hide");
+            })
         })
     </script>
 {% endblock %}

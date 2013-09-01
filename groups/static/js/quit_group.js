@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 function quit_success() {
-    $("#quit_group").html("已退出").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
+    $("#quit_group").html("已退出").removeClass("btn-danger").addClass("disabled").attr('disabled', true);
     $.globalMessenger().post({
         message: "成功退出",
         hideAfter: 2,
