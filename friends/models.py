@@ -5,21 +5,22 @@ from django.utils.translation import ugettext_lazy as _
 
 from User.models import MyUser
 
+
 class FriendShipManager(models.Manager):
-    
     def get_following(self, user):
         """Get the `user's following users."""
         return MyUser.objects.filter(to_user__from_user=user)
-    
+
     def get_followed(self, user):
         """Get the `user's followed users."""
         return MyUser.objects.filter(from_user__to_user=user)
+
 
 class FriendShip(models.Model):
     """ Model to represent Friendships """
     to_user = models.ForeignKey(MyUser, related_name='to_user')
     from_user = models.ForeignKey(MyUser, related_name='from_user')
-    created = models.DateTimeField(auto_now_add = True)
+    created = models.DateTimeField(auto_now_add=True)
 
     objects = FriendShipManager()
 

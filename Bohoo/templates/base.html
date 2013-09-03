@@ -48,6 +48,36 @@
     .action:hover{
         cursor: pointer;
     }
+    .bdage{
+        position: absolute;
+{#        top: 2px;#}
+        left: 65%;
+        font-weight: normal;
+        line-height: 1;
+        padding: 2px 5px;
+        color: #fff;
+        background: #b01;
+        border-radius: 6px;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        z-index: 999;
+{#        -moz-opacity: 0.5;#}
+{#        -khtml-opacity: 0.5;#}
+{#        opacity: 0.6;#}
+    }
+    .bdage-hor{
+        position: absolute;
+        right: 10%;
+        font-weight: normal;
+        line-height: 1;
+        padding: 2px 5px;
+        color: #fff;
+        background: #b01;
+        border-radius: 6px;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        z-index: 999;
+    }
     </style>
 {% endcompress %}
 {% block head_other %}{% endblock %}
@@ -82,15 +112,15 @@
                     </li>
                     <li class="dropdown action">
                         <a class="dropdown-toggle" role="button" data-toggle="dropdown">
-                            <i class="icon-envelope-alt"></i>通知
+                            <i class="icon-envelope-alt"></i>通知<b class="bdage">5555</b>
                             <i class="icon-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">群组</a></li>
-                            <li><a href="">话题</a></li>
-                            <li><a href="">好友</a></li>
+                            <li><a href="#">群组<b class="bdage-hor">3</b></a></li>
+                            <li><a href="">话题<b class="bdage-hor">3</b></a></li>
+                            <li><a href="">好友<b class="bdage-hor">1333</b></a></li>
                             <li class="divider"></li>
-                            <li><a href="">我知道了</a></li>
+                            <li><a href="">全部</a></li>
                         </ul>
                     </li>
                 </ul>
