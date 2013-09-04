@@ -70,6 +70,14 @@
                             <div class="span3 text-info">简介</div>
                             <div class="span9 text-warning">{{ g.description }}</div>
                         </div>
+                        {% if g.group_type == 'private' %}
+                        <div class="row-fluid">
+                            <div class="span3 text-info">申请人</div>
+                            <div class="span9 text-warning">
+                                <a href="{% url 'apply_deal' group_id=g.id %}" class="text-error"><strong>{{ g.get_applicant_num }}</strong></a>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

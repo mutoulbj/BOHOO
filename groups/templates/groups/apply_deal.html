@@ -1,0 +1,84 @@
+{% extends "group_base.html" %}
+
+{% block head_other %}
+    {{ block.super }}
+{% endblock %}
+
+{% block right_content %}
+    <div class="container-fluid right_content">
+        <div class="row-fluid">
+            <div class="span12">
+            {% if applicant %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>申请人</th>
+                        <th>理由</th>
+                        <th>申请时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for a in applicant %}
+                        <tr>
+                            <td>
+                                {{ a.applicant }}
+                            </td>
+                            <td>
+                                {{ a.reason }}
+                            </td>
+                            <td>
+                                {{ a.apply_time }}
+                            </td>
+                            <td>
+                                <button class="btn btn-primary pass" data-applicant_id="{{ a.applicant.id }}" data-group_id="{{ a.group.id }}">通过</button>
+                                <button class="btn btn-danger reject" data-applicant_id="{{ a.id }}">拒绝</button>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <span class="text-info">Good Job!你已经处理完所有请求啦!</span>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_other %}
+    <script type="text/javascript">
+    function action_success(){
+        $.globalMessenger().post({
+            message: "操作成功",
+            hideAfter: 2,
+            type: 'success',
+            showCloseButton: true
+        });
+        location.reload();
+    }
+    $(".pass").on("click", function(){
+        var applicant_id = $(this).data("applicant_id");
+        var group_id = $(this).data("group_id");
+        $.ajax({
+            async: false,
+            method: "post",
+            dataType: "json",
+            data: {"applicant_id": applicant_id, "group_id": group_id},
+            url: "{% url 'ajax_apply_pass' %}",
+            success: action_success()
+        })
+    });
+    $(".reject").on("click", function(){
+        var applicant_id = $(this).data("applicant_id");
+        $.ajax({
+            async: false,
+            method: "post",
+            dataType: "json",
+            data: {"applicant_id": applicant_id},
+            url: "{% url 'ajax_apply_reject' %}",
+            success: action_success()
+        })
+    })
+    </script>
+{% endblock %}

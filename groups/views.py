@@ -27,6 +27,7 @@ from django.template import loader
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 
+from User.models import MyUser
 from groups.forms import group
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
@@ -110,7 +111,6 @@ def ajax_apply_join_group(request):
         try:
             group = Group.objects.get(id=request.POST.get("group_id"))
             reason = request.POST.get("apply_reason")
-            print reason
             applicant = Applicant(applicant=request.user, group=group, reason=reason)
             applicant.save()
             error["success"] = "success"
@@ -143,6 +143,50 @@ def joined(request):
     """  我加入的群组 @fanlintao """
     groups = Group.objects.filter(member=request.user)
     return render(request, 'groups/joined.html', {'groups': groups})
+
+
+def apply_deal(request, group_id):
+    """ 处理请求 @fanlintao """
+    try:
+        group = Group.objects.get(id=group_id)
+        applicant = Applicant.objects.filter(group=group, status="processing")
+        return render(request, 'groups/apply_deal.html', {'applicant': applicant})
+    except ObjectDoesNotExist:
+        pass
+
+
+def ajax_apply_pass(request):
+    """ ajax 通过请求 @fanlintao """
+    error = {"success": "", "error": ""}
+    if request.method == 'POST':
+        try:
+            group = Group.objects.get(id=request.POST.get("group_id"))
+            user = MyUser.objects.get(id=request.POST.get("applicant_id"))
+            applicant = Applicant.objects.get(applicant=user, status="processing")
+            group.member.add(user)
+            applicant.status = 'pass'
+            applicant.save()
+            error['success'] = 'success'
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+        except ObjectDoesNotExist:
+            error['error'] = 'error'
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+
+
+def ajax_apply_reject(request):
+    """ ajax 拒绝请求 @fanlintao """
+    error = {"success": "", "error": ""}
+    if request.method == 'POST':
+        try:
+            applicant = Applicant.objects.get(id=request.POST.get("applicant_id"), status="processing")
+            applicant.status = 'reject'
+            applicant.save()
+            error['success'] = 'success'
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+        except ObjectDoesNotExist:
+            error['error'] = 'error'
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+
 
 
 ##################################    below   to check ####################

@@ -42,4 +42,7 @@ urlpatterns = patterns(
     url(r'^ajax_quite_group/$', 'ajax_quite_group', name='ajax_quite_group'),
     url(r'^my_manager/$', 'manage', name='group_my_manage'),
     url(r'^joined/$', 'joined', name='group_joined'),
+    url(r'^apply_deal/(?P<group_id>\d+)/$', 'apply_deal', name='apply_deal'),
+    url(r'^ajax_apply_pass/$', 'ajax_apply_pass', name='ajax_apply_pass'),
+    url(r'^ajax_apply_reject/$', 'ajax_apply_reject', name='ajax_apply_reject'),
 )

@@ -86,6 +86,9 @@ class Group(models.Model):
     def get_group_name(self):
         return self.name
 
+    def get_applicant_num(self):
+        return len(self.apply_group.filter(status="processing"))
+
 
 class Topic(models.Model):
     """
@@ -130,7 +133,6 @@ class Topic(models.Model):
         verbose_name = u'话题'
         verbose_name_plural = u'话题'
         db_table = 'topic'
-
 
     def save(self, *args, **kwargs):
         self.group.last_topic_add = datetime.datetime.now() # 更新“最新话题添加时间”
@@ -195,10 +197,14 @@ class Report(models.Model):
     reason = models.SmallIntegerField(default=0, choices=REASON_CHOICES, verbose_name=u'举报原因')
     is_handle = models.BooleanField(default=False, verbose_name=u'处理情况')
 
+    def __unicode__(self):
+        return self.topic
+
     class Meta:
         verbose_name = u'举报'
         verbose_name_plural = u'举报'
         db_table = 'report'
+
 
 
 APPLY_STATUS = (('processing', u'处理中'), ('pass', u'通过'), ('rejected', u'未通过'))
@@ -210,12 +216,16 @@ class Applicant(models.Model):
     applicant    申请人
     group        申请加入的小组
     reason       申请理由
-    status       状态(处理中,通过,未通过)
+    status       状态(处理中,通过,未通过)(processing,pass,reject)
     """
     applicant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='applicant_user', verbose_name=u'申请人')
     group = models.ForeignKey(Group, related_name='apply_group', verbose_name=u'申请加入的小组')
     reason = models.TextField(verbose_name=u'理由', blank=True, null=True)
+    apply_time = models.DateTimeField(verbose_name=u'申请时间', auto_now_add=True)
     status = models.CharField(max_length=256, default='processing', verbose_name=u'状态')
+
+    def __unicode__(self):
+        return self.applicant.username
 
     class Meta:
         verbose_name = u'申请加入群组'
