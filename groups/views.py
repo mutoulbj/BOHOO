@@ -28,7 +28,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 
 from User.models import MyUser
-from groups.forms import group
+from groups.forms import group, topicForm
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
@@ -88,8 +88,9 @@ def group_detail(request, group_id):
             is_processing = True
         except ObjectDoesNotExist:
             is_processing = False
+        topics = Topic.objects.filter(group=group)
         return render(request, 'groups/detail.html', {'g': group, 'is_member': is_member,
-                                                      'is_processing': is_processing})
+                                                      'is_processing': is_processing, 'topics': topics})
     except ObjectDoesNotExist:
         pass
 
@@ -186,6 +187,26 @@ def ajax_apply_reject(request):
         except ObjectDoesNotExist:
             error['error'] = 'error'
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+
+
+def add_topic(request, group_id):
+    """ 添加话题 @fanlintao """
+    try:
+        group = Group.objects.get(id=group_id)
+        print group
+        if request.method == 'POST':
+            form = topicForm(request.POST)
+            print form.errors
+            if form.is_valid():
+                g = form.save(commit=False)
+                g.creator = request.user
+                g.save()
+                g_id = int(group.id)
+                return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
+        return render(request, 'groups/new/topic.html', {'form': topicForm(initial={"group": group}), 'g': group})
+    except ObjectDoesNotExist:
+        pass
+
 
 
 

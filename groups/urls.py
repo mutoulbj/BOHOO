@@ -45,4 +45,5 @@ urlpatterns = patterns(
     url(r'^apply_deal/(?P<group_id>\d+)/$', 'apply_deal', name='apply_deal'),
     url(r'^ajax_apply_pass/$', 'ajax_apply_pass', name='ajax_apply_pass'),
     url(r'^ajax_apply_reject/$', 'ajax_apply_reject', name='ajax_apply_reject'),
+    url(r'^add_topic/(?P<group_id>\d+)/$', 'add_topic', name='add_topic')
 )

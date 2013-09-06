@@ -1,0 +1,106 @@
+{% extends "detail_base.html" %}
+{% load avatar_tags group_avatar_tags %}
+
+{% block title %}小组发帖{% endblock %}
+{% block head_other %}
+    {{ block.super }}
+    <style type="text/css">
+{#        .box {#}
+{#            margin: 0 0 25px;#}
+{#            clear: both;#}
+{#            border-radius: 4px;#}
+{#            border: 2px solid #ddd;#}
+{#            box-shadow: 0 1px 0 #f2f4f5;#}
+{#        }#}
+{##}
+{#        .box-module {#}
+{#            position: relative;#}
+{#            padding: 20px 12px;#}
+{#        }#}
+{##}
+{#        .box-module+.box-module {#}
+{#            border-top: 1px solid #ddd;;#}
+{#        }#}
+
+        .empty-error {
+            background-color: #da4f49;
+        }
+    </style>
+{% endblock %}
+
+{% block left_content %}
+    <form method="post" id="new-topic-form">
+        <div class="row-fluid box">
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <span class="text-info"><span class="mustin">*</span>{{ form.name.label }}</span>
+                    </div>
+                    <div class="span9">
+                        {{ form.group }}
+                        {{ form.name }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3">
+                        <span class="text-info"><span class="mustin">*</span>{% avatar request.user %}</span>
+                    </div>
+                    <div class="span9">
+                        {{ form.content }}
+                    </div>
+                </div>
+            </div>
+            <div class="box-module">
+                <div class="row-fluid">
+                    <div class="span3">
+{#                        <span class="text-info"><span class="mustin">*</span>{% avatar request.user %}</span>#}
+                    </div>
+                    <div class="span9">
+                        <div class="span6">
+                            {% csrf_token %}<input type="submit" class="btn btn-primary btn-block" id="id-submit">
+                        </div>
+                        <div class="span6">
+                            <input type="reset" class="btn btn-info btn-block">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+
+
+{% block right_content %}
+    <ul class="nav nav-list left-list">
+        <li id="new_topic"><a href="">{% group_avatar g %}</a></li>
+        <li id="topic_replied"><a href="">返回{{ g.name  }}</a></li>
+    </ul>
+{% endblock %}
+
+{% block js_other %}
+    <script type="text/javascript">
+        $("#id-submit").on('click', function (e) {
+            e.preventDefault();
+            var pass_check = true;
+            $('.required').each(function () {
+                if (!$(this).val()) {
+                    $(this).parents('.box-module').addClass("empty-error");
+                    $.globalMessenger().post({
+                        message: "以*号标注的项不能为空!",
+                        hideAfter: 2,
+                        type: 'error',
+                        showCloseButton: true
+                    });
+                    pass_check = false;
+                    return false;
+                }
+            });
+            if (pass_check) {
+                $("#new-topic-form").submit();
+            }
+        })
+    </script>
+{% endblock %}

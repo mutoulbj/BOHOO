@@ -7,11 +7,14 @@
             border-radius: 5px;
             margin: 10px 0 10px 0;
         }
+        .content{
+            margin: 10px !important;
+        }
     </style>
 {% endblock %}
 
 {% block main %}
-    <div class="container-fluid">
+    <div class="container-fluid content">
         <div class="row-fluid">
             <div class="span9">
                 {% block left_content %}{% endblock %}

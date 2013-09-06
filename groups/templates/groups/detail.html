@@ -72,7 +72,7 @@
                     <ul class="breadcrumb">
                         <li><a href="">最近话题</a><span class="divider">/</span></li>
                         <li><a hrf="">热门话题</a></li>
-                        <li class="pull-right"><a href=""><i class="icon-plus"></i>发帖</a></li>
+                        <li class="pull-right"><a href="{% url 'add_topic' group_id=g.id %}"><i class="icon-plus"></i>发帖</a></li>
                     </ul>
                 </div>
                 <div class="row-fluid topics">
@@ -87,7 +87,14 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {# TODO #}
+                            {% for t in topics %}
+                                <tr>
+                                    <td>{{ t.name }}</td>
+                                    <td>{{ t.creator }}</td>
+                                    <td>{{ t.reply_amount }}</td>
+                                    <td>{{ t.last_reply_add|date:"m-j H:i:s" }}</td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>

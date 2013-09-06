@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from groups.models import Category, Group
+from groups.models import Category, Group, Topic
 
 
 class category(ModelForm):
@@ -57,3 +57,24 @@ class group(ModelForm):
 
     def __unicode__(self):
         return "小组:%s" % self.name
+
+
+class topicForm(ModelForm):
+    """ 话题form @fanlintao
+    name  标题
+    content  内容
+    group 小组
+    """
+    name = forms.CharField(label=u'标题', widget=forms.TextInput(attrs={'class': 'span12 required'}))
+    content = forms.CharField(label=u'内容', widget=forms.Textarea(attrs={'class': 'span12 required'}))
+
+    def __init__(self, *args, **kwargs):
+        super(topicForm, self).__init__(*args, **kwargs)
+        self.fields['group'].widget = forms.HiddenInput()
+
+    class Meta:
+        model = Topic
+        fields = ('name', 'content', 'group')
+
+    def __unicode__(self):
+        return "话题:%s" % self.name
