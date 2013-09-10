@@ -193,7 +193,6 @@ def ajax_apply_pass(request):
     if request.method == 'POST':
         try:
             pass_type = request.POST.get("type")
-            print pass_type
             group = Group.objects.get(id=request.POST.get("group_id"))
             user = MyUser.objects.get(id=request.POST.get("applicant_id"))
             applicant = Applicant.objects.get(applicant=user, status="processing")
@@ -229,10 +228,8 @@ def add_topic(request, group_id):
     """ 添加话题 @fanlintao """
     try:
         group = Group.objects.get(id=group_id)
-        print group
         if request.method == 'POST':
             form = topicForm(request.POST)
-            print form.errors
             if form.is_valid():
                 g = form.save(commit=False)
                 g.creator = request.user
