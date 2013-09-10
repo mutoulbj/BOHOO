@@ -19,7 +19,17 @@ function apply_join_success() {
     $("#apply_join_group_modal").modal("hide");
     $("#apply_join_modal_trigger").html("处理中...").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
     $.globalMessenger().post({
-        message: "申请加入群组成功,等待管理员通过申请",
+        message: "申请成功,等待管理员通过申请",
+        hideAfter: 2,
+        type: 'success',
+        showCloseButton: true
+    })
+}
+function apply_be_manager_success() {
+    $("#apply_be_manager_modal").modal("hide");
+    $("#apply_be_manager_modal_trigger").html("处理中...").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
+    $.globalMessenger().post({
+        message: "申请成功,等待管理员通过申请",
         hideAfter: 2,
         type: 'success',
         showCloseButton: true
@@ -54,6 +64,24 @@ $(document).ready(function () {
             data: {"group_id": $(this).data("group-id"), "apply_reason": $("#apply_reason").val()},
             dataType: "json",
             success: apply_join_success()
+//                                        fail: $.globalMessenger().post({
+//                                            message: "服务器错误,请稍后再试",
+//                                            hideAfter: 2,
+//                                            type: 'error',
+//                                            showCloseButton: true
+//                                        })
+        })
+    });
+
+    // 申请成为管理员
+    $("#apply_be_manager").click(function () {
+        $.ajax({
+            async: false,
+            url: "/group/ajax_apply_be_manager/",     //url: "{% url 'ajax_apply_join_group' %}",
+            type: "POST",
+            data: {"group_id": $(this).data("group-id"), "apply_reason": $("#apply_be_manager_reason").val()},
+            dataType: "json",
+            success: apply_be_manager_success()
 //                                        fail: $.globalMessenger().post({
 //                                            message: "服务器错误,请稍后再试",
 //                                            hideAfter: 2,

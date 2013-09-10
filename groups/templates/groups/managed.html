@@ -45,39 +45,30 @@
         <div class="row-fluid box">
             <div class="box-module">
                 <div class="row-fluid">
-                    <div class="span3 avatar">
+                    <div class="span12">
                         <div class="row-fluid">
-                            <a href="{% url 'group_detail' group_id=g.id %}">{% group_avatar g %}</a>
-                        </div>
-                        <div class="row-fluid">
-                            <a href="{% url 'edit_group' group_id=g.id %}" class="btn btn-primary btn-block edit-group">修改群组资料</a>
-                        </div>
-                    </div>
-                    <div class="span9">
-                        <div class="row-fluid">
-                            <div class="span3 text-info">名称</div>
-                            <div class="span9"><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></div>
-                        </div>
-                        <div class="row-fluid">
-                            <div class="span3 text-info">分类</div>
-                            <div class="span9">{{ g.category }}</div>
-                        </div>
-                        <div class="row-fluid">
-                            <div class="span3 text-info">地点</div>
-                            <div class="span9">{{ g.name }}</div>
-                        </div>
-                        <div class="row-fluid">
-                            <div class="span3 text-info">简介</div>
-                            <div class="span9 text-warning">{{ g.description }}</div>
-                        </div>
-                        {% if g.group_type == 'private' %}
-                        <div class="row-fluid">
-                            <div class="span3 text-info">申请人</div>
-                            <div class="span9 text-warning">
-                                <a href="{% url 'apply_deal' group_id=g.id %}" class="text-error"><strong>{{ g.get_applicant_num }}</strong></a>
+                            <div class="span6">
+                                <a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a>
+                            </div>
+                            <div class="span3">
+                                <a href="{% url 'edit_group' group_id=g.id %}"
+                                   class="btn btn-primary edit-group">修改群组资料</a>
+                            </div>
+                            <div class="span3">
+                                {% if g.group_type == 'private' %}
+                                    <div class="text-warning">
+                                        申请加入群组:
+                                        <a href="{% url 'apply_deal' group_id=g.id %}" class="text-error">
+                                            <strong>{{ g.get_applicant_member_num }}</strong>
+                                        </a><br />
+                                        申请管理员:
+                                        <a href="{% url 'apply_deal' group_id=g.id %}" class="text-error">
+                                            <strong>{{ g.get_applicant_manager_num }}</strong>
+                                        </a>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>

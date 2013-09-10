@@ -86,9 +86,13 @@ class Group(models.Model):
     def get_group_name(self):
         return self.name
 
-    def get_applicant_num(self):
-        return len(self.apply_group.filter(status="processing"))
+    def get_applicant_member_num(self):
+        # 返回申请加入群组的人数
+        return len(self.apply_group.filter(status="processing", join_type="member"))
 
+    def get_applicant_manager_num(self):
+        # 返回申请成为群组管理员的人数
+        return len(self.apply_group.filter(status="processing", join_type="manager"))
 
 class Topic(models.Model):
     """
@@ -217,17 +221,19 @@ class Applicant(models.Model):
     group        申请加入的小组
     reason       申请理由
     status       状态(处理中,通过,未通过)(processing,pass,reject)
+    join_type         类型(加入群组,群组管理员)(member,manager)
     """
     applicant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='applicant_user', verbose_name=u'申请人')
     group = models.ForeignKey(Group, related_name='apply_group', verbose_name=u'申请加入的小组')
     reason = models.TextField(verbose_name=u'理由', blank=True, null=True)
     apply_time = models.DateTimeField(verbose_name=u'申请时间', auto_now_add=True)
     status = models.CharField(max_length=256, default='processing', verbose_name=u'状态')
+    join_type = models.CharField(max_length=128, verbose_name=u'类型')
 
     def __unicode__(self):
         return self.applicant.username
 
     class Meta:
-        verbose_name = u'申请加入群组'
-        verbose_name_plural = u'申请加入群组'
+        verbose_name = u'申请加入群组/成为管理员'
+        verbose_name_plural = u'申请加入群组/成为管理员'
         db_table = 'applicant'

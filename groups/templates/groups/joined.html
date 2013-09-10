@@ -42,31 +42,11 @@
         <div class="row-fluid box">
             <div class="box-module">
                 <div class="row-fluid">
-                    <div class="span3 avatar">
-                        <div class="row-fluid">
-                            <a href="{% url 'group_detail' group_id=g.id %}">{% group_avatar g %}</a>
-                        </div>
-                        <div class="row-fluid">
-                            <button id="quit_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>退出群组</button>
-                        </div>
-                    </div>
                     <div class="span9">
-                        <div class="row-fluid">
-                            <div class="span3 text-info">名称</div>
-                            <div class="span9"><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></div>
-                        </div>
-                        <div class="row-fluid">
-                            <div class="span3 text-info">分类</div>
-                            <div class="span9">{{ g.category }}</div>
-                        </div>
-                        <div class="row-fluid">
-                            <div class="span3 text-info">地点</div>
-                            <div class="span9">{{ g.name }}</div>
-                        </div>
-                        <div class="row-fluid">
-                            <div class="span3 text-info">简介</div>
-                            <div class="span9 text-warning">{{ g.description }}</div>
-                        </div>
+                        <a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a>
+                    </div>
+                    <div class="span3">
+                        <button id="quit_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>退出群组</button>
                     </div>
                 </div>
             </div>

@@ -29,7 +29,7 @@
     .avatar img{
         padding-left: 15px;
     }
-    #apply_reason{
+    #apply_reason, #apply_be_manager_reason{
         width: 98%;
     }
     </style>
@@ -48,18 +48,26 @@
                     </div>
                     <div class="span10">
                         <div class="row-fluid">
-                            <div class="span6 text-info">{{ g.name }}</div>
-                            <div class="span6">
-                                {% if g.group_type == 'open' %}
-                                    <button id="join_group" class="btn btn-primary" data-group-id={{ g.id }}>加入群组
-                                    </button>
-                                {% elif g.group_type == 'private' %}
-                                    <!-- button to tigger modal -->
-                                    <button id="apply_join_modal_trigger" class="btn btn-primary">申请加入群组</button>
+                            <div class="span4 text-info">{{ g.name }}</div>
+                            <div class="span8">
+                                {% if not is_member %}
+                                    {% if g.group_type == 'open' %}
+                                        <button id="join_group" class="btn btn-primary" data-group-id={{ g.id }}>加入群组</button>
+                                    {% elif g.group_type == 'private' %}
+                                        <!-- button to tigger modal -->
+                                        <button id="apply_join_modal_trigger" class="btn btn-primary">加入群组</button>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="text-warning">我是群组成员 ></span>
+                                {% endif %}
+
+                                {% if is_manager %}
+                                    <span class="text-warning">我是管理员 ></span>
+                                {% else %}
+                                    <button id="apply_be_manager_modal_trigger" class="btn btn-primary">成为管理员</button>
                                 {% endif %}
                                 {% if is_member %}
-                                    <button id="quit_group" class="btn btn-danger" data-group-id={{ g.id }}>退出群组
-                                    </button>
+                                    <button id="quit_group" class="btn btn-danger" data-group-id={{ g.id }}>退出群组</button>
                                 {% endif %}
                             </div>
                         </div>
@@ -71,7 +79,7 @@
                 <div class="row-fluid topic-tab">
                     <ul class="breadcrumb">
                         <li><a href="">最近话题</a><span class="divider">/</span></li>
-                        <li><a hrf="">热门话题</a></li>
+                        <li><a href="">热门话题</a></li>
                         <li class="pull-right"><a href="{% url 'add_topic' group_id=g.id %}"><i class="icon-plus"></i>发帖</a></li>
                     </ul>
                 </div>
@@ -120,6 +128,21 @@
             <button id="apply_join_group" class="btn btn-primary" data-group-id={{ g.id }}>发送请求</button>
         </div>
     </div>
+
+    <!-- modal for apply be manager reason -->
+    <div class="modal hide fade" id="apply_be_manager_modal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>理由</h3>
+        </div>
+        <div class="modal-body">
+            <textarea id="apply_be_manager_reason" placeholder="不说几句很难通过申请哦......"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button id="apply_be_manager_modal_close" class="btn">取消</button>
+            <button id="apply_be_manager" class="btn btn-primary" data-group-id={{ g.id }}>发送请求</button>
+        </div>
+    </div>
 {% endblock %}
 
 {% block js_other %}
@@ -136,18 +159,31 @@
             {% endif %}
 
             // 当前用户的申请加入该群组的请求是否正在处理中
-            {% if g.group_type == "private" and is_processing %}
-                $("#apply_join_modal_trigger").html("处理中...").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
+            {% if g.group_type == "private" and is_member_processing %}
+                $("#apply_join_modal_trigger").html("加入群组...").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
             {% endif %}
 
-            //  点击打开modal
+            {% if is_manager_processing %}
+                $("#apply_be_manager_modal_trigger").html("申请管理员...").removeClass("btn-primary").addClass("disabled").attr('disabled', true);
+            {% endif %}
+
+            //  点击打开申请加入群组modal
             $("#apply_join_modal_trigger").click(function(){
                 $("#apply_join_group_modal").modal("show");
             });
-            // 点击取消关闭modal
+            // 点击'取消'关闭申请加入群组modal
             $("#apply_modal_close").click(function(){
                 $("#apply_join_group_modal").modal("hide");
-            })
+            });
+
+            // 点击打开申请成为管理员modal
+            $("#apply_be_manager_modal_trigger").click(function(){
+                $("#apply_be_manager_modal").modal("show");
+            });
+            // 点击'取消'关闭申请成为管理员modal
+            $("#apply_be_manager_modal_close").click(function(){
+                $("#apply_be_manager_modal").modal("hide");
+            });
         })
     </script>
 {% endblock %}

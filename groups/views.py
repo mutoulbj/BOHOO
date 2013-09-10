@@ -47,6 +47,7 @@ def new_group(request):
             g.creator = request.user
             g.save()
             g.manager.add(request.user)   # 创建者默认是管理员
+            g.member.add(request.user)    # 创建者默认是小组成员
             return redirect(reverse("add_group_avatar", args=[g.id]))
     return render(request, 'groups/new/group.html', {'form': group()})
 
@@ -77,20 +78,33 @@ def group_detail(request, group_id):
     """ 群组详细页 @fanlintao"""
     try:
         group = Group.objects.get(id=group_id)
+        is_member, is_manager = False, False
         # 判断当前用户是不是小组成员
         if request.user in group.member.all():
             is_member = True
-        else:
-            is_member = False
+        # 判断当前用户是不是小组管理员
+        print group.manager.all()
+        if request.user in group.manager.all():
+            is_manager = True
         # 判断当前用户申请加入该小组的请求是否正在处理中,若正在处理中,不允许重复申请
         try:
-            apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing")
-            is_processing = True
+            apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
+                                                        join_type="member")
+            is_member_processing = True
         except ObjectDoesNotExist:
-            is_processing = False
+            is_member_processing = False
+
+        try:
+            apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
+                                                        join_type="manager")
+            is_manager_processing = True
+        except ObjectDoesNotExist:
+            is_manager_processing = False
         topics = Topic.objects.filter(group=group)
-        return render(request, 'groups/detail.html', {'g': group, 'is_member': is_member,
-                                                      'is_processing': is_processing, 'topics': topics})
+        return render(request, 'groups/detail.html', {'g': group, 'is_member': is_member, 'topics': topics,
+                                                      'is_member_processing': is_member_processing,
+                                                      'is_manager': is_manager,
+                                                      'is_manager_processing': is_manager_processing})
     except ObjectDoesNotExist:
         pass
 
@@ -112,7 +126,23 @@ def ajax_apply_join_group(request):
         try:
             group = Group.objects.get(id=request.POST.get("group_id"))
             reason = request.POST.get("apply_reason")
-            applicant = Applicant(applicant=request.user, group=group, reason=reason)
+            applicant = Applicant(applicant=request.user, group=group, reason=reason, join_type="member")
+            applicant.save()
+            error["success"] = "success"
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+        except ObjectDoesNotExist:
+            error["success"] = "error"
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+
+
+def ajax_apply_be_manager(request):
+    """ 申请成为管理员 ajax @fanlintao """
+    error = {"success": "", "error": ""}
+    if request.method == "POST":
+        try:
+            group = Group.objects.get(id=request.POST.get("group_id"))
+            reason = request.POST.get("apply_reason")
+            applicant = Applicant(applicant=request.user, group=group, reason=reason, join_type="manager")
             applicant.save()
             error["success"] = "success"
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
@@ -150,8 +180,9 @@ def apply_deal(request, group_id):
     """ 处理请求 @fanlintao """
     try:
         group = Group.objects.get(id=group_id)
-        applicant = Applicant.objects.filter(group=group, status="processing")
-        return render(request, 'groups/apply_deal.html', {'applicant': applicant})
+        m_applicant = Applicant.objects.filter(group=group, status="processing", join_type="member")
+        g_applicant = Applicant.objects.filter(group=group, status="processing", join_type="manager")
+        return render(request, 'groups/apply_deal.html', {'m_applicant': m_applicant, 'g_applicant': g_applicant})
     except ObjectDoesNotExist:
         pass
 
@@ -161,10 +192,15 @@ def ajax_apply_pass(request):
     error = {"success": "", "error": ""}
     if request.method == 'POST':
         try:
+            pass_type = request.POST.get("type")
+            print pass_type
             group = Group.objects.get(id=request.POST.get("group_id"))
             user = MyUser.objects.get(id=request.POST.get("applicant_id"))
             applicant = Applicant.objects.get(applicant=user, status="processing")
-            group.member.add(user)
+            if pass_type == "member":
+                group.member.add(user)
+            elif pass_type == "manager":
+                group.manager.add(user)
             applicant.status = 'pass'
             applicant.save()
             error['success'] = 'success'

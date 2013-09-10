@@ -39,6 +39,7 @@ urlpatterns = patterns(
     url(r'^detail/(?P<group_id>\d+)/$', 'group_detail', name='group_detail'),
     url(r'^ajax_join_group/$', 'ajax_join_group', name='ajax_join_group'),
     url(r'^ajax_apply_join_group/$', 'ajax_apply_join_group', name='ajax_apply_join_group'),
+    url(r'^ajax_apply_be_manager/$', 'ajax_apply_be_manager', name='ajax_apply_be_manager'),
     url(r'^ajax_quite_group/$', 'ajax_quite_group', name='ajax_quite_group'),
     url(r'^my_manager/$', 'manage', name='group_my_manage'),
     url(r'^joined/$', 'joined', name='group_joined'),
