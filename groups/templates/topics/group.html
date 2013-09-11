@@ -28,14 +28,6 @@
     <div class="row-fluid">
         <div class="span12">
             <table class="table">
-                <thead>
-                <tr>
-                    <th>话题</th>
-                    <th>创建者</th>
-                    <th>回复</th>
-                    <th>最后发言</th>
-                </tr>
-                </thead>
                 <tbody>
                 {% paginate topics %}
                 {% for t in topics %}
@@ -44,6 +36,7 @@
                         <td><a href="{% url "profile_view" tid=t.creator.id %}">{{ t.creator }}</a></td>
                         <td>{{ t.reply_amount }}</td>
                         <td>{{ t.last_reply_add|date:"m-j H:i:s" }}</td>
+                        <td><a href="{% url 'group_detail' t.group.id %}">{{ t.group.name }}</a></td>
                     </tr>
                 {% endfor %}
                 {% get_pages %}
