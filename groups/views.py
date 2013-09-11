@@ -21,7 +21,6 @@ from django.conf import settings
 
 from django.db.models import F, Q
 from models import Group, Topic, Reply, Report, Applicant
-import group_utils
 
 from django.template import loader
 from django.shortcuts import render
@@ -236,11 +235,22 @@ def add_topic(request, group_id):
                 g.save()
                 g_id = int(group.id)
                 return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
-        return render(request, 'groups/new/topic.html', {'form': topicForm(initial={"group": group}), 'g': group})
+        return render(request, 'topics/new/topic.html', {'form': topicForm(initial={"group": group}), 'g': group})
     except ObjectDoesNotExist:
         pass
 
 
+def group_topic(request):
+    """ 最近的话题 @fanlintao """
+    groups = Group.objects.filter(member=request.user)
+    topics = Topic.objects.filter(group__in=groups).order_by("-last_reply_add")
+    return render(request, "topics/group.html", {"topics": topics})
+
+
+def created_topic(request):
+    """我创建的话题 @fanlintao """
+    topics = Topic.objects.filter(creator=request.user).order_by("-create_time")
+    return render(request, "topics/created.html", {"topics": topics})
 
 
 ##################################    below   to check ####################

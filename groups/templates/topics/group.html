@@ -1,0 +1,68 @@
+{% extends "topic_base.html" %}
+{% load endless %}
+
+{% block title %}
+    最近的话题
+{% endblock %}
+
+{% block descrition %}
+    我的最新话题
+{% endblock %}
+
+{% block head_other %}
+    <style type="text/css">
+    .pagination a{
+        padding-left: 3px;
+        padding-right: 3px;
+    }
+    .pagination{
+        margin-right: 0;
+        text-align: right;
+    }
+    </style>
+    <script src="{{ STATIC_URL }}endless_pagination/js/endless-pagination.js"></script>
+    <script>$.endlessPaginate();</script>
+{% endblock %}
+
+{% block left_content %}
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>话题</th>
+                    <th>创建者</th>
+                    <th>回复</th>
+                    <th>最后发言</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% paginate topics %}
+                {% for t in topics %}
+                    <tr>
+                        <td><a href="">{{ t.name }}</a></td>
+                        <td><a href="{% url "profile_view" tid=t.creator.id %}">{{ t.creator }}</a></td>
+                        <td>{{ t.reply_amount }}</td>
+                        <td>{{ t.last_reply_add|date:"m-j H:i:s" }}</td>
+                    </tr>
+                {% endfor %}
+                {% get_pages %}
+                <div class="row-fluid">
+                    <div class="span6"><h3>我发表的话题</h3></div>
+                    <div class="span6">
+                        <div class="span12 pull-right pagination">{{ pages }}</div>
+
+                    </div>
+                </div>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_other %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $("#topic_my_group").addClass("active");  // 当前页
+    </script>
+{% endblock %}

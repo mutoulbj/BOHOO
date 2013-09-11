@@ -17,10 +17,9 @@
                 {% block left_content %}
                     <ul class="nav nav-list left-list">
                         <li class="nav-header">话题</li>
-                        <li id="new_topic"><a href="">我的最新话题<i class="icon-chevron-right pull-right"></i></a></li>
+                        <li id="topic_my_group"><a href="{% url 'group_topic' %}">我的小组话题<i class="icon-chevron-right pull-right"></i></a></li>
                         <li id="topic_replied"><a href="">我回复的话题<i class="icon-chevron-right pull-right"></i></a></li>
-                        <li id="topic_created"><a href="">我发表的话题<i class="icon-chevron-right pull-right"></i></a></li>
-                        <li id="topic_my_group"><a href="">我的小组话题<i class="icon-chevron-right pull-right"></i></a></li>
+                        <li id="topic_created"><a href="{% url 'created_topic' %}">我发表的话题<i class="icon-chevron-right pull-right"></i></a></li>
                         <li class="nav-header">群组</li>
                         <li id="group_managed"><a href="{% url 'group_my_manage' %}">我管理的群组<i class="icon-chevron-right pull-right"></i></a></li>
                         <li id="group_joined"><a href="{% url 'group_joined' %}">我加入的群组<i class="icon-chevron-right pull-right"></i></a></li>

@@ -94,6 +94,7 @@ class Group(models.Model):
         # 返回申请成为群组管理员的人数
         return len(self.apply_group.filter(status="processing", join_type="manager"))
 
+
 class Topic(models.Model):
     """
     话题表
