@@ -48,5 +48,6 @@ urlpatterns = patterns(
     url(r'^ajax_apply_reject/$', 'ajax_apply_reject', name='ajax_apply_reject'),
     url(r'^add_topic/(?P<group_id>\d+)/$', 'add_topic', name='add_topic'),
     url(r'^topic/group/$', 'group_topic', name='group_topic'),
-    url(r'^topic/created', 'created_topic', name='created_topic'),
+    url(r'^topic/created/$', 'created_topic', name='created_topic'),
+    url(r'^topic/detail/(?P<topic_id>\d+)/$', 'topic_detail', name='topic_detail'),
 )

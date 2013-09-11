@@ -27,7 +27,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 
 from User.models import MyUser
-from groups.forms import group, topicForm
+from groups.forms import group, topicForm, replyForm
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
@@ -252,6 +252,29 @@ def created_topic(request):
     topics = Topic.objects.filter(creator=request.user).order_by("-create_time")
     return render(request, "topics/created.html", {"topics": topics})
 
+
+def topic_detail(request, topic_id):
+    """ 话题详细页 @fanlintao """
+    try:
+        topic = Topic.objects.get(id=topic_id)
+        replies = Reply.objects.filter(topic=topic).order_by("-create_time")
+        recent_topics = Topic.objects.filter(group=topic.group).order_by("-create_time")[:5]
+
+        # 判断当前用户是否是该小组成员和管理员
+        is_member, is_manager = request.user in topic.group.member.all(), request.user in topic.group.member.all()
+
+        if request.method == "POST":
+            form = replyForm(request.POST)
+            if form.is_valid():
+                g = form.save(commit=False)
+                g.creator = request.user
+                g.topic = topic
+                g.save()
+        return render(request, "topics/detail.html", {"topic": topic, "replies": replies, "is_member": is_member,
+                                                      "is_manager": is_manager, 'recent_topics': recent_topics,
+                                                      'form': replyForm()})
+    except ObjectDoesNotExist:
+        pass
 
 ##################################    below   to check ####################
 def explore_topic(request):

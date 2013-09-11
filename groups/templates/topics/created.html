@@ -32,7 +32,7 @@
                 {% paginate topics %}
                 {% for t in topics %}
                     <tr>
-                        <td><a href="">{{ t.name }}</a></td>
+                        <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></td>
                         <td><a href="{% url "profile_view" tid=t.creator.id %}">{{ t.creator }}</a></td>
                         <td>{{ t.reply_amount }}</td>
                         <td>{{ t.last_reply_add|date:"m-j H:i:s" }}</td>

@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from groups.models import Category, Group, Topic
+from groups.models import Category, Group, Topic, Reply
 
 
 class category(ModelForm):
@@ -78,3 +78,18 @@ class topicForm(ModelForm):
 
     def __unicode__(self):
         return "话题:%s" % self.name
+
+
+class replyForm(ModelForm):
+    """
+    回复  form @fanlintao
+    content 回复内容
+    """
+    content = forms.CharField(label=u'回复内容', widget=forms.Textarea(attrs={'class': 'span11 reply_content required'}))
+
+    class Meta:
+        model = Reply
+        fields = ('content',)
+
+    def __unicode__(self):
+        return "回复内容:%s" % self.content
