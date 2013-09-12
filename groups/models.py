@@ -95,6 +95,22 @@ class Group(models.Model):
         return len(self.apply_group.filter(status="processing", join_type="manager"))
 
 
+class TopicImage(models.Model):
+    """
+    话题图片
+    image 图片
+    """
+    image = models.ImageField(upload_to=settings.TOPIC_IMAGE_PATH)
+
+    def __unicode__(self):
+        return "Topic Image"
+
+    class Meta:
+        verbose_name = u'话题图片'
+        verbose_name_plural = u'话题图片'
+        db_table = 'image_topic'
+
+
 class Topic(models.Model):
     """
     话题表
@@ -111,10 +127,10 @@ class Topic(models.Model):
     dislike         不喜欢
     last_reply_add  最新回复时间
     reply_amount    回复总数
+    image           图片
     
     #add by lazytiger
     topic_type      话题类型 : 1类是系统自动发布的，没有作者 ，另一类是用户发表的，需要有作者
-    
     """
     name = models.CharField(max_length=1024, verbose_name=u'名称')
     content = models.TextField(verbose_name=u'内容')
@@ -128,6 +144,7 @@ class Topic(models.Model):
     dislike = models.IntegerField(default=0, verbose_name=u'踩')
     last_reply_add = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'最新回复时间')
     reply_amount = models.IntegerField(default=0, verbose_name=u'回复总数')
+    image = models.ManyToManyField(TopicImage, null=True, blank=True)
 
     topic_type = models.IntegerField(default=0, verbose_name=u'话题类型')
 
@@ -155,6 +172,7 @@ class Topic(models.Model):
         if self.content.find(">>>>||>>>>") != -1:
             return self.content[self.content.find(">>>>||>>>>") + 10:]
         return self.content
+
 
 
 class Reply(models.Model):

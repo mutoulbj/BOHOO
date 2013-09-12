@@ -3,7 +3,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from groups.models import Category, Group, Topic, Reply
+from groups.models import Category, Group, Topic, Reply, TopicImage
 
 
 class category(ModelForm):

@@ -267,3 +267,6 @@ ENABLE_EMAIL = False
 
 # Comment must contans Chinese
 ENABLE_COMMENT_CHN = False
+
+
+TOPIC_IMAGE_PATH = "/home/fan/media/topic_image/"

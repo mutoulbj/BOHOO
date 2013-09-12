@@ -27,7 +27,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 
 from User.models import MyUser
-from groups.forms import group, topicForm, replyForm
+from groups.forms import group, topicForm, replyForm, topicImageForm
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
@@ -235,7 +235,8 @@ def add_topic(request, group_id):
                 g.save()
                 g_id = int(group.id)
                 return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
-        return render(request, 'topics/new/topic.html', {'form': topicForm(initial={"group": group}), 'g': group})
+        return render(request, 'topics/new/topic.html', {'form': topicForm(initial={"group": group}), 'g': group,
+                                                         'image': topicImageForm()})
     except ObjectDoesNotExist:
         pass
 

@@ -8,13 +8,43 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'TopicImage'
+        db.create_table('image_topic', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
+        ))
+        db.send_create_signal(u'groups', ['TopicImage'])
+
+        # Adding M2M table for field image on 'Topic'
+        m2m_table_name = db.shorten_name('topic_image')
+        db.create_table(m2m_table_name, (
+            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
+            ('topic', models.ForeignKey(orm[u'groups.topic'], null=False)),
+            ('topicimage', models.ForeignKey(orm[u'groups.topicimage'], null=False))
+        ))
+        db.create_unique(m2m_table_name, ['topic_id', 'topicimage_id'])
+
+        # Deleting field 'Applicant.join_type'
+        db.delete_column('applicant', 'join_type')
+
         # Adding field 'Applicant.join_type'
         db.add_column('applicant', 'join_type',
-                      self.gf('django.db.models.fields.CharField')(default='member', max_length=128),
+                      self.gf('django.db.models.fields.CharField')(default=1, max_length=128),
                       keep_default=False)
 
 
     def backwards(self, orm):
+        # Deleting model 'TopicImage'
+        db.delete_table('image_topic')
+
+        # Removing M2M table for field image on 'Topic'
+        db.delete_table(db.shorten_name('topic_image'))
+
+        # Adding field 'Applicant.join_type'
+        db.add_column('applicant', 'join_type',
+                      self.gf('django.db.models.fields.CharField')(default=1, max_length=128),
+                      keep_default=False)
+
         # Deleting field 'Applicant.join_type'
         db.delete_column('applicant', 'join_type')
 
@@ -130,6 +160,7 @@ class Migration(SchemaMigration):
             'group': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'group_topic'", 'to': u"orm['groups.Group']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'ilike': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'image': ('django.db.models.fields.related.ManyToManyField', [], {'symmetrical': 'False', 'to': u"orm['groups.TopicImage']", 'null': 'True', 'blank': 'True'}),
             'is_closed': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'is_top': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'last_reply_add': ('django.db.models.fields.DateTimeField', [], {'default': 'datetime.datetime.now'}),
@@ -137,6 +168,11 @@ class Migration(SchemaMigration):
             'name': ('django.db.models.fields.CharField', [], {'max_length': '1024'}),
             'reply_amount': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             'topic_type': ('django.db.models.fields.IntegerField', [], {'default': '0'})
+        },
+        u'groups.topicimage': {
+            'Meta': {'object_name': 'TopicImage', 'db_table': "'image_topic'"},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'})
         }
     }
 
