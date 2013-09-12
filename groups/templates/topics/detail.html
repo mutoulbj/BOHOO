@@ -11,8 +11,8 @@
         .content{
             margin: 10px !important;
         }
-        .reply_content{
-            height: 100px;
+        .reply-content{
+            height: auto;
             margin-top: 10px;
         }
     </style>
@@ -46,19 +46,19 @@
                     </div>
                 </div>
                 {% for r in replies %}
-                    <div class="row-fluid">
-                    <div class="span2">{% avatar r.creator 60 %}</div>
-                    <div class="span10">
-                        <div class="row-fluid">
-                            <div class="span12 reply-content">
-                                <span class="text-success"><a href=""></a>{{ r.creator }}</span>
-                                <span class="text-success">{{ r.create_time|date:"Y-m-j H:i:s" }}</span>
+                    <div class="row-fluid reply">
+                        <div class="span2 reply_avatar"><a href="">{% avatar r.creator 60 %}</a></div>
+                        <div class="span10 reply-content">
+                            <div class="row-fluid">
+                                <div class="span12">
+                                    <span class="text-success"><a href="">{{ r.creator }}</a></span>
+                                    <span class="text-success">{{ r.create_time|date:"Y-m-j H:i:s" }}</span>
+                                </div>
+                            </div>
+                            <div class="row-fluid">
+                                <div class="span12">{{ r.content }}</div>
                             </div>
                         </div>
-                        <div class="row-fluid">
-                            <div class="span12">{{ r.content }}</div>
-                        </div>
-                    </div>
                     </div>
                 {% endfor %}
                 <div class="row-fluid">
@@ -74,6 +74,8 @@
 
                 </div>
             </div>
+
+           <!-- 右边栏 -->
             <div class="span4">
                 <div class="row-fluid">
                     <div class="span12"><a href="{% url 'group_detail' group_id=topic.group.id %}">{{ topic.group.name }}</a></div>
