@@ -27,7 +27,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 
 from User.models import MyUser
-from groups.forms import group, topicForm, replyForm, topicImageForm
+from groups.forms import group, topicForm, replyForm
 
 SHA1_RE = re.compile('^[a-f0-9]{40}$')
 
@@ -235,8 +235,7 @@ def add_topic(request, group_id):
                 g.save()
                 g_id = int(group.id)
                 return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
-        return render(request, 'topics/new/topic.html', {'form': topicForm(initial={"group": group}), 'g': group,
-                                                         'image': topicImageForm()})
+        return render(request, 'topics/new/topic.html', {'form': topicForm(initial={"group": group}), 'g': group})
     except ObjectDoesNotExist:
         pass
 
@@ -254,11 +253,17 @@ def created_topic(request):
     return render(request, "topics/created.html", {"topics": topics})
 
 
+def replied_topic(request):
+    """我回复的话题 @fanlintao """
+    topics = Topic.objects.filter(id__in=Reply.objects.all().order_by('-create_time').filter(creator=request.user).values_list('topic', flat=True))
+    return render(request, "topics/replied.html", {"topics": topics})
+
+
 def topic_detail(request, topic_id):
     """ 话题详细页 @fanlintao """
     try:
         topic = Topic.objects.get(id=topic_id)
-        replies = Reply.objects.filter(topic=topic).order_by("-create_time")
+        replies = Reply.objects.filter(topic=topic).order_by("create_time")
         recent_topics = Topic.objects.filter(group=topic.group).order_by("-create_time")[:5]
 
         # 判断当前用户是否是该小组成员和管理员
@@ -266,10 +271,19 @@ def topic_detail(request, topic_id):
 
         if request.method == "POST":
             form = replyForm(request.POST)
+            print request.POST
             if form.is_valid():
+                try:
+                    reply = Reply.objects.get(id=request.POST.get('reply_id'))
+                    print reply
+                except:
+                    reply = None
+                print reply
                 g = form.save(commit=False)
                 g.creator = request.user
                 g.topic = topic
+                if reply:
+                    g.reply = reply
                 g.save()
         return render(request, "topics/detail.html", {"topic": topic, "replies": replies, "is_member": is_member,
                                                       "is_manager": is_manager, 'recent_topics': recent_topics,

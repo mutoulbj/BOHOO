@@ -2,11 +2,11 @@
 {% load endless %}
 
 {% block title %}
-    最近的话题
+    我回复的话题
 {% endblock %}
 
 {% block descrition %}
-    我的最新话题
+    我回复的话题
 {% endblock %}
 
 {% block head_other %}
@@ -39,7 +39,7 @@
                 {% endfor %}
                 {% get_pages %}
                 <div class="row-fluid">
-                    <div class="span6"><h3>我发表的话题</h3></div>
+                    <div class="span6"><h3>我回复的话题</h3></div>
                     <div class="span6">
                         <div class="span12 pull-right pagination">{{ pages }}</div>
 
@@ -54,6 +54,6 @@
 {% block js_other %}
     {{ block.super }}
     <script type="text/javascript">
-    $("#topic_my_group").addClass("active");  // 当前页
+    $("#topic_replied").addClass("active");  // 当前页
     </script>
 {% endblock %}

@@ -85,7 +85,8 @@ class replyForm(ModelForm):
     回复  form @fanlintao
     content 回复内容
     """
-    content = forms.CharField(label=u'回复内容', widget=forms.Textarea(attrs={'class': 'span11 reply_content required'}))
+    content = forms.CharField(label=u'回复内容', widget=forms.Textarea(attrs={'class': 'span12 reply_content required'}))
+    reply_id = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Reply

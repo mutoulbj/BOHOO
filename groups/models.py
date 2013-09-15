@@ -162,18 +162,6 @@ class Topic(models.Model):
         self.group.save()
         super(Topic, self).save(*args, **kwargs)
 
-    def get_topic_images(self):
-        #TODO 不知道什么意思
-        if self.content.find(">>>>||>>>>") != -1:
-            return self.content[:self.content.find(">>>>||>>>>")].split("<br/>")[:-1]
-
-    def get_topic_content(self):
-        #TODO 不知道什么意思
-        if self.content.find(">>>>||>>>>") != -1:
-            return self.content[self.content.find(">>>>||>>>>") + 10:]
-        return self.content
-
-
 
 class Reply(models.Model):
     """
@@ -188,6 +176,7 @@ class Reply(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='creator_reply', verbose_name=u'创建者')
     topic = models.ForeignKey(Topic, related_name='topic_replies', verbose_name=u'话题')
     create_time = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'创建时间')
+    reply = models.ForeignKey('self', related_name='reply_reply', null=True, blank=True)
 
     def __unicode__(self):
         return "%s's reply" % self.topic.name
