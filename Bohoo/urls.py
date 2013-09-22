@@ -14,8 +14,6 @@ urlpatterns = patterns(
     url(r'^accounts/', include('accounts.urls')),
     url(r'^accounts/', include('social.urls')),
     url(r'^people/', include('User.urls')),
-    url(r'^accounts/activate/(?P<activation_key>\w+)/$', 'groups.views.activate'),
-    url(r'^accounts/wait_activate/$', 'groups.views.wait_activate'),
     url(r'^group/', include('groups.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

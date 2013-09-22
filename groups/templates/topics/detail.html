@@ -136,8 +136,8 @@
                     <div class="span12">
                         {% if is_manager %}
                             <span class="muted">我是管理员</span>
-                        {% else %}
-                            <button id="apply_be_manager_modal_trigger" class="btn btn-primary">成为管理员</button>
+                        {% elif is_member %}
+                            <button id="apply_be_manager_modal_trigger" class="btn btn-primary">申请成为组长</button>
                         {% endif %}
                     </div>
                 </div>

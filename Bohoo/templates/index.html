@@ -15,10 +15,14 @@
     .btn-signup-weibo{
         margin-bottom: 20px;
     }
+    .recent-topic ul li{
+        list-style-type: none;
+    }
     </style>
 {% endblock %}
 
 {% block main %}
+    {% if not request.user.is_authenticated %}
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="span8">
@@ -39,29 +43,66 @@
                         <label class="checkbox"><input type="checkbox" id="id_terms">我已经阅读并同意<a href="">服务条款</a> </label>
                         <button class="btn btn-primary btn-register">注册</button>
                     </form>
-                        <a href="/accounts/weibo/login/" class="btn btn-primary btn-signup-weibo">微博帐号注册</a>
-                        <a href="/accounts/qqweibo/login/" class="btn btn-primary btn-signup-qq">qq帐号注册</a>
+                        <a href="{% url 'social_weibo_login' %}" class="btn btn-primary btn-signup-weibo">微博帐号注册</a>
+                        <a href="{% url 'social_qqweibo_login' %}" class="btn btn-primary btn-signup-qq">qq帐号注册</a>
                 </div>
             </div>
         </div>
     </div>
     <div class="container-fluid">
         <div class="row pull-left">
-            <div class="span4">
-                <header>分类</header>
-            </div>
-        </div>
-
-        <div class="row pull-right">
-            <div class="span6">
-                <header>群组</header>
+            <div class="span8">
+                <div class="recent-topic">
+                    <ul>
+                        {% for t in recent_topics %}
+                            <li><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
+    {% else %}
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2">
+                    <ul class="nav nav-list left-list">
+                        <li class="nav-header">分类</li>
+                        {% for c in categories %}
+                        <li id="c_{{ c.id }}"><a href="{% url 'index' %}?c_id={{ c.id }}">{{ c.name }}<i class="icon-chevron-right pull-right"></i></a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="span10">
+                    <table class="table">
+                        {% for g in groups %}
+                            <tr>
+                            <th colspan="2"><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></th>
+                            </tr>
+                            {% for t in g.group_topic.all|slice:":30" %}
+                            <tr>
+                            <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</td>
+                            <td>{{ t.create_time|date:"m-d H:i:s" }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}
 
 {% block js_other %}
     <script type="text/javascript">
+
+        {% if request.GET.c_id %}
+            var c_id = "{{ request.GET.c_id }}";
+            console.log(c_id);
+            $("#c_"+ c_id).addClass("active");
+        {% else %}
+            $("#c_1").addClass("active");
+        {% endif %}
         $('.btn-register').on('click',function(e){
             e.preventDefault();
             if ($('#id_terms').is(':checked')){  // 未同意服务条款不给提交
