@@ -165,9 +165,10 @@ INSTALLED_APPS = (
     'User',
     'groups',
     'accounts',
-    # 'friends',
-    # 'django_messages',
-    # 'social',
+    'endless_pagination',
+    'friends',
+    'django_messages',
+    'social',
     # 'notification',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',

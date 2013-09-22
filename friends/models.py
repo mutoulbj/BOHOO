@@ -21,7 +21,6 @@ class FriendShip(models.Model):
     to_user = models.ForeignKey(MyUser, related_name='to_user')
     from_user = models.ForeignKey(MyUser, related_name='from_user')
     created = models.DateTimeField(auto_now_add=True)
-
     objects = FriendShipManager()
 
     class Meta:
