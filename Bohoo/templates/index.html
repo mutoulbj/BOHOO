@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load compress %}
+{% load timeformat %}
 
 {% block descrition %}Bohoo首页{% endblock %}
 {% block title %}Bohoo首页{% endblock %}
@@ -17,6 +18,12 @@
     }
     .recent-topic ul li{
         list-style-type: none;
+    }
+    .table th,.table td{
+        text-align: center;
+    }
+    .table th{
+        font-size: 20px !important;
     }
     </style>
 {% endblock %}
@@ -74,19 +81,19 @@
                     </ul>
                 </div>
                 <div class="span10">
-                    <table class="table">
-                        {% for g in groups %}
+                    {% for g in groups %}
+                        <table class="table table-hover">
                             <tr>
-                            <th colspan="2"><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></th>
+                                <th colspan="2"><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></th>
                             </tr>
-                            {% for t in g.group_topic.all|slice:":30" %}
-                            <tr>
-                            <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</td>
-                            <td>{{ t.create_time|date:"m-d H:i:s" }}</td>
-                            </tr>
+                            {% for t in g.get_last_reply_order_topic_qs %}
+                                <tr>
+                                    <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></td>
+                                    <td>{{ t.create_time|date:"m-d H:i:s" }}</td>
+                                </tr>
                             {% endfor %}
-                        {% endfor %}
-                    </table>
+                        </table>
+                    {% endfor %}
                 </div>
             </div>
         </div>

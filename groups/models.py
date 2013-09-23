@@ -94,6 +94,12 @@ class Group(models.Model):
         # 返回申请成为群组管理员的人数
         return len(self.apply_group.filter(status="processing", join_type="manager"))
 
+    def get_last_reply_order_topic_qs(self, amount=5):
+        """
+        返回数量为amount,默认为5,以最后回复排序的话题,返回queryset
+        """
+        return self.group_topic.all().order_by("-last_reply_add")[:amount]
+
 
 class TopicImage(models.Model):
     """
