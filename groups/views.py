@@ -10,9 +10,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from models import Group, Topic, Reply, Applicant
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from User.models import MyUser
-from groups.forms import group, topicForm, replyForm
+from groups.forms import group, topicForm, replyForm, topicImageForm
 
 
 def new_group(request):
@@ -205,15 +206,28 @@ def add_topic(request, group_id):
     """ 添加话题 @fanlintao """
     try:
         group = Group.objects.get(id=group_id)
+        img = None
         if request.method == 'POST':
             form = topicForm(request.POST)
+            imageForm = topicImageForm(request.POST, request.FILES)
+            if imageForm.is_valid():
+                import ImageFile
+                f = request.FILES["image"]
+                parser = ImageFile.Parser()
+                for chunk in f.chunks():
+                    parser.feed(chunk)
+                img = parser.close()
+                img.save(settings.TOPIC_IMAGE_PATH)
             if form.is_valid():
                 g = form.save(commit=False)
                 g.creator = request.user
                 g.save()
+                g.image = img
+                print 123
                 g_id = int(group.id)
                 return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
-        return render(request, 'topics/new/topic.html', {'form': topicForm(initial={"group": group}), 'g': group})
+        return render(request, 'topics/new/topic.html',
+                      {'form': topicForm(initial={"group": group}), 'g': group, 'imageForm': topicImageForm()})
     except ObjectDoesNotExist:
         pass
 

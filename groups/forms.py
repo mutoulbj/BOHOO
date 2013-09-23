@@ -80,6 +80,17 @@ class topicForm(ModelForm):
         return "话题:%s" % self.name
 
 
+class topicImageForm(ModelForm):
+    """
+    话题图片上传form
+    """
+    image = forms.ImageField(required=False)
+
+    class Meta:
+        model = TopicImage
+        fields = ('image',)
+
+
 class replyForm(ModelForm):
     """
     回复  form @fanlintao

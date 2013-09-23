@@ -81,17 +81,20 @@
     </form>
 
     <!-- modal for apply reason -->
-    <div class="modal hide fade" id="apply_join_group_modal">
+    <div class="modal hide fade" id="add_image_modal">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h3>添加图片</h3>
         </div>
         <div class="modal-body">
-
+            <form enctype="multipart/form-data" method="post" id="add-image-form">
+                {% csrf_token %}
+                {{ imageForm.image }}
+            </form>
         </div>
         <div class="modal-footer">
-            <button id="image_modal_close" class="btn">取消</button>
-            <button id="add_image" class="btn btn-primary" data-topic-id={{ g.id }}>发送请求</button>
+            <button id="add-image-modal-cancel" class="btn">取消</button>
+            <button id="add-image-modal-button" class="btn btn-primary" data-topic-id={{ g.id }}>发送请求</button>
         </div>
     </div>
 {% endblock %}
@@ -125,6 +128,17 @@
             if (pass_check) {
                 $("#new-topic-form").submit();
             }
+        });
+        $("#add-image").click(function(e){
+            e.preventDefault();
+            $("#add_image_modal").modal();
+        });
+        $("#add-image-modal-cancel").click(function(){
+            $("#add_image_modal").modal("hide");
+        });
+        $("#add-image-modal-button").click(function(){
+            $("#add-image-form").submit();
+            $(this).html("完成");
         })
     </script>
 {% endblock %}
