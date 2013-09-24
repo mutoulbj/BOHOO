@@ -16,6 +16,7 @@ urlpatterns = patterns(
     url(r'^ajax_apply_pass/$', 'ajax_apply_pass', name='ajax_apply_pass'),
     url(r'^ajax_apply_reject/$', 'ajax_apply_reject', name='ajax_apply_reject'),
     url(r'^add_topic/(?P<group_id>\d+)/$', 'add_topic', name='add_topic'),
+    url(r'^delete_topic_image/$', 'ajax_delete_topic_image', name='ajax_delete_topic_image'),
     url(r'^topic/group/$', 'group_topic', name='group_topic'),
     url(r'^topic/created/$', 'created_topic', name='created_topic'),
     url(r'^topic/relied/$', 'replied_topic', name='replied_topic'),

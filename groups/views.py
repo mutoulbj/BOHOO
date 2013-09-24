@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from models import Group, Topic, Reply, Applicant
+from models import Group, Topic, Reply, Applicant, TopicImage
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -78,7 +78,7 @@ def group_detail(request, group_id):
             is_manager_processing = True
         except ObjectDoesNotExist:
             is_manager_processing = False
-        topics = Topic.objects.filter(group=group)
+        topics = Topic.objects.filter(group=group).order_by("-last_reply_add")
         return render(request, 'groups/detail.html', {'g': group, 'is_member': is_member, 'topics': topics,
                                                       'is_member_processing': is_member_processing,
                                                       'is_manager': is_manager,
@@ -202,34 +202,65 @@ def ajax_apply_reject(request):
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 
+image_obj = []
 def add_topic(request, group_id):
     """ 添加话题 @fanlintao """
     try:
         group = Group.objects.get(id=group_id)
-        img = None
+        global image_obj
         if request.method == 'POST':
             form = topicForm(request.POST)
-            imageForm = topicImageForm(request.POST, request.FILES)
-            if imageForm.is_valid():
-                import ImageFile
-                f = request.FILES["image"]
-                parser = ImageFile.Parser()
-                for chunk in f.chunks():
-                    parser.feed(chunk)
-                img = parser.close()
-                img.save(settings.TOPIC_IMAGE_PATH)
+            if "image" in request.FILES:   # 如果有上传图片
+                imageForm = topicImageForm(request.POST, request.FILES)
+                if imageForm.is_valid():
+                    import ImageFile
+                    f = request.FILES["image"]
+                    parser = ImageFile.Parser()
+                    for chunk in f.chunks():
+                        parser.feed(chunk)
+                    img = parser.close()
+                    img.save(settings.TOPIC_IMAGE_PATH+f.name)
+                    i = imageForm.save()
+                    image_obj.append(i)
+                    print image_obj[0].image
             if form.is_valid():
                 g = form.save(commit=False)
                 g.creator = request.user
                 g.save()
-                g.image = img
                 print 123
+                if len(image_obj):
+                    for i in image_obj:
+                        g.image.add(i)
+                image_obj = []
                 g_id = int(group.id)
                 return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
-        return render(request, 'topics/new/topic.html',
-                      {'form': topicForm(initial={"group": group}), 'g': group, 'imageForm': topicImageForm()})
+        print image_obj
+        ctx = {
+            'form': topicForm(initial={"group": group}),
+            'g': group,
+            'imageForm': topicImageForm(),
+            'images': image_obj
+        }
+        return render(request, 'topics/new/topic.html', ctx)
     except ObjectDoesNotExist:
         pass
+
+
+def ajax_delete_topic_image(request):
+    """ 删除图片 @fanlintao """
+    error = {"success": "", "error": ""}
+    if request.method == 'POST':
+        try:
+            image = TopicImage.objects.get(id=request.POST.get("image_id"))
+            global image_obj
+            image_obj.remove(image)
+            image.delete()
+            error["success"] = "success"
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+        except ObjectDoesNotExist:
+            error["success"] = "error"
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+
 
 
 def group_topic(request):
@@ -241,7 +272,7 @@ def group_topic(request):
 
 def created_topic(request):
     """我创建的话题 @fanlintao """
-    topics = Topic.objects.filter(creator=request.user).order_by("-create_time")
+    topics = Topic.objects.filter(creator=request.user).order_by("-last_reply_add")
     return render(request, "topics/created.html", {"topics": topics})
 
 

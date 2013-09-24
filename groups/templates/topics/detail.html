@@ -65,7 +65,10 @@
                         </div>
                         <div class="row-fluid">
                             <div class="span12">
-                                {{ topic.content }}
+                                {% for i in topic.image.all %}
+                                    <div><img src="{{ i.get_topic_image_url }}" style="width: 90%;"></div>
+                                {% endfor %}
+                                <div>{{ topic.content }}</div>
                             </div>
                         </div>
                     </div>

@@ -44,8 +44,14 @@
                             </div>
                         </div>
                         <div class="row-fluid">
-                            <div class="span4">
+                            <div class="span12">
                                 <a href="" id="add-image">上传图片</a>
+                                {% for i in images %}
+                                    <span>
+                                        [{{ i.get_topic_image_name }}]
+                                        <a class="delete-image" data-image-id="{{ i.id }}"><i class="icon-trash"></i></a>
+                                    </span>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
@@ -94,7 +100,7 @@
         </div>
         <div class="modal-footer">
             <button id="add-image-modal-cancel" class="btn">取消</button>
-            <button id="add-image-modal-button" class="btn btn-primary" data-topic-id={{ g.id }}>发送请求</button>
+            <button id="add-image-modal-button" class="btn btn-primary" data-topic-id={{ g.id }}>上传</button>
         </div>
     </div>
 {% endblock %}
@@ -138,7 +144,20 @@
         });
         $("#add-image-modal-button").click(function(){
             $("#add-image-form").submit();
-            $(this).html("完成");
+        });
+        // 删除上传的图片
+        $(".delete-image").click(function(e){
+            e.preventDefault();
+            if (confirm("确认删除?")){
+                $.ajax({
+                    async: false,
+                    url: "{% url 'ajax_delete_topic_image' %}",
+                    type: "POST",
+                    data: {"image_id": $(this).data("image-id")},
+                    dataType: "json",
+                    success: function(){location.reload();}
+                })
+            }
         })
     </script>
 {% endblock %}

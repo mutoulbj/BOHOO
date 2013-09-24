@@ -116,6 +116,15 @@ class TopicImage(models.Model):
         verbose_name_plural = u'话题图片'
         db_table = 'image_topic'
 
+    def get_topic_image_url(self):
+        path = self.image.path
+        url = '/' + '/'.join(path.split('/')[3:])
+        return url
+
+    def get_topic_image_name(self):
+        name = self.image.name.split('/')[-1]
+        return name
+
 
 class Topic(models.Model):
     """
