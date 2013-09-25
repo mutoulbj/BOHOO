@@ -253,7 +253,7 @@ class Applicant(models.Model):
     join_type = models.CharField(max_length=128, verbose_name=u'类型')
 
     def __unicode__(self):
-        return self.applicant.username
+        return self.applicant
 
     class Meta:
         verbose_name = u'申请加入群组/成为管理员'

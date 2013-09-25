@@ -61,7 +61,6 @@ def group_detail(request, group_id):
         if request.user in group.member.all():
             is_member = True
         # 判断当前用户是不是小组管理员
-        print group.manager.all()
         if request.user in group.manager.all():
             is_manager = True
         # 判断当前用户申请加入该小组的请求是否正在处理中,若正在处理中,不允许重复申请
@@ -114,7 +113,7 @@ def ajax_apply_join_group(request):
 
 
 def ajax_apply_be_manager(request):
-    """ 申请成为管理员 ajax @fanlintao """
+    """ 申请成为组长 ajax @fanlintao """
     error = {"success": "", "error": ""}
     if request.method == "POST":
         try:
