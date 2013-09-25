@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var job_categories = {"job_category":[{"category":"it","jobs":[{"job":'互联网/电子商务'},{"job":'网络游戏'},{"job":'计算机软件'},{"job":'计算机服务(系统、数据服务、维修)'}]},
+var job_categories = {"job_category":[{"category":"it","jobs":[{"job":'互联网/电子商务'},{"job":'网络游戏'},{"job":'计算机软件'},{"job":'计算机服务(系统、数据、维修)'}]},
     {"category":"elec","jobs":[{"job":'计算机硬件'},{"job":'通信/电信/网络设备'},{"job":'通信/电信运营、增值服务'},{"job":'电子技术/半导体/集成电路'},{"job":'仪器仪表/工业自动化'}]},
     {"category":"trade","jobs":[{"job":'贸易/进出口'},{"job":'批发/零售'},{"job":'家具/家电/工艺品/玩具/珠宝'},{"job":'快速消费品(食品、饮料、化妆品)'},{"job":'办公用品及设备'},{"job":'服装/纺织/皮革'},{"job":'奢侈品/收藏品'}]},
     {"category":"finance","jobs":[{"job":'会计/审计'},{"job":'金融/投资/证券'},{"job":'银行'},{"job":'保险'}]},

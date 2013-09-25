@@ -262,7 +262,6 @@ def ajax_delete_topic_image(request):
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 
-
 def group_topic(request):
     """ 最近的话题 @fanlintao """
     groups = Group.objects.filter(member=request.user)

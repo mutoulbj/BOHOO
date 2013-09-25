@@ -23,7 +23,7 @@ def index(request):
         except:
             groups = Group.objects.filter(category__id=1).order_by("-create_time")[:30]
     recent_topics = Topic.objects.all().order_by("-create_time")[:5]
-    categories = Category.objects.all()
+    categories = Category.objects.filter(parent__isnull=True)  # 顶级分类
     vt = loader.get_template("index.html")
     c = RequestContext(
         request, {
