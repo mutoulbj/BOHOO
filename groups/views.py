@@ -226,7 +226,6 @@ def add_topic(request, group_id):
                 g = form.save(commit=False)
                 g.creator = request.user
                 g.save()
-                print 123
                 if len(image_obj):
                     for i in image_obj:
                         g.image.add(i)
@@ -236,6 +235,52 @@ def add_topic(request, group_id):
         print image_obj
         ctx = {
             'form': topicForm(initial={"group": group}),
+            'g': group,
+            'imageForm': topicImageForm(),
+            'images': image_obj
+        }
+        return render(request, 'topics/new/topic.html', ctx)
+    except ObjectDoesNotExist:
+        pass
+
+
+def edit_topic(request, group_id, topic_id):
+    """编辑话题 @fanlintao """
+    try:
+        group = Group.objects.get(id=group_id)
+        t_topic = Topic.objects.get(id=topic_id)
+        global image_obj
+        for i in t_topic.image.all():
+            if i not in image_obj:
+                image_obj.append(i)
+        if request.method == 'POST':
+            form = topicForm(request.POST, instance=t_topic)
+            if "image" in request.FILES:   # 如果有上传图片
+                imageForm = topicImageForm(request.POST, request.FILES)
+                if imageForm.is_valid():
+                    import ImageFile
+                    f = request.FILES["image"]
+                    parser = ImageFile.Parser()
+                    for chunk in f.chunks():
+                        parser.feed(chunk)
+                    img = parser.close()
+                    img.save(settings.TOPIC_IMAGE_PATH+f.name)
+                    i = imageForm.save()
+                    image_obj.append(i)
+                    print image_obj[0].image
+            if form.is_valid():
+                g = form.save(commit=False)
+                g.creator = request.user
+                g.save()
+                if len(image_obj):
+                    for i in image_obj:
+                        g.image.add(i)
+                image_obj = []
+                g_id = int(group.id)
+                return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
+        print image_obj
+        ctx = {
+            'form': topicForm(instance=t_topic),
             'g': group,
             'imageForm': topicImageForm(),
             'images': image_obj

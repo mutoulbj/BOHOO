@@ -66,10 +66,15 @@
                         <div class="row-fluid">
                             <div class="span12">
                                 {% for i in topic.image.all %}
-                                    <div><img src="{{ i.get_topic_image_url }}" style="width: 90%;"></div>
+                                    <div><img src="{{ i.get_topic_image_url }}" style="width: 90%;margin-bottom: 20px"></div>
                                 {% endfor %}
                                 <div>{{ topic.content }}</div>
                             </div>
+                            {% if request.user == topic.creator or request.user in topic.group.manager.all %}
+                            <div class="span12">
+                                <a href="{% url 'edit_topic' group_id=topic.group.id topic_id=topic.id %}" class="btn btn-link pull-right">修改</a>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
