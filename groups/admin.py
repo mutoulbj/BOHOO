@@ -2,6 +2,7 @@
 
 from django.contrib import admin
 from models import Category, Group, Topic, Report, Applicant
+from django.contrib import messages
 
 
 class CategoryAdmin(admin.ModelAdmin):
@@ -35,10 +36,6 @@ class ReportAdmin(admin.ModelAdmin):
 admin.site.register(Report, ReportAdmin)
 
 
-# 申请相关处理
-
-
-
 class ApplicantAdmin(admin.ModelAdmin):
     list_display = ('applicant', 'group', 'reason', 'join_type', 'status')
     list_filter = ('group', 'join_type', 'status')
@@ -62,11 +59,10 @@ class ApplicantAdmin(admin.ModelAdmin):
                     q.status = "pass"
                     q.save()
             msg = u"已经通过所有申请"
+            self.message_user(request, msg)
         else:
             msg = u"只有状态为processing的记录能操作,请确认!"
-        self.message_user(request, msg)
-        # TODO  修改错误时的显示方式
-
+            messages.add_message(request, messages.ERROR, msg)
     pass_apply.short_description = u"通过申请"
 
     def reject_apply(self, request, queryset):
@@ -79,9 +75,11 @@ class ApplicantAdmin(admin.ModelAdmin):
         if can_treat:
             queryset.update(status="reject")
             msg = u"已经驳回所有申请"
+            self.message_user(request, msg)
         else:
             msg = u"只有状态为processing的记录能操作,请确认!"
-        self.message_user(request, msg)
+            messages.add_message(request, messages.ERROR, msg)
+
     reject_apply.short_description = u"拒绝申请"
 
 admin.site.register(Applicant, ApplicantAdmin)
