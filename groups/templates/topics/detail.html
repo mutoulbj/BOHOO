@@ -35,6 +35,9 @@
         #id_content{
             height: 100px;
         }
+        .right{
+            width: 17% !important;
+        }
     </style>
 {% endblock %}
 
@@ -45,9 +48,9 @@
                 <h3 class="pull-left">{{ topic.name }}</h3>
             </div>
         </div>
-
-        <div class="row-fluid">
-            <div class="span8">
+        <!-- 左侧 -->
+        <div class="row-fluid left">
+            <div class="span9">
                 <div class="row-fluid topic">
                     <div class="span2">{% avatar topic.creator 70 %}</div>
                     <div class="span10">
@@ -88,7 +91,7 @@
                                     <span class="text-success">{{ r.create_time|date:"Y-m-j H:i:s" }}</span>
                                     <span class="reply">
                                         <a href="#" class="reply-reply" data-reply_id="{{ r.id }}">
-                                            <img src="{{ STATIC_URL }}image/reply.png" alt="Reply" align="absmiddle">
+                                            回复
                                         </a>
                                     </span>
                                 </div>
@@ -122,15 +125,15 @@
             </div>
 
            <!-- 右边栏 -->
-            <div class="span4">
+            <div class="span3 right">
                 <div class="row-fluid">
                     <div class="span12"><span class="muted">返回</span><a href="{% url 'group_detail' group_id=topic.group.id %}">{{ topic.group.name }}</a></div>
                 </div>
                 <div class="row-fluid">
                     <div class="span12">
-                        {% if is_member %}
+                        {% if is_member and not is_manager %}
                         <span class="muted">我是群组成员</span>
-                        {% else %}
+                        {% elif not is_member %}
                             {% if topic.group.group_type == 'open' %}
                                 <button id="join_group" class="btn btn-primary" data-group-id={{ g.id }}>加入群组</button>
                             {% elif topic.group.group_type == 'private' %}
@@ -138,15 +141,16 @@
                                 <button id="apply_join_modal_trigger" class="btn btn-primary">申请加入群组</button>
                             {% endif %}
                         {% endif %}
+                        {% if is_manager %}
+                            <span class="muted">我是管理员</span>
+                        {% elif is_member %}
+                            <button id="apply_be_manager_modal_trigger" class="btn btn-primary">申请成为管理员</button>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="row-fluid">
                     <div class="span12">
-                        {% if is_manager %}
-                            <span class="muted">我是管理员</span>
-                        {% elif is_member %}
-                            <button id="apply_be_manager_modal_trigger" class="btn btn-primary">申请成为组长</button>
-                        {% endif %}
+
                     </div>
                 </div>
                 <div class="row-fluid">
