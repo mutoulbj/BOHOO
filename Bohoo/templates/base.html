@@ -127,32 +127,24 @@
 
                 <ul class="nav pull-right">
                     {% if request.user.is_authenticated %}
-                        <li>
-                            <a href="{% url 'profile_view' request.user.id %}">{% avatar request.user 45 %}</a>
-                        </li>
-                        <li>
-                            <a href="{% url 'profile_view' request.user.id %}">{{ request.user.username }}</a>
-                        </li>
+                        <li class="dropdown action">
+                        <a class="dropdown-toggle" role="button" data-toggle="dropdown">
+                            {% avatar request.user 40 %}{{ request.user.username }}
+                            <i class="icon-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{% url 'profile_view' request.user.id %}">我的帐号</a></li>
+                            <li><a href="{% url 'profile_edit' %}">编辑个人资料</a></li>
+                            <li class="divider"></li>
+                            <li><a href="{% url 'logout' %}">退出</a></li>
+                        </ul>
+                    </li>
                     {% else %}
                     <li>
                         <a href="{% url 'login' %}"><i class="icon-fire"></i>登录</a>
                     </li>
                     <li>
                         <a href="{% url 'register' %}"><i class="icon-lemon"></i>注册</a>
-                    </li>
-                    {% endif %}
-                    {% if request.user.is_authenticated %}
-                    <li class="dropdown action">
-                        <a class="dropdown-toggle" role="button" data-toggle="dropdown">
-                            操作
-                            <i class="icon-caret-down"></i>
-                        </a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">我的帐号</a></li>
-                            <li><a href="{% url 'profile_edit' %}">编辑个人资料</a></li>
-                            <li class="divider"></li>
-                            <li><a href="{% url 'logout' %}">退出</a></li>
-                        </ul>
                     </li>
                     {% endif %}
                 </ul>
