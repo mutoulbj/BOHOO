@@ -15,17 +15,9 @@
         border-radius: 5px;
         margin: 10px 0 10px 0;
     }
-{#    .box{#}
-{#        margin: 0 0 25px;#}
-{#        clear: both;#}
-{#        border-radius: 4px;#}
-{#        border: 1px solid #ddd;#}
-{#        box-shadow: 0 1px 0 #f2f4f5;#}
-{#    }#}
-{#    .box-module{#}
-{#        position: relative;#}
-{#        padding: 20px 12px;#}
-{#    }#}
+    .toolbar{
+        text-align: right;
+    }
     .avatar img{
         padding-left: 15px;
     }
@@ -48,8 +40,8 @@
                     </div>
                     <div class="span10">
                         <div class="row-fluid">
-                            <div class="span4 text-info">{{ g.name }}</div>
-                            <div class="span8">
+                            <div class="span5 text-info">{{ g.name }}</div>
+                            <div class="span7 pull-right toolbar">
                                 {% if not is_member %}
                                     {% if g.group_type == 'open' %}
                                         <button id="join_group" class="btn btn-primary" data-group-id={{ g.id }}>加入群组</button>
@@ -57,13 +49,13 @@
                                         <!-- button to tigger modal -->
                                         <button id="apply_join_modal_trigger" class="btn btn-primary">申请加入群组</button>
                                     {% endif %}
-                                {% else %}
+                                {% elif is_member and not is_manager %}
                                     <span class="text-warning">我是群组成员 ></span>
                                 {% endif %}
 
                                 {% if is_manager %}
                                     <span class="text-warning">我是管理员 ></span>
-                                {% else %}
+                                {% elif is_member and not is_manager %}
                                     <button id="apply_be_manager_modal_trigger" class="btn btn-primary">成为管理员</button>
                                 {% endif %}
                                 {% if is_member %}
@@ -191,6 +183,15 @@
 
             // 点击打开申请成为管理员modal
             $("#apply_be_manager_modal_trigger").click(function(){
+                if('{{ is_member }}' == 'False'){
+                    $.globalMessenger().post({
+                    message: "只有群组成员才能申请管理员!",
+                    hideAfter: 2,
+                    type: 'error',
+                    showCloseButton: true
+                    });
+                    return false;
+                }
                 $("#apply_be_manager_modal").modal("show");
             });
             // 点击'取消'关闭申请成为管理员modal

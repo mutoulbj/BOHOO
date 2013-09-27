@@ -14,7 +14,8 @@ function quit_success() {
         hideAfter: 2,
         type: 'success',
         showCloseButton: true
-    })
+    });
+    location.reload();
 }
 $(document).ready(function () {
     // 退出小组

@@ -12,7 +12,8 @@ function join_success() {
         hideAfter: 2,
         type: 'success',
         showCloseButton: true
-    })
+    });
+    location.reload();
 }
 // 加入小组
 $(document).ready(function () {

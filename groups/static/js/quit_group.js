@@ -12,7 +12,8 @@ function quit_success() {
         hideAfter: 2,
         type: 'success',
         showCloseButton: true
-    })
+    });
+    location.reload()
 }
 $(document).ready(function () {
     $("#quit_group").click(function () {

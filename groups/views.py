@@ -134,6 +134,8 @@ def ajax_quite_group(request):
         try:
             group = Group.objects.get(id=request.POST.get("group_id"))
             group.member.remove(request.user)
+            if request.user in group.manager.all():  # 如果是管理员,退出时也移除其管理员资格
+                group.manager.remove(request.user)
             error["success"] = "success"
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
         except ObjectDoesNotExist:

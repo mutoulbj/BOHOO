@@ -13,7 +13,8 @@ function join_success() {
         hideAfter: 2,
         type: 'success',
         showCloseButton: true
-    })
+    });
+    location.reload();
 }
 function apply_join_success() {
     $("#apply_join_group_modal").modal("hide");
