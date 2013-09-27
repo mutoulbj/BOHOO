@@ -58,7 +58,7 @@
                                 <span class="text-success">{{ topic.create_time|date:"Y-m-j H:i:s" }}</span>
                                 <span class="reply">
                                     <a href="#" class="reply-topic">
-                                        <img src="{{ STATIC_URL }}image/reply.png" alt="Reply" align="absmiddle">
+                                        回复
                                     </a>
                                 </span>
                             </span>
@@ -68,7 +68,7 @@
                                 {% for i in topic.image.all %}
                                     <div><img src="{{ i.get_topic_image_url }}" style="width: 90%;margin-bottom: 20px"></div>
                                 {% endfor %}
-                                <div>{{ topic.content }}</div>
+                                <div>{{ topic.content|linebreaksbr }}</div>
                             </div>
                             {% if request.user == topic.creator or request.user in topic.group.manager.all %}
                             <div class="span12">
@@ -96,18 +96,18 @@
                             {% if r.reply %}
                                 <div class="row-fluid">
                                     <div class="span12 muted reply-quote">
-                                        <blockquote>{{ r.reply.content }}<span>&nbsp;&nbsp;@<a href="">{{ r.reply.creator }}</a></span></blockquote>
+                                        <blockquote>{{ r.reply.content|linebreaksbr }}<span>&nbsp;&nbsp;@<a href="">{{ r.reply.creator }}</a></span></blockquote>
                                     </div>
                                 </div>
                             {% endif %}
                             <div class="row-fluid">
-                                <div class="span12">{{ r.content }}</div>
+                                <div class="span12">{{ r.content|linebreaksbr }}</div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
                 <div class="row-fluid">
-                    <form method="post">
+                    <form method="post" id="reply-form">
                         <div class="span12">
                             {{ form.reply_id }}
                             {{ form.content }}
@@ -214,6 +214,28 @@
             e.preventDefault();
             $('body').scrollTo("#id_content");
             $('#id_reply_id').val($(this).data('reply_id'));
+        });
+        // 发送回复
+        $('.btn_submit').click(function(e){
+            e.preventDefault();
+            var content = $('.reply_content').val();
+            if ('{{ is_member }}' == 'False'){   // 非群组成员不能回复
+                $.globalMessenger().post({
+                    message: "要回复先加入群组吧!",
+                    hideAfter: 2,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }else if(!content){
+                $.globalMessenger().post({
+                    message: "发送内容不能为空!",
+                    hideAfter: 2,
+                    type: 'error',
+                    showCloseButton: true
+                });
+            }else{
+                $('#reply-form').submit();
+            }
         });
         $(document).ready(function () {
             // 当前用户是否已经是该小组成员

@@ -80,9 +80,15 @@
                     <ul class="breadcrumb">
                         <li><a href="">最近话题</a><span class="divider">/</span></li>
                         <li><a href="">热门话题</a></li>
-                        <li class="pull-right"><a href="{% url 'add_topic' group_id=g.id %}"><i class="icon-plus"></i>发帖</a></li>
+                        <li class="pull-right">
+                            <a href="{% url 'add_topic' group_id=g.id %}" id="create-topic">
+                                <i class="icon-plus"></i>
+                                发帖
+                            </a>
+                        </li>
                     </ul>
                 </div>
+                {% if topics %}
                 <div class="row-fluid topics">
                     <div class="span12">
                         <table class="table">
@@ -107,6 +113,13 @@
                         </table>
                     </div>
                 </div>
+                {% else %}
+                <div class="row-fluid">
+                    <div class="span12">
+                        <p class="muted">当前群组还没有任何话题哦!</p>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -184,6 +197,22 @@
             $("#apply_be_manager_modal_close").click(function(){
                 $("#apply_be_manager_modal").modal("hide");
             });
+        });
+        // 发帖
+        $("#create-topic").click(function(e){
+            e.preventDefault();
+            var is_member = '{{ is_member }}';
+            if (is_member == 'False'){    // 不是群组成员不允许发帖
+                $.globalMessenger().post({
+                    message: "要发帖先加入群组吧!",
+                    hideAfter: 2,
+                    type: 'error',
+                    showCloseButton: true
+                });
+                return false;
+            }else{
+                location.href = $(this).attr('href');
+            }
         })
     </script>
 {% endblock %}
