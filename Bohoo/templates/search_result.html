@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load compress %}
+{% load timeformat %}
+
+{% block descrition %}Bohoo首页{% endblock %}
+{% block title %}Bohoo首页{% endblock %}
+
+{% block head_other %}
+    <style type="text/css">
+    .recent-topic ul li{
+        list-style-type: none;
+    }
+    .table th,.table td{
+        text-align: center;
+    }
+    .table th{
+        font-weight: bolder !important;
+    }
+    .nav-list{
+        padding: 0 !important;
+    }
+    .nav-list > li > a{
+        padding: 3px 10px !important;
+        color: #000000;
+    }
+    .accordion-toggle{
+        font-weight: bolder;
+    }
+    .table th,.table td{
+        text-align: left !important;
+    }
+    .table th a{
+        color: #000000 !important;
+    }
+    .table{
+        margin-bottom: 40px;
+    }
+    </style>
+{% endblock %}
+
+{% block main %}
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span3">
+                    <div class="accordion" id="accordion1">
+                        {% for c in categories %}
+                        <div class="accordion-group">
+                            <div class="accordion-heading">
+                                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion1" href="#accordion_{{ forloop.counter0 }}">
+                                    {{ c.name }}
+                                </a>
+                            </div>
+                            <div id="accordion_{{ forloop.counter0 }}"  class="accordion-body collapse {% if not forloop.counter0 %}in{% endif %}">
+                                <div class="accordion-inner">
+                                    <ul class="nav nav-list left-list">
+                                        {% for t in c.category_parent.all %}
+                                        <li id="c_{{ t.id }}"><a href="{% url 'index' %}?c_id={{ t.id }}&ca={{ forloop.parentloop.counter0 }}">{{ t.name }}</a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="span9">
+                    {% if topics or groups %}
+                        {% if groups %}
+                        <table class="table table-hover">
+                            <caption style="font-weight: bolder">群组</caption>
+                            {% for g in groups %}
+                                <tr>
+                                    <td><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+                        {% endif %}
+                        {% if topics %}
+                        <table class="table table-hover">
+                            <caption style="font-weight: bolder">话题</caption>
+                            {% for t in topics %}
+                                {% for t in topics %}
+                                    <tr>
+                                        <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></td>
+                                        <td>{{ t.create_time|date:"m-d H:i:s" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                        </table>
+                        {% endif %}
+                    {% else %}
+                        <span class="muted">没有结果哦!请修改关键词试试吧!</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+{% endblock %}

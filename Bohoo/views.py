@@ -1,7 +1,8 @@
 #! -*- coding:utf-8 -*-
 from django.template import loader, RequestContext
 from django.http import HttpResponse
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
+from django.utils.datastructures import MultiValueDictKeyError
 
 from accounts.forms import register_form
 from groups.models import Topic, Category, Group
@@ -38,4 +39,29 @@ def index(request):
         }
     )
     return HttpResponse(vt.render(c))
+
+
+def search(request):
+    """
+    搜索群组和话题
+    """
+    categories = Category.objects.filter(parent__isnull=True)  # 顶级分类
+    try:
+        content = request.GET['search_content']
+        group_qs = Group.objects.filter(name__icontains=content)
+        topic_qs = Topic.objects.filter(name__icontains=content)
+        ctx = {
+            'groups': group_qs,
+            'topics': topic_qs,
+            'categories': categories
+        }
+        return render(request, 'search_result.html', ctx)
+    except MultiValueDictKeyError:
+        ctx = {
+            'groups': None,
+            'topics': None,
+            'categories': categories
+        }
+        return render(request, 'search_result.html', ctx)
+
 

@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}css/messenger/messenger-theme-block.css">
     <!-- bootstrap and awesome font end -->
     <style type="text/css">
+    .search-input{
+        width: 250px !important;
+    }
     .input-append{
         margin-top: 5px;
     }
@@ -111,10 +114,10 @@
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     <li>
-                        <form class="search-query">
+                        <form class="search-query" action="{% url 'search' %}" method="get">
                             <div class="input-append">
-                                <input class="search-input" name="search-content" type="text" placeholder="Search">
-                                <button class="btn btn-primary"><i class="icon-search icon-large"></i></button>
+                                <input class="search-input" name="search_content" type="text" placeholder="搜索群组/话题">
+                                <button class="btn btn-primary" id="search-button"><i class="icon-search icon-large"></i></button>
                             </div>
                         </form>
                     </li>
@@ -195,9 +198,24 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/messenger.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery_fix_csrf.js"></script>
     <script type="text/javascript">
-            $._messengerDefaults = {
-                extraClasses: 'messenger-fixed messenger-theme-block messenger-on-top'
+        $._messengerDefaults = {
+            extraClasses: 'messenger-fixed messenger-theme-block messenger-on-top'
+        };
+        $('#search-button').click(function(e){
+            e.preventDefault();
+            var search_content = $(".search-input").val();
+            if (!search_content){
+                $.globalMessenger().post({
+                    message: "搜索内容不能为空!",
+                    hideAfter: 2,
+                    type: 'error',
+                    showCloseButton: true
+                });
+                return false;
+            }else{
+                $(".search-query").submit();
             }
+        })
     </script>
 {% endcompress %}
 {% block js_other %}{% endblock %}
