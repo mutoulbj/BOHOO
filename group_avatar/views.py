@@ -75,7 +75,7 @@ def group_add(request, group_id, extra_context=None, next_override=None,
             messages.success(request, _("Successfully uploaded a new avatar."))
             group_avatar_updated.send(sender=GroupAvatar, group=group, group_avatar=group_avatar)
             # return redirect(next_override or _get_next(request))
-            return redirect(reverse('group_my_manage'))
+            return redirect(reverse('group_detail', kwargs={'group_id': group.id}))
     context = {
         'group': group,
         'group_avatar': group_avatar,
@@ -91,10 +91,7 @@ def group_add(request, group_id, extra_context=None, next_override=None,
 def group_change(request, group_id, extra_context=None, next_override=None,
            upload_form=UploadGroupAvatarForm, primary_form=PrimaryGroupAvatarForm, *args, **kwargs):
     """ 需要传入 group_id 变量 """
-    print 333
-    print group_id
     group = Group.objects.get(id=group_id)
-    print group
     if extra_context is None:
         extra_context = {}
     group_avatar, group_avatars = _get_group_avatars(group)
@@ -117,7 +114,7 @@ def group_change(request, group_id, extra_context=None, next_override=None,
             group_avatar_updated.send(sender=GroupAvatar, group=group, group_avatar=group_avatar)
         # TODO: 修改小组头像后跳转
         # return redirect(next_override or _get_next(request))
-        return redirect(reverse('profile_edit'))
+        return redirect(reverse('group_detail', kwargs={'group_id': group.id}))
     context = {
         'group': group,
         'group_avatar': group_avatar,
@@ -131,7 +128,8 @@ def group_change(request, group_id, extra_context=None, next_override=None,
 
 
 @login_required
-def group_delete(request, group, extra_context=None, next_override=None, *args, **kwargs):
+def group_delete(request, group_id, extra_context=None, next_override=None, *args, **kwargs):
+    group = Group.objects.get(id=group_id)
     if extra_context is None:
         extra_context = {}
     group_avatar, group_avatars = _get_group_avatars(group)
@@ -151,11 +149,12 @@ def group_delete(request, group, extra_context=None, next_override=None, *args, 
             messages.success(request, _("Successfully deleted the requested avatars."))
             # TODO: 成功删除小组头像后页面跳转
             # return redirect(next_override or _get_next(request))
-            return redirect(reverse('profile_edit'))
+            return redirect(reverse('group_detail', kwargs={'group_id': group.id}))
     context = {
         'group_avatar': group_avatar,
         'group_avatars': group_avatars,
-        'delete_avatar_form': delete_group_avatar_form,
+        'group': group,
+        'delete_group_avatar_form': delete_group_avatar_form,
         'next': next_override or _get_next(request),
     }
     context.update(extra_context)

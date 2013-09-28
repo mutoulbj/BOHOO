@@ -26,7 +26,7 @@ def new_group(request):
             g.save()
             g.manager.add(request.user)   # 创建者默认是管理员
             g.member.add(request.user)    # 创建者默认是小组成员
-            return redirect(reverse("add_group_avatar", args=[g.id]))
+            return redirect(reverse("group_detail", args=[g.id]))
     return render(request, 'groups/new/group.html', {'form': group()})
 
 
@@ -41,7 +41,7 @@ def edit_group(request, group_id):
                 g.modify_time = datetime.datetime.now()
                 g.save()
                 return redirect(reverse("group_my_manage"))
-        return render(request, 'groups/new/group.html', {'form': group(instance=t_group)})
+        return render(request, 'groups/edit.html', {'t_group': t_group, 'form': group(instance=t_group)})
     except ObjectDoesNotExist:
         pass
 

@@ -78,6 +78,25 @@
         -moz-border-radius: 6px;
         z-index: 999;
     }
+    .action .dropdown-menu {
+        width: 120px !important;
+        min-width: 120px !important;
+    }
+
+    #footer {
+        color: #999;
+        padding-top: 6px;
+        margin: 40px 0 20px 0;
+        overflow: hidden;
+        zoom: 1;
+        border-top: 1px dashed #ddd;
+    }
+    .fleft{
+        float: left;
+    }
+    .fright{
+        float: right;
+    }
     </style>
 {% endcompress %}
 {% block head_other %}{% endblock %}
@@ -157,6 +176,18 @@
     {% block main %}{% endblock %}
 </div>
 
+<footer id="footer">
+<span id="icp" class="fleft gray-link">
+    © 2013-2014 BOHOO, all rights reserved
+</span>
+
+<span class="fright">
+    <a href="http://www.douban.com/about">关于</a>
+    · <a href="http://www.douban.com/about?topic=contactus">联系</a>
+    · <a href="http://www.douban.com/about?policy=disclaimer">免责声明</a>
+    · <a href="http://www.douban.com/help/">备案信息</a>
+</span>
+</footer>
 
 {% compress js %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.min.js"></script>

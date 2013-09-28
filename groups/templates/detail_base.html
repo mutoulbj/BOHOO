@@ -2,13 +2,19 @@
 
 {% block head_other %}
     <style type="text/css">
-        .right-list {
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin: 10px 0 10px 0;
-        }
+{#        .right-list {#}
+{#            border: 1px solid #ddd;#}
+{#            border-radius: 5px;#}
+{#            margin: 10px 0 10px 0;#}
+{#        }#}
         .content{
             margin: 10px !important;
+        }
+        .left{
+            width: 78% !important;
+        }
+        .right{
+            width: 17% !important;
         }
     </style>
 {% endblock %}
@@ -16,19 +22,19 @@
 {% block main %}
     <div class="container-fluid content">
         <div class="row-fluid">
-            <div class="span9">
+            <div class="span9 left">
                 {% block left_content %}{% endblock %}
             </div>
-            <div class="span3">
+            <div class="span3 right">
                 {% block right_content %}
                     <ul class="nav nav-list right-list">
                         <li class="nav-header">话题</li>
-                        <li id="topic_my_group"><a href="{% url 'group_topic' %}">我的群组话题<i class="icon-chevron-right pull-right"></i></a></li>
-                        <li id="topic_replied"><a href="{% url 'replied_topic' %}">我回复的话题<i class="icon-chevron-right pull-right"></i></a></li>
-                        <li id="topic_created"><a href="{% url 'created_topic' %}">我发表的话题<i class="icon-chevron-right pull-right"></i></a></li>
+                        <li id="topic_my_group"><a href="{% url 'group_topic' %}">我的群组话题<i class="icon-chevron-left pull-left"></i></a></li>
+                        <li id="topic_replied"><a href="{% url 'replied_topic' %}">我回复的话题<i class="icon-chevron-left pull-left"></i></a></li>
+                        <li id="topic_created"><a href="{% url 'created_topic' %}">我发表的话题<i class="icon-chevron-left pull-left"></i></a></li>
                         <li class="nav-header">群组</li>
-                        <li id="group_joined"><a href="{% url 'group_joined' %}">我加入的群组<i class="icon-chevron-right pull-right"></i></a></li>
-                        <li id="group_managed"><a href="{% url 'group_my_manage' %}">我管理的群组<i class="icon-chevron-right pull-right"></i></a></li>
+                        <li id="group_joined"><a href="{% url 'group_joined' %}">我加入的群组<i class="icon-chevron-left pull-left"></i></a></li>
+                        <li id="group_managed"><a href="{% url 'group_my_manage' %}">我管理的群组<i class="icon-chevron-left pull-left"></i></a></li>
                     </ul>
                     <ul class="nav nav-list left-list">
                         <li class="nav-header">为你推荐</li>

@@ -5,6 +5,7 @@
 {% block title %}{{ g.name }}--详情{% endblock %}
 
 {% block head_other %}
+    {{ block.super }}
     {% compress css %}
     <style type="text/css">
     .left_content{
@@ -35,13 +36,13 @@
                 <div class="row-fluid">
                     <div class="span2 avatar">
                         <div class="row-fluid">
-                             <a href="">{% group_avatar g 50 %}</a>
+                             {% group_avatar g 50 %}
                         </div>
                     </div>
                     <div class="span10">
                         <div class="row-fluid">
-                            <div class="span5 text-info">{{ g.name }}</div>
-                            <div class="span7 pull-right toolbar">
+                            <div class="span7 text-info">{{ g.name }}</div>
+                            <div class="span5 pull-right toolbar">
                                 {% if not is_member %}
                                     {% if g.group_type == 'open' %}
                                         <button id="join_group" class="btn btn-primary" data-group-id={{ g.id }}>加入群组</button>
