@@ -38,7 +38,7 @@
     .table th,.table td{
         text-align: left !important;
     }
-    .table th a,.table td a{
+    .table th a{
         color: #000000 !important;
     }
     .table{
@@ -135,9 +135,11 @@
 
 {% block js_other %}
     <script type="text/javascript">
-        // 初始化的左侧加上active样式,所在分类展开
-        var init_ca_id = "c_" + "{{ init_ca_id }}";
-        $('#' + init_ca_id).addClass("active").parents(".accordion-body").addClass('in');
+        {% if request.GET.init %}
+            // 初始化的左侧加上active样式,所在分类展开
+            var init_ca_id = "c_" + "{{ init_ca_id }}";
+            $('#' + init_ca_id).addClass("active").parents(".accordion-body").addClass('in');
+        {% endif %}
         // 给选定的tab加上active
         {% if request.GET.c_id %}
             var c_id = "{{ request.GET.c_id }}";
