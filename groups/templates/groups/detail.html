@@ -201,12 +201,26 @@
             });
         });
         // 发帖
+{#        $("#create-topic").click(function(e){#}
+{#            e.preventDefault();#}
+{#            var is_member = '{{ is_member }}';#}
+{#            if (is_member == 'False'){    // 不是群组成员不允许发帖#}
+{#                $.globalMessenger().post({#}
+{#                    message: "要发帖先加入群组吧!",#}
+{#                    hideAfter: 2,#}
+{#                    type: 'error',#}
+{#                    showCloseButton: true#}
+{#                });#}
+{#                return false;#}
+{#            }else{#}
+{#                location.href = $(this).attr('href');#}
+{#            }#}
+{#        });#}
         $("#create-topic").click(function(e){
             e.preventDefault();
-            var is_member = '{{ is_member }}';
-            if (is_member == 'False'){    // 不是群组成员不允许发帖
+            if ("{{ request.user.is_authenticated }}" === 'False'){    // 未登录
                 $.globalMessenger().post({
-                    message: "要发帖先加入群组吧!",
+                    message: "登录后才能发帖哦!",
                     hideAfter: 2,
                     type: 'error',
                     showCloseButton: true
@@ -215,6 +229,6 @@
             }else{
                 location.href = $(this).attr('href');
             }
-        })
+        });
     </script>
 {% endblock %}

@@ -68,14 +68,14 @@ def group_detail(request, group_id):
             apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
                                                         join_type="member")
             is_member_processing = True
-        except ObjectDoesNotExist:
+        except:
             is_member_processing = False
 
         try:
             apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
                                                         join_type="manager")
             is_manager_processing = True
-        except ObjectDoesNotExist:
+        except:
             is_manager_processing = False
         topics = Topic.objects.filter(group=group).order_by("-last_reply_add")
         return render(request, 'groups/detail.html', {'g': group, 'is_member': is_member, 'topics': topics,

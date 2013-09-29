@@ -220,12 +220,33 @@
             $('#id_reply_id').val($(this).data('reply_id'));
         });
         // 发送回复
+{#        $('.btn_submit').click(function(e){#}
+{#            e.preventDefault();#}
+{#            var content = $('.reply_content').val();#}
+{#            if ('{{ is_member }}' == 'False'){   // 非群组成员不能回复#}
+{#                $.globalMessenger().post({#}
+{#                    message: "要回复先加入群组吧!",#}
+{#                    hideAfter: 2,#}
+{#                    type: 'error',#}
+{#                    showCloseButton: true#}
+{#                });#}
+{#            }else if(!content){#}
+{#                $.globalMessenger().post({#}
+{#                    message: "发送内容不能为空!",#}
+{#                    hideAfter: 2,#}
+{#                    type: 'error',#}
+{#                    showCloseButton: true#}
+{#                });#}
+{#            }else{#}
+{#                $('#reply-form').submit();#}
+{#            }#}
+{#        });#}
         $('.btn_submit').click(function(e){
             e.preventDefault();
             var content = $('.reply_content').val();
-            if ('{{ is_member }}' == 'False'){   // 非群组成员不能回复
+            if ('{{ request.user.is_authenticated }}' === 'False'){   // 未登录不能回复
                 $.globalMessenger().post({
-                    message: "要回复先加入群组吧!",
+                    message: "登录后才能回复哦!",
                     hideAfter: 2,
                     type: 'error',
                     showCloseButton: true
