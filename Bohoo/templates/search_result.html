@@ -50,7 +50,7 @@
                                     {{ c.name }}
                                 </a>
                             </div>
-                            <div id="accordion_{{ forloop.counter0 }}"  class="accordion-body collapse {% if not forloop.counter0 %}in{% endif %}">
+                            <div id="accordion_{{ forloop.counter0 }}"  class="accordion-body collapse">
                                 <div class="accordion-inner">
                                     <ul class="nav nav-list left-list">
                                         {% for t in c.category_parent.all %}
