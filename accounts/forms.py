@@ -2,6 +2,7 @@
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth import authenticate
+from captcha.fields import CaptchaField    # django-simple-captcha  验证码字段
 from User.models import MyUser
 
 
@@ -23,6 +24,7 @@ class login_form(forms.Form):
             }
         )
     )
+    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'})
 
     def __init__(self, request=None, *args, **kwargs):
         """

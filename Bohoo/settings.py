@@ -161,6 +161,7 @@ INSTALLED_APPS = (
     'compressor',
     'avatar',
     'group_avatar',
+    'captcha',  # 验证码app
     'django.contrib.admin',
     'User',
     'groups',

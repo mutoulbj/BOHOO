@@ -9,6 +9,7 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     url(r'^$', 'Bohoo.views.index', name='index'),
+    url(r'^captcha/', include('captcha.urls')),   # django-simple-captcha
     url(r'^search/$', 'Bohoo.views.search', name='search'),
     url(r'^avatar/', include('avatar.urls')),
     url(r'^group_avatar/', include('group_avatar.urls')),
