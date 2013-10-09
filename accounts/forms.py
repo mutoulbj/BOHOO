@@ -108,6 +108,8 @@ class register_form(forms.Form):
     def clean_password1(self):
         data = self.cleaned_data
         password = data['password']
+        if len(password) < 6:
+            raise forms.ValidationError(u'密码必须长于6字节')
         password1 = data['password1']
         if password == password1:
             return password1

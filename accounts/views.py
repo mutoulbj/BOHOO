@@ -88,6 +88,9 @@ def username_check(request):
             res['error'] = 'error'
             return HttpResponse(json.dumps(res))
         except ObjectDoesNotExist:
+            if len(username.encode('gbk')) > 14:   # 用户名长度大于14个字节
+                res['error'] = 'error'
+                return HttpResponse(json.dumps(res))
             if not username:
                 res['error'] = 'error'
                 return HttpResponse(json.dumps(res))
