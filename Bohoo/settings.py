@@ -272,3 +272,10 @@ ENABLE_COMMENT_CHN = False
 
 
 TOPIC_IMAGE_PATH = "/home/fan/media/topic_image/"
+
+HASH_KEY = 'p0o9i8u7y6t5r4e3w2q1'
+
+try:
+    from settings_dev import *
+except ImportError:
+    pass

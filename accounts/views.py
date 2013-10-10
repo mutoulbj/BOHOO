@@ -6,8 +6,12 @@ from django.http import HttpResponse
 from django.template import loader, RequestContext
 from django.shortcuts import redirect
 from django.contrib.auth import logout
+from django.core.mail import send_mail
+from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.shortcuts import render
 
-from accounts.forms import login_form, register_form
+from accounts.forms import login_form, register_form, password_reset_form
 
 from User.models import MyUser
 
@@ -115,3 +119,33 @@ def email_check(request):
                 return HttpResponse(json.dumps(res))
             res['error'] = 'success'
             return HttpResponse(json.dumps(res))
+
+
+def reset_password(request):
+    """
+    重置密码
+    """
+    if request.method == 'POST':
+        form = password_reset_form(request.POST)
+        print form.errors
+        if form.is_valid():
+            import time
+            import hashlib
+            t_email = form.get_email()
+            user_id = str(MyUser.objects.get(email=t_email).id)
+            timestamp = str(time.time())
+            key = settings.HASH_KEY
+            l_str = user_id + timestamp + key
+            m = hashlib.md5()
+            m.update(l_str)
+            hash_code = m.hexdigest()
+            url = request.build_absolute_uri(reverse('reset_password')) + \
+                  '?id=' + user_id + '&timestamp=' + timestamp + '&hash_code=' + hash_code
+            subject = u'密码重置'
+            message = u'请点击下面的连接进行密码重置,如果不能点击请将链接复制到浏览器地址栏中打开.%s' % url
+            send_mail(subject, message, settings.EMAIL_HOST_USER, [t_email, ])
+            return render(request, 'reset_password_email_sent.html', {'email': t_email})
+    else:
+        form = password_reset_form()
+    return render(request, 'reset_password.html', {'form': form})
+

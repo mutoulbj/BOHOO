@@ -24,7 +24,7 @@ class login_form(forms.Form):
             }
         )
     )
-    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'})
+    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'}, required=False)
 
     def __init__(self, request=None, *args, **kwargs):
         """
@@ -128,3 +128,22 @@ class register_form(forms.Form):
     def save(self):
         data = self.cleaned_data
         MyUser.objects.create_user(email=data['email'], username=data['username'], password=data['password'])
+
+
+class password_reset_form(forms.Form):
+    """ 重置密码 """
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': u'邮件',}))
+    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'}, required=False)
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email:
+            try:
+                user = MyUser.objects.get(email=email)
+                return email
+            except ObjectDoesNotExist:
+                print 3
+                raise forms.ValidationError(u"该邮箱不存在!")
+
+    def get_email(self):
+        return self.cleaned_data['email']
