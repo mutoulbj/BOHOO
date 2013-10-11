@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
+from django.utils.datastructures import MultiValueDictKeyError
 
 from accounts.forms import login_form, register_form, password_reset_apply_form, reset_password_form
 
@@ -138,7 +139,7 @@ def reset_password_apply(request):
             m = hashlib.md5()
             m.update(l_str)
             hash_code = m.hexdigest()
-            url = request.build_absolute_uri(reverse('reset_password')) + \
+            url = request.build_absolute_uri(reverse('reset_password', kwargs={'user_id': 0})) + \
                   '?id=' + user_id + '&timestamp=' + timestamp + '&hash_code=' + hash_code
             subject = u'密码重置'
             message = u'请点击下面的连接进行密码重置,如果不能点击请将链接复制到浏览器地址栏中打开.%s' % url
@@ -149,8 +150,27 @@ def reset_password_apply(request):
     return render(request, 'reset_password_apply.html', {'form': form})
 
 
-def reset_password(request, user_id):
+def reset_password(request, user_id=None):
     """"重置密码"""
+    import time
+    import hashlib
+    timestamp = None
+    try:
+        timestamp = request.GET['timestamp']
+    except MultiValueDictKeyError:
+        pass
+
+    if timestamp:
+        if time.time() - float(timestamp) > 3600:    # 超过1小时连接失效
+            return render(request, 'reset_password_invalid.html', {'invalid_reason': 'timeout'})
+        else:
+            key = settings.HASH_KEY
+            user_id = request.GET['id']
+            hash_code = request.GET['hash_code']
+            m = hashlib.md5()
+            m.update(user_id+timestamp+key)
+            if hash_code != m.hexdigest():   # hash值不正确,连接无效
+                return render(request, 'reset_password_invalid.html', {'invalid_reason': 'invalid_link'})
     try:
         user = MyUser.objects.get(id=user_id)
         if request.method == 'POST':

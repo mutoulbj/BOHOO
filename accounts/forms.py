@@ -142,7 +142,6 @@ class password_reset_apply_form(forms.Form):
                 user = MyUser.objects.get(email=email)
                 return email
             except ObjectDoesNotExist:
-                print 3
                 raise forms.ValidationError(u"该邮箱不存在!")
 
     def get_email(self):
