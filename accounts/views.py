@@ -11,7 +11,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 
-from accounts.forms import login_form, register_form, password_reset_form
+from accounts.forms import login_form, register_form, password_reset_apply_form, reset_password_form
 
 from User.models import MyUser
 
@@ -121,13 +121,12 @@ def email_check(request):
             return HttpResponse(json.dumps(res))
 
 
-def reset_password(request):
+def reset_password_apply(request):
     """
-    重置密码
+    请求重置密码
     """
     if request.method == 'POST':
-        form = password_reset_form(request.POST)
-        print form.errors
+        form = password_reset_apply_form(request.POST)
         if form.is_valid():
             import time
             import hashlib
@@ -146,6 +145,25 @@ def reset_password(request):
             send_mail(subject, message, settings.EMAIL_HOST_USER, [t_email, ])
             return render(request, 'reset_password_email_sent.html', {'email': t_email})
     else:
-        form = password_reset_form()
-    return render(request, 'reset_password.html', {'form': form})
+        form = password_reset_apply_form()
+    return render(request, 'reset_password_apply.html', {'form': form})
+
+
+def reset_password(request, user_id):
+    """"重置密码"""
+    try:
+        user = MyUser.objects.get(id=user_id)
+        if request.method == 'POST':
+            form = reset_password_form(request.POST)
+            if form.is_valid():
+                password = form.cleaned_data['password']
+                user.set_password(password)
+                user.save()
+                logout(request)
+                return redirect(reverse('login'))
+        else:
+            form = reset_password_form()
+        return render(request, 'reset_password.html', {'form': form})
+    except ObjectDoesNotExist:
+        pass
 

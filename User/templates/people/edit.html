@@ -114,7 +114,10 @@
                 <span class="pull-left"><a href="#">{{ request.user.username }}</a>
                     <i class="icon-double-angle-right"></i>编辑个人资料</span>
             </div>
-            <div class="span6">
+            <div class="span3">
+                <span class="pull-right"><a href="{% url 'reset_password' user_id=request.user.id %}">修改密码</a></span>
+            </div>
+            <div class="span3">
                 <span class="pull-right"><a href="#">返回个人主页</a></span>
             </div>
         </div>

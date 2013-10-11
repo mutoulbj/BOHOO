@@ -24,7 +24,7 @@ class login_form(forms.Form):
             }
         )
     )
-    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'}, required=False)
+    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'})
 
     def __init__(self, request=None, *args, **kwargs):
         """
@@ -130,10 +130,10 @@ class register_form(forms.Form):
         MyUser.objects.create_user(email=data['email'], username=data['username'], password=data['password'])
 
 
-class password_reset_form(forms.Form):
-    """ 重置密码 """
+class password_reset_apply_form(forms.Form):
+    """  申请重置密码 """
     email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': u'邮件',}))
-    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'}, required=False)
+    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'})
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -147,3 +147,21 @@ class password_reset_form(forms.Form):
 
     def get_email(self):
         return self.cleaned_data['email']
+
+
+class reset_password_form(forms.Form):
+    """ 重置密码 """
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': u'新密码',}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': u'重复密码',}))
+    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'})
+
+
+    def clean_password1(self):
+        data = self.cleaned_data
+        password = data['password']
+        if len(password) < 6:
+            raise forms.ValidationError(u'密码必须长于6字节')
+        password1 = data['password1']
+        if password == password1:
+            return password1
+        raise forms.ValidationError(u'密码必须一致')
