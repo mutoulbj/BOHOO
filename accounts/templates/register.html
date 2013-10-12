@@ -18,16 +18,14 @@
     <div class="container-fluid">
         <div class="span12">
             <div class="control-group">
-                <div class="input-prepend">
-                    <span class="add-on"><i class="icon-envelope"></i></span>{{ form.email }}
-                </div>
-                <div class="help-block"><span class="email-help text-info">请输入有效的email地址</span></div>
+                <div class="input-prepend"><span class="add-on"><i class="icon-envelope"></i></span>{{ form.email }}</div>
+                <div class="help-block"><span class="email-help text-info"></span></div>
                 <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span>{{ form.username }}</div>
-                <div class="help-block"><span class="username-help text-info">用户名14个英文或7个汉字以内</span></div>
+                <div class="help-block"><span class="username-help text-info"></span></div>
                 <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span>{{ form.password }}</div>
-                <div class="help-block"><span class="password-help text-info">密码6个字符以上</span></div>
+                <div class="help-block"><span class="password-help text-info"></span></div>
                 <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span>{{ form.password1 }}</div>
-                <div class="help-block"><span class="re-password-help text-info">密码6个字符以上</span></div>
+                <div class="help-block"><span class="re-password-help text-info"></span></div>
                 <label class="checkbox"><input type="checkbox" id="id_terms">我已经阅读并同意<a href="">服务条款</a> </label>
                 <button class="btn btn-primary btn-register">注册</button>
             </div>
@@ -38,54 +36,171 @@
 
 {% block js_other %}
     <script type="text/javascript">
-        // 邮件格式监听
-        var email_input = document.getElementById("id_email");
-        email_input.addEventListener('input', function(){
-            var email = $(this).val();
+        // email的验证
+        var email_obj = $('input#id_email');
+        email_obj.mousedown(function(){
+            var email = email_obj.val();
             var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
-            if(!pattern.test(email)){
+            if(!email){
+                $('.email-help').text("请输入有效的email地址!").removeClass("text-error text-success").addClass("text-info");
+            }else if (!pattern.test(email)){
                 $(".email-help").text("邮件格式不正确!").removeClass("text-info text-success").addClass("text-error");
-            }else{
+            }else {
                 $(".email-help").text("邮件输入正确!").removeClass("text-info text-error").addClass("text-success");
             }
-        }, false);
+        });
+        email_obj.focusout(function(){
+            var email = email_obj.val();
+            var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);
+            if(!email){
+                $('.email-help').text('');
+            }else{
+                if(!pattern.test(email)){
+                    $(".email-help").text("邮件格式不正确!").removeClass("text-info text-success").addClass("text-error");
+                }else{
+                    $(".email-help").text("邮件输入正确!").removeClass("text-info text-error").addClass("text-success");
+                }
+            }
+        });
 
-        // 用户名输入监听,14个英文或者7个汉字以内
+        // 用户名验证
+        // 计算带有中文的字符串长度
         String.prototype.ByteCount = function(){
             var txt = this.match(/[^\x00-\xff]/ig);  // 匹配中文
             return this.length + (txt == null ? 0 : txt.length);   // 字符串长度再加上其中中文的长度length
         };
-        var username = document.getElementById("id_username");
-        username.addEventListener('input', function(){
-            var count = username.value.ByteCount();
-            if (count <= 14){
-                $(".username-help").text("用户名长度正确!").removeClass("text-info text-error").addClass("text-success");
-            }else{
-                $(".username-help").text("只能输入14个英文或者7个汉字!").removeClass("text-info text-success").addClass("text-error");
-            }
-        }, false);
-
-        // 监听密码的输入,6个字符以上
-        var password = document.getElementById('id_password');
-        password.addEventListener('input', function(){
-            if($(this).val().length < 6){
-                $(".password-help").text("密码少于6个字符!").removeClass("text-info text-success").addClass("text-error");
-            }else{
-                $(".password-help").text("此密码可用!").removeClass("text-info text-error").addClass("text-success");
-            }
-        }, false);
-
-        // 监听重复密码,必须一致
-        var password1 = document.getElementById('id_password1');
-        password1.addEventListener('input', function(){
-            if ($(this).val() !== password.value){
-                $(".re-password-help").text("两次输入不一致!").removeClass("text-info text-success").addClass("text-error");
-            }else if($(this).val().length < 6){
-                $(".re-password-help").text("密码少于6个字符!").removeClass("text-info text-success").addClass("text-error");
-            }else if ($(this).val() === password.value && $(this).val().length >= 6){
-                $(".re-password-help").text("输入正确!").removeClass("text-info text-error").addClass("text-success");
+        var username_obj = $('input#id_username');
+        username_obj.mousedown(function(){
+            var username = username_obj.val();
+            var count = username.ByteCount();
+            if (!username){
+                $('.username-help').text("用户名14个英文或7个汉字以内!").removeClass("text-error text-success").addClass("text-info");
+            } else {
+                if (count <= 14){
+                    $(".username-help").text("用户名长度正确!").removeClass("text-info text-error").addClass("text-success");
+                }else{
+                    $(".username-help").text("只能输入14个英文或者7个汉字!").removeClass("text-info text-success").addClass("text-error");
+                }
             }
         });
+        username_obj.focusout(function(){
+            var username = username_obj.val();
+            var count = username.ByteCount();
+            if (!username){
+                $('.username-help').text('');
+            } else{
+                if (count <= 14) {
+                    $(".username-help").text("用户名长度正确!").removeClass("text-info text-error").addClass("text-success");
+                } else {
+                    $(".username-help").text("只能输入14个英文或者7个汉字!").removeClass("text-info text-success").addClass("text-error");
+                }
+            }
+        });
+
+        // 密码验证,至少6个字符
+        var password_obj = $('input#id_password');
+        password_obj.mousedown(function(){
+            var password = password_obj.val();
+            if (!password){
+                $('.password-help').text("密码至少6个字符(非中文)!").removeClass("text-error text-success").addClass("text-info");
+            } else{
+                if(password.length < 6){
+                    $(".password-help").text("密码少于6个字符!").removeClass("text-info text-success").addClass("text-error");
+                } else {
+                    $(".password-help").text("此密码可用!").removeClass("text-info text-error").addClass("text-success");
+                }
+            }
+        });
+        password_obj.focusout(function(){
+            var password = password_obj.val();
+            if (!password){
+                $('.password-help').text('');
+            }else{
+                if(password.length < 6){
+                    $(".password-help").text("密码少于6个字符!").removeClass("text-info text-success").addClass("text-error");
+                } else {
+                    $(".password-help").text("此密码可用!").removeClass("text-info text-error").addClass("text-success");
+                }
+            }
+        });
+
+        // 重复密码验证,输入必须一致
+        var password1_obj = $('input#id_password1');
+        password1_obj.mousedown(function(){
+            var password1 = password1_obj.val();
+            var password = password_obj.val();
+            if (!password1){
+                $('.re-password-help').text("请重复输入密码").removeClass("text-error text-success").addClass("text-info");
+            }else{
+                if (password1 !== password) {
+                    $(".re-password-help").text("两次输入不一致!").removeClass("text-info text-success").addClass("text-error");
+                } else if (password1 === password) {
+                    $(".re-password-help").text("两次输入一致!").removeClass("text-info text-error").addClass("text-success");
+                }
+            }
+        });
+        password1_obj.focusout(function(){
+            var password1 = password1_obj.val();
+            var password = password_obj.val();
+            if (!password1){
+                $('.re-password-help').text("");
+            }else{
+                if (password1 !== password) {
+                    $(".re-password-help").text("两次输入不一致!").removeClass("text-info text-success").addClass("text-error");
+                } else if (password1 === password) {
+                    $(".re-password-help").text("两次输入一致!").removeClass("text-info text-error").addClass("text-success");
+                }
+            }
+        });
+
+        // 邮件格式监听
+{#        var email_input = document.getElementById("id_email");#}
+{#        email_input.addEventListener('input', function(){#}
+{#            var email = $(this).val();#}
+{#            var pattern = new RegExp(/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?$/i);#}
+{#            if(!pattern.test(email)){#}
+{#                $(".email-help").text("邮件格式不正确!").removeClass("text-info text-success").addClass("text-error");#}
+{#            }else{#}
+{#                $(".email-help").text("邮件输入正确!").removeClass("text-info text-error").addClass("text-success");#}
+{#            }#}
+{#        }, false);#}
+
+        // 用户名输入监听,14个英文或者7个汉字以内
+{#        String.prototype.ByteCount = function(){#}
+{#            var txt = this.match(/[^\x00-\xff]/ig);  // 匹配中文#}
+{#            return this.length + (txt == null ? 0 : txt.length);   // 字符串长度再加上其中中文的长度length#}
+{#        };#}
+{#        var username = document.getElementById("id_username");#}
+{#        username.addEventListener('input', function(){#}
+{#            var count = username.value.ByteCount();#}
+{#            if (count <= 14){#}
+{#                $(".username-help").text("用户名长度正确!").removeClass("text-info text-error").addClass("text-success");#}
+{#            }else{#}
+{#                $(".username-help").text("只能输入14个英文或者7个汉字!").removeClass("text-info text-success").addClass("text-error");#}
+{#            }#}
+{#        }, false);#}
+
+        // 监听密码的输入,6个字符以上
+{#        var password = document.getElementById('id_password');#}
+{#        password.addEventListener('input', function(){#}
+{#            if($(this).val().length < 6){#}
+{#                $(".password-help").text("密码少于6个字符!").removeClass("text-info text-success").addClass("text-error");#}
+{#            }else{#}
+{#                $(".password-help").text("此密码可用!").removeClass("text-info text-error").addClass("text-success");#}
+{#            }#}
+{#        }, false);#}
+
+        // 监听重复密码,必须一致
+{#        var password1 = document.getElementById('id_password1');#}
+{#        password1.addEventListener('input', function(){#}
+{#            if ($(this).val() !== password.value){#}
+{#                $(".re-password-help").text("两次输入不一致!").removeClass("text-info text-success").addClass("text-error");#}
+{#            }else if($(this).val().length < 6){#}
+{#                $(".re-password-help").text("密码少于6个字符!").removeClass("text-info text-success").addClass("text-error");#}
+{#            }else if ($(this).val() === password.value && $(this).val().length >= 6){#}
+{#                $(".re-password-help").text("输入正确!").removeClass("text-info text-error").addClass("text-success");#}
+{#            }#}
+{#        });#}
 
         $('.btn-register').on('click',function(e){
             e.preventDefault();
