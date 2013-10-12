@@ -10,21 +10,9 @@ class login_form(forms.Form):
     """
     登录
     """
-    email = forms.EmailField(
-        widget=forms.TextInput(
-            attrs={
-                'placeholder': u'邮件',
-            }
-        )
-    )
-    password = forms.CharField(
-        widget=forms.PasswordInput(
-            attrs={
-                'placeholder': u'密码',
-            }
-        )
-    )
-    captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'})
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': u'邮件',}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': u'密码',}))
+    # captcha = CaptchaField(error_messages={'invalid': u'验证码错误.'})
 
     def __init__(self, request=None, *args, **kwargs):
         """
