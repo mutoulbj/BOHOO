@@ -64,34 +64,57 @@
                     </div>
                 </div>
                 <div class="span9">
-                    {% if topics or groups %}
-                        {% if groups %}
+                    {% if ty == 'group' %}
+                        <h2>群组搜索:{{ content }}</h2>
+                    {% elif ty == 'topic' %}
+                        <h2>话题搜索:{{ content }}</h2>
+                    {% endif %}
+                    <ul class="nav nav-pills">
+                        <li class="search-group"><a href="{% url 'search' %}?ty=group&search_content={{ content }}">群组</a></li>
+                        <li class="search-topic"><a href="{% url 'search' %}?ty=topic&search_content={{ content }}">话题</a></li>
+                    </ul>
+
+                    {% if ty == 'group' %}
                         <table class="table table-hover">
-                            <caption style="font-weight: bolder">群组</caption>
                             {% for g in groups %}
                                 <tr>
-                                    <td><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></td>
+                                    <td style="width: 30%"><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name|truncatechars:25 }}</a></td>
+                                    <td style="width: 70%;">
+                                        <span>{{ g.get_members }}个成员</span> <br />
+                                        <span class="muted">{{ g.description|truncatechars:150 }}</span>
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </table>
-                        {% endif %}
-                        {% if topics %}
+                    {% elif ty == 'topic' %}
                         <table class="table table-hover">
-                            <caption style="font-weight: bolder">话题</caption>
                             {% for t in topics %}
-                                {% for t in topics %}
-                                    <tr>
-                                        <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></td>
-                                        <td>{{ t.create_time|date:"m-d H:i:s" }}</td>
-                                    </tr>
-                                {% endfor %}
+                                <tr>
+                                    <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name|truncatechars:25 }}</a></td>
+                                    <td>{{ t.create_time|date:"m-d H:i:s" }}</td>
+                                    <td>{{ t.reply_amount }}回复</td>
+                                    <td>
+                                        <a href="{% url 'group_detail' group_id=t.group.id %}">{{ t.group.name|truncatechars:20 }}</a>
+                                    </td>
+                                </tr>
                             {% endfor %}
                         </table>
-                        {% endif %}
-                    {% else %}
+                    {% endif %}
+
+                    {% if not ty %}
                         <span class="muted">没有结果哦!请修改关键词试试吧!</span>
                     {% endif %}
                 </div>
             </div>
         </div>
+{% endblock %}
+
+{% block js_other %}
+    <script type="text/javascript">
+        {% if ty == 'group' %}
+            $('li.search-group').addClass('active');
+        {% elif ty == 'topic' %}
+            $('li.search-topic').addClass('active');
+        {% endif %}
+    </script>
 {% endblock %}

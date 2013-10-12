@@ -10,7 +10,6 @@ ADMINS = (
 )
 
 SITE_ID = 1
-MANAGERS = ADMINS
 
 AUTH_USER_MODEL = 'User.MyUser'
 
@@ -25,7 +24,7 @@ DEFAULT_FROM_EMAIL = '@qq.com'
 LOGIN_URL = '/accounts/login'
 
 # 分页
-ENDLESS_PAGINATION_PER_PAGE = 20
+ENDLESS_PAGINATION_PER_PAGE = 3
 ENDLESS_PAGINATION_NEXT_LABEL = "Next"
 ENDLESS_PAGINATION_DEFAULT_CALLABLE_AROUNDS = 5
 ENDLESS_PAGINATION_DEFAULT_CALLABLE_ARROWS = True
@@ -219,13 +218,6 @@ GOOGLE_ACCESS_TOKEN_ENDPOINT = 'https://accounts.google.com/o/oauth2/token'
 GOOGLE_USERINFO_ENDPOINT = 'https://www.googleapis.com/oauth2/v1/userinfo'
 GOOGLE_REDIRECT_URI = '%s/accounts/google/login/done/' % SITE
 
-GOOGLE_SIMPLE_API_KEY = ''
-# Google CustomSearch api
-GOOGLE_SEARCH_ENGINE_UNIQUE_ID = ''
-GOOGLE_CUSTOM_SEARCH_ENDPOINT = 'https://www.googleapis.com/customsearch/v1'
-# Google Url Shortener api
-GOOGLE_URL_SHORTENER_ENDPOINT = 'https://www.googleapis.com/urlshortener/v1/url'
-                        
 # Weibo
 ENABLE_WEIBO_ACCOUNT = False
 WEIBO_API = {
@@ -264,11 +256,6 @@ QQWEIBO_API = {
 QQWEIBO_REDIRECT_URI = '%s/accounts/qqweibo/login/done/' % SITE
 
 
-# Email
-ENABLE_EMAIL = False
-
-# Comment must contans Chinese
-ENABLE_COMMENT_CHN = False
 
 
 TOPIC_IMAGE_PATH = "/home/fan/media/topic_image/"

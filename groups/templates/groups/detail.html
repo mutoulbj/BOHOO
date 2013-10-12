@@ -25,6 +25,9 @@
     #apply_reason, #apply_be_manager_reason{
         width: 98%;
     }
+    .group-name{
+        font-size: large;
+    }
     </style>
     {% endcompress %}
 {% endblock %}
@@ -41,7 +44,7 @@
                     </div>
                     <div class="span10">
                         <div class="row-fluid">
-                            <div class="span7 text-info">{{ g.name }}</div>
+                            <div class="span7 text-info group-name">{{ g.name }}</div>
                             <div class="span5 pull-right toolbar">
                                 {% if not is_member %}
                                     {% if g.group_type == 'open' %}

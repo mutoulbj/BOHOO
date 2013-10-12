@@ -114,9 +114,10 @@
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     <li>
-                        <form class="search-query" action="{% url 'search' %}" method="get">
+                        <form class="search-query" action="{% url 'search' %}" method="get"> <!-- 默认显示群组 -->
                             <div class="input-append">
-                                <input class="search-input" name="search_content" type="text" placeholder="搜索群组/话题">
+                                <input type="hidden" name="ty" value="group" />
+                                <input class="search-input" name="search_content" type="text" placeholder="搜索群组/话题" />
                                 <button class="btn btn-primary" id="search-button"><i class="icon-search icon-large"></i></button>
                             </div>
                         </form>

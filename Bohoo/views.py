@@ -46,20 +46,25 @@ def search(request):
     搜索群组和话题
     """
     categories = Category.objects.filter(parent__isnull=True)  # 顶级分类
+    content = request.GET['search_content']
     try:
-        content = request.GET['search_content']
-        group_qs = Group.objects.filter(name__icontains=content)
-        topic_qs = Topic.objects.filter(name__icontains=content)
+        ty = request.GET['ty']    # 类型:群组/话题
+        group_qs = Group.objects.filter(name__icontains=content).distinct()
+        topic_qs = Topic.objects.filter(name__icontains=content).distinct()
         ctx = {
             'groups': group_qs,
             'topics': topic_qs,
-            'categories': categories
+            'categories': categories,
+            'content': content,
+            'ty':ty
         }
         return render(request, 'search_result.html', ctx)
     except MultiValueDictKeyError:
         ctx = {
             'groups': None,
             'topics': None,
+            'ty': None,
+            'content': content,
             'categories': categories
         }
         return render(request, 'search_result.html', ctx)
