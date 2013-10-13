@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load compress %}
 {% load timeformat %}
+{% load bootstrap_toolkit %}
 
 {% block descrition %}Bohoo首页{% endblock %}
 {% block title %}Bohoo首页{% endblock %}
@@ -131,6 +132,7 @@
                             {% endfor %}
                         </table>
                     {% endfor %}
+                    {{ groups|pagination }}
                 </div>
             </div>
         </div>
