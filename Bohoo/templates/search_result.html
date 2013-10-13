@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load compress %}
 {% load timeformat %}
+{% load bootstrap_toolkit %}
 
 {% block descrition %}Bohoo首页{% endblock %}
 {% block title %}Bohoo首页{% endblock %}
@@ -86,6 +87,7 @@
                                 </tr>
                             {% endfor %}
                         </table>
+                        {% bootstrap_pagination groups url="/search?page=1&ty=group" extra="search_content=\{{ content \}}"  align="right" %}
                     {% elif ty == 'topic' %}
                         <table class="table table-hover">
                             {% for t in topics %}
@@ -99,6 +101,7 @@
                                 </tr>
                             {% endfor %}
                         </table>
+                        {% bootstrap_pagination topics url="/search?page=1&ty=topic" extra="search_content=py" align="right" %}
                     {% endif %}
 
                     {% if not ty %}

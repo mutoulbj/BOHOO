@@ -21,15 +21,13 @@ def index(request):
             form.save()
             return redirect('login')   # 跳转到登录页面
     if request.method == "GET":
-        # print request.GET
         try:
             groups_list = Group.objects.filter(category__id=request.GET["c_id"]).order_by("-last_topic_add")
         except MultiValueDictKeyError:
             groups_list = Group.objects.filter(category__name="互联网/电子商务").order_by("-last_topic_add")
-        # 对群组
+        # 对群组分页
         paginator = Paginator(groups_list, settings.PAGINATION_PER_PAGE)
         page = request.GET.get('page')
-        print page
         try:
             groups = paginator.page(page)
         except PageNotAnInteger:
@@ -64,15 +62,43 @@ def search(request):
     content = request.GET['search_content']
     try:
         ty = request.GET['ty']    # 类型:群组/话题
-        group_qs = Group.objects.filter(name__icontains=content).distinct()
-        topic_qs = Topic.objects.filter(name__icontains=content).distinct()
-        ctx = {
-            'groups': group_qs,
-            'topics': topic_qs,
-            'categories': categories,
-            'content': content,
-            'ty':ty
-        }
+        if ty == 'group':
+            group_qs_list = Group.objects.filter(name__icontains=content).distinct()
+            # 对群组分页
+            paginator = Paginator(group_qs_list, settings.PAGINATION_PER_PAGE)
+            page = request.GET.get('page')
+            print paginator.page()
+            try:
+                group_qs = paginator.page(page)
+            except PageNotAnInteger:
+                group_qs = paginator.page(1)
+            except EmptyPage:
+                group_qs = paginator.page(paginator.num_pages)
+            ctx = {
+                'groups': group_qs,
+                'topics': None,
+                'categories': categories,
+                'content': content,
+                'ty':ty
+            }
+        elif ty == 'topic':
+            topic_qs_list = Topic.objects.filter(name__icontains=content).distinct()
+            # 对话题分页
+            paginator = Paginator(topic_qs_list, settings.PAGINATION_PER_PAGE)
+            page = request.GET.get('page')
+            try:
+                topic_qs = paginator.page(page)
+            except PageNotAnInteger:
+                topic_qs = paginator.page(1)
+            except EmptyPage:
+                topic_qs = paginator.page(paginator.num_pages)
+            ctx = {
+                'groups': None,
+                'topics': topic_qs,
+                'categories': categories,
+                'content': content,
+                'ty':ty
+            }
         return render(request, 'search_result.html', ctx)
     except MultiValueDictKeyError:
         ctx = {
