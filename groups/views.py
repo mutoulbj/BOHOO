@@ -372,7 +372,6 @@ def topic_detail(request, topic_id):
 
         if request.method == "POST":
             form = replyForm(request.POST)
-            print request.POST
             if form.is_valid():
                 try:
                     reply = Reply.objects.get(id=request.POST.get('reply_id'))
