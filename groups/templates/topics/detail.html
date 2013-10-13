@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load avatar_tags %}
+{% load bootstrap_toolkit %}
 
 {% block head_other %}
     <style type="text/css">
@@ -52,8 +53,8 @@
         <div class="row-fluid left">
             <div class="span9">
                 <div class="row-fluid topic">
-                    <div class="span2">{% avatar topic.creator 70 %}</div>
-                    <div class="span10">
+                    <div class="span1">{% avatar topic.creator 55 %}</div>
+                    <div class="span11">
                         <div class="row-fluid">
                             <span class="items span12 ">
                                 <span class="muted">来自:</span>
@@ -99,7 +100,10 @@
                             {% if r.reply %}
                                 <div class="row-fluid">
                                     <div class="span12 muted reply-quote">
-                                        <blockquote>{{ r.reply.content|linebreaksbr }}<span>&nbsp;&nbsp;@<a href="">{{ r.reply.creator }}</a></span></blockquote>
+                                        <blockquote>{{ r.reply.content|linebreaksbr|truncatechars:50 }}
+                                            <!-- TODO: 设置个人主页链接 -->
+                                            <span>&nbsp;&nbsp;@<a href="">{{ r.reply.creator }}</a></span>
+                                        </blockquote>
                                     </div>
                                 </div>
                             {% endif %}
@@ -109,7 +113,9 @@
                         </div>
                     </div>
                 {% endfor %}
+                {{ replies|pagination }}
                 <div class="row-fluid">
+                    <h4 class="muted">你的回复</h4>
                     <form method="post" id="reply-form">
                         <div class="span12">
                             {{ form.reply_id }}
@@ -211,11 +217,13 @@
         // 对话题回复
         $('.reply-topic').click(function(e){
             e.preventDefault();
+            $('.reply_content').focus();
             $('body').scrollTo("#id_content");
         });
         // 对回复的回复
         $('.reply-reply').click(function(e){
             e.preventDefault();
+            $('.reply_content').focus();
             $('body').scrollTo("#id_content");
             $('#id_reply_id').val($(this).data('reply_id'));
         });

@@ -235,7 +235,6 @@ def add_topic(request, group_id):
                 image_obj = []
                 g_id = int(group.id)
                 return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
-        print image_obj
         ctx = {
             'form': topicForm(initial={"group": group}),
             'g': group,
@@ -356,8 +355,17 @@ def topic_detail(request, topic_id):
     """ 话题详细页 @fanlintao """
     try:
         topic = Topic.objects.get(id=topic_id)
-        replies = Reply.objects.filter(topic=topic).order_by("create_time")
         recent_topics = Topic.objects.filter(group=topic.group).order_by("-create_time")[:5]
+        replies_list = Reply.objects.filter(topic=topic).order_by("create_time")
+        # 对回复分页
+        paginator = Paginator(replies_list, settings.PAGINATION_PER_PAGE)
+        page = request.GET.get('page')
+        try:
+            replies = paginator.page(page)
+        except PageNotAnInteger:
+            replies = paginator.page(1)
+        except EmptyPage:
+            replies = paginator.page(paginator.num_pages)
 
         # 判断当前用户是否是该小组成员和管理员
         is_member, is_manager = request.user in topic.group.member.all(), request.user in topic.group.member.all()
@@ -378,6 +386,7 @@ def topic_detail(request, topic_id):
                 if reply:
                     g.reply = reply
                 g.save()
+                return redirect(reverse('topic_detail', args=[topic_id]))
         return render(request, "topics/detail.html", {"topic": topic, "replies": replies, "is_member": is_member,
                                                       "is_manager": is_manager, 'recent_topics': recent_topics,
                                                       'form': replyForm()})
