@@ -1,5 +1,6 @@
 django
-django-endless-pagination
 south
 django_compressor
 django-avatar
+django-bootstrap-toolkit
+django_messages

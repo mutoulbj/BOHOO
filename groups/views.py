@@ -11,6 +11,7 @@ from models import Group, Topic, Reply, Applicant, TopicImage
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from User.models import MyUser
 from groups.forms import group, topicForm, replyForm, topicImageForm
@@ -309,21 +310,45 @@ def ajax_delete_topic_image(request):
 
 
 def group_topic(request):
-    """ 最近的话题 @fanlintao """
+    """ 我的群组的话题 @fanlintao """
     groups = Group.objects.filter(member=request.user)
-    topics = Topic.objects.filter(group__in=groups).order_by("-last_reply_add")
+    topics_list = Topic.objects.filter(group__in=groups).order_by("-last_reply_add")
+    paginator = Paginator(topics_list, settings.PAGINATION_PER_PAGE)
+    page = request.GET.get('page')
+    try:
+        topics = paginator.page(page)
+    except PageNotAnInteger:
+        topics = paginator.page(1)
+    except EmptyPage:
+        topics = paginator.page(paginator.num_pages)
     return render(request, "topics/group.html", {"topics": topics})
 
 
 def created_topic(request):
     """我创建的话题 @fanlintao """
-    topics = Topic.objects.filter(creator=request.user).order_by("-last_reply_add")
+    topics_list = Topic.objects.filter(creator=request.user).order_by("-last_reply_add")
+    paginator = Paginator(topics_list, settings.PAGINATION_PER_PAGE)
+    page = request.GET.get('page')
+    try:
+        topics = paginator.page(page)
+    except PageNotAnInteger:
+        topics = paginator.page(1)
+    except EmptyPage:
+        topics = paginator.page(paginator.num_pages)
     return render(request, "topics/created.html", {"topics": topics})
 
 
 def replied_topic(request):
     """我回复的话题 @fanlintao """
-    topics = Topic.objects.filter(id__in=Reply.objects.all().order_by('-create_time').filter(creator=request.user).values_list('topic', flat=True))
+    topics_list = Topic.objects.filter(id__in=Reply.objects.all().order_by('-create_time').filter(creator=request.user).values_list('topic', flat=True))
+    paginator = Paginator(topics_list, settings.PAGINATION_PER_PAGE)
+    page = request.GET.get('page')
+    try:
+        topics = paginator.page(page)
+    except PageNotAnInteger:
+        topics = paginator.page(1)
+    except EmptyPage:
+        topics = paginator.page(paginator.num_pages)
     return render(request, "topics/replied.html", {"topics": topics})
 
 

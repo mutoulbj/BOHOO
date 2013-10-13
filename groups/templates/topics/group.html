@@ -1,5 +1,5 @@
 {% extends "topic_base.html" %}
-{% load endless %}
+{% load bootstrap_toolkit %}
 
 {% block title %}
     最近的话题
@@ -12,14 +12,7 @@
 {% block head_other %}
     {{ block.super }}
     <style type="text/css">
-    .pagination a{
-        padding-left: 3px;
-        padding-right: 3px;
-    }
-    .pagination{
-        margin-right: 0;
-        text-align: right;
-    }
+
     </style>
 {% endblock %}
 
@@ -28,7 +21,6 @@
         <div class="span12">
             <table class="table">
                 <tbody>
-                {% paginate topics %}
                 {% for t in topics %}
                     <tr>
                         <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></td>
@@ -38,16 +30,12 @@
                         <td><a href="{% url 'group_detail' t.group.id %}">{{ t.group.name }}</a></td>
                     </tr>
                 {% endfor %}
-                {% get_pages %}
                 <div class="row-fluid">
-                    <div class="span6"><h3>我小组的话题</h3></div>
-                    <div class="span6">
-                        <div class="span12 pull-right pagination">{{ pages }}</div>
-
-                    </div>
+                    <div class="span6"><h3>我的群组话题</h3></div>
                 </div>
                 </tbody>
             </table>
+            {{ topics|pagination }}
         </div>
     </div>
 {% endblock %}

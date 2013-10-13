@@ -24,12 +24,8 @@ DEFAULT_FROM_EMAIL = '@qq.com'
 LOGIN_URL = '/accounts/login'
 
 # 分页
-ENDLESS_PAGINATION_PER_PAGE = 3
-ENDLESS_PAGINATION_NEXT_LABEL = "Next"
-ENDLESS_PAGINATION_DEFAULT_CALLABLE_AROUNDS = 5
-ENDLESS_PAGINATION_DEFAULT_CALLABLE_ARROWS = True
-ENDLESS_PAGINATION_FIRST_LABEL = "First"
-ENDLESS_PAGINATION_LAST_LABEL = "Last"
+PAGINATION_PER_PAGE = 2
+
 
 AUTHENTICATION_BACKENDS = ('Bohoo.backends.EmailAuthBackend', 'django.contrib.auth.backends.ModelBackend',)
 
@@ -156,7 +152,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'south',
-    'endless_pagination',
+    'bootstrap_toolkit',
     'compressor',
     'avatar',
     'group_avatar',
@@ -165,7 +161,6 @@ INSTALLED_APPS = (
     'User',
     'groups',
     'accounts',
-    'endless_pagination',
     'friends',
     'django_messages',
     'social',
