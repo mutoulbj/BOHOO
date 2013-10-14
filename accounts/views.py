@@ -11,6 +11,8 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.utils.datastructures import MultiValueDictKeyError
+from django.dispatch import receiver
+from django.core.signals import request_finished
 
 from accounts.forms import login_form, register_form, password_reset_apply_form, reset_password_form
 

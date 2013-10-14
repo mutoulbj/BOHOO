@@ -3,11 +3,8 @@ import datetime
 import utils
 
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
-from django.conf import settings
-from django.template.loader import render_to_string
-from django.utils import timezone
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.core.signals import request_finished
 
 
 class MyUserManager(BaseUserManager):
@@ -64,6 +61,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     qq      qq号码
     weibo   微博帐号
     phone_number  电话号码
+    lastest_login  最近登录时间
     """
     SEX_CHOICES = (('M', u'男'), ('F', u'女'))
     email = models.EmailField(max_length=255, verbose_name=u'邮箱', unique=True, db_index=True)
@@ -86,6 +84,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     qq = models.IntegerField(verbose_name=u'qq', null=True, blank=True)
     weibo = models.CharField(max_length=256, verbose_name=u'微博', null=True, blank=True)
     phone_number = models.CharField(max_length=25, verbose_name=u'手机', null=True, blank=True)
+    latest_login = models.DateTimeField(verbose_name=u'最近登录', null=True, blank=True)
     objects = MyUserManager()
 
     USERNAME_FIELD = 'username'
@@ -122,16 +121,11 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
-    def send_activation_email(self, usermail, site):
-        ctx_dict = {'activation_key': self.activation_key,
-                    'expiration_days': settings.ACCOUNT_ACTIVATION_DAYS, 'site': site}
-        subject = render_to_string('accounts/activation_email_subject.txt', ctx_dict)
-        subject = ''.join(subject.splitlines())
-        message = render_to_string('accounts/activation_email.txt', ctx_dict)
-        #self.email_user(subject,message,settings.DEFAULT_FROM_EMAIL)
-        mail = utils.WebSMTP(settings.EMAIL_HOST_USER, settings.EMAIL_HOST_PASSOWORD)
-        mail.sendmail(usermail, subject, message)
 
-    def activation_key_expired(self):
-        expiration_date = datetime.timedelta(days=settings.ACCOUNT_ACTIVATION_DAYS)
-        return self.activation_key == u"ALREADY_ACTIVATED" or (self.date_joined + expiration_date <= timezone.now())
+def after_login_callback(sender, instance, **kwargs):
+    import datetime
+    obj = instance
+    obj.update(lastest_login=datetime.datetime.now())
+
+request_finished.connect(after_login_callback, dispatch_uid="update_lastest_login")
+
