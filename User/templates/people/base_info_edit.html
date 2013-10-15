@@ -1,0 +1,252 @@
+{% extends 'people_base.html' %}
+{% load avatar_tags %}
+
+{% block title %}编辑个人资料-BOHOO{% endblock %}
+
+{% block description %}编辑用户资料{% endblock %}
+
+{% block head_other %}
+    <style type="text/css">
+    .profile-box{
+        margin: 0 0 25px;
+        clear: both;
+        border-radius: 4px;
+        border: 2px solid #ddd;
+        box-shadow: 0 1px 0 #f2f4f5;
+    }
+    .profile-box-module{
+        position: relative;
+        padding: 20px 12px;
+    }
+    .profile-box-module+.profile-box-module{
+        border-top: 1px solid #ddd;;
+    }
+    .avatar img{
+        padding-bottom: 14px;
+    }
+    .sex ul{
+        list-style-type: none;
+    }
+    .sex ul li{
+        display: inline-block;
+        margin-left: 5px;
+        margin-right: 10px;
+    }
+    </style>
+{% endblock %}
+
+{% block js_other %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.chained.min.js"></script>
+    <script type="text/javascript" src={{ STATIC_URL }}js/cities.js></script>  {# 引进cities数据 #}
+    <script type="text/javascript" src={{ STATIC_URL }}js/job_category.js></script>  {# 引进job_category数据 #}
+    <script type="text/javascript">
+    // 国家-州省-市县 的三级联动
+    $(document).ready(function(){
+        $("#id_country").append(
+                "<option value='中国' class='china'>中国</option>"+
+                "<option value='其他' class='china'>其他</option>"
+        );
+        var provinces = eval(cities.provinces);
+        for (var i = 0; i < provinces.length; i++){
+            if (provinces[i].name != "海外"){
+                $('#id_state').append("<option value='"+ provinces[i].name + "' class='中国'>" + provinces[i].name + "</option>");
+            }else{
+                $('#id_state').append("<option value='"+ provinces[i].name + "' class='其他'>" + provinces[i].name + "</option>");
+
+            }
+            $('#id_state').append("<option value='"+ provinces[i].name + "' class='" + provinces[i].name + "'>" + provinces[i].name + "</option>");
+            var city = eval(provinces[i].citys);
+            for (var j = 0; j < city.length; j ++){
+                $("#id_city").append("<option value='"+ city[j].city + "' class='" + provinces[i].name + "'>" + city[j].city + "</option>");
+            }
+        }
+        $("#id_state").chained("#id_country");
+        $("#id_city").chained("#id_state");
+
+        // 职业的联动处理
+        var job_category = eval(job_categories.job_category);
+        for (var k = 0;k < job_category.length; k++){
+            var jobs = eval(job_category[k].jobs);
+            for (var l = 0; l < jobs.length; l++){
+                $("#id_job").append("<option value='"+ jobs[l].job + "' class='" + job_category[k].category + "'>" + jobs[l].job + "</option>")
+            }
+        }
+        $("#id_job").chained("#job_category");
+
+        // 给初始值
+        var $job = "{{ request.user.job }}";
+        if ($job != 'None'){
+            $("#id_job").append("<option value='" + $job + "' class='" + $job + "' selected='selected'>" + $job +"</option>");
+        }
+        var $country = "{{ request.user.country }}";
+        if($country != 'None'){
+            $("#id_country").append("<option value='" + $country + "' class='" + $country + "' selected='selected'>" + $country +"</option>");
+        }
+        var $state = "{{ request.user.state }}";
+        if($state != 'None'){
+            $("#id_state").append("<option value='" + $state + "' class='" + $state + "' selected='selected'>" + $state +"</option>");
+        }
+        var $city = "{{ request.user.city }}";
+        if($city != 'None'){
+            $("#id_city").append("<option value='" + $city + "' class='" + $city + "' selected='selected'>" + $city +"</option>");
+        }
+    });
+    $('.cancel').click(function(){
+        if (confirm('确认取消填写基本资料?这样会影响正常使用网站功能哦.')){
+            window.location = "{% url 'index' %}";
+        }else {
+            return false;
+        }
+    });
+    $('#btn-submit').click(function(e){
+        e.preventDefault();
+        if (!$('#id_job').val() || !$('#id_city').val()){
+            $.globalMessenger().post({
+                message:"职业和所在地不能为空!",
+                hideAfter: 2,
+                type: 'error',
+                showCloseButton: true
+            });
+        }else {
+            $('.base-info-form').submit();
+        }
+    })
+    </script>
+{% endblock %}
+
+{% block left_content %}
+    <div class="row-fluid profile-box">
+        <div class="profile-box-module">
+            <div class="span6">
+                <span class="pull-left"><a href="#">{{ request.user.username }}</a>
+                    <i class="icon-double-angle-right"></i>基本资料填写</span>
+            </div>
+            <div class="span3">
+                <span class="pull-right"><a href="{% url 'profile_edit' %}">编辑个人资料</a></span>
+            </div>
+            <div class="span3">
+                <span class="pull-right"><a href="#">返回个人主页</a></span>  <!-- TODO: 个人页面 -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row-fluid profile-box">
+        <div class="profile-box-module">
+            <div class="span3">
+                <span class="text-info">头像</span>
+            </div>
+            <div class="span3 avatar">
+                {% avatar request.user %}
+            </div>
+            <div class="span3">
+                <span class="pull-right"><a href="{% url 'avatar_change' %}">修改头像</a></span>
+            </div>
+            <div class="span3">
+                <span class="pull-right"><a href="{% url 'avatar_delete' %}">删除头像</a></span>
+            </div>
+        </div>
+    </div>
+
+<form method="post" class="base-info-form">
+    <div class="profile-box">
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span2">
+                            <span class="text-info">{{ form.sign.label }}</span>
+                        </div>
+                        <div class="span10">
+                            {{ form.sign }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span12">
+                    <div class="row-fluid">
+                        <div class="span2">
+                            <span class="mustin">*</span>
+                            <span class="text-info">{{ form.job.label }}</span>
+                        </div>
+                        <div class="span5">
+                            <select class="span10" id="job_category">
+                                <option class="">---</option>
+                                <option value="it" class="it">计算机软件/互联网</option>
+                                <option value="elec" class="elec">通信/电子</option>
+                                <option value="trade" class="trade">贸易/批发/零售</option>
+                                <option value="finance" class="finance">会计/金融</option>
+                                <option value="medical" class="medical">制药/生物/医疗</option>
+                                <option value="culture" class="culture">文化/广告/媒体</option>
+                                <option value="building" class="building">房地产/建筑</option>
+                                <option value="education" class="education">教育/培训/科研</option>
+                                <option value="professional" class="professional">专业服务</option>
+                                <option value="machine" class="machine">加工/机械/制造</option>
+                                <option value="traffic" class="traffic">物流/运输</option>
+                                <option value="services" class="services">服务行业</option>
+                                <option value="energy" class="energy">能源/化工/原材料</option>
+                                <option value="government" class="government">政府/其他</option>
+                            </select>
+                        </div>
+                        <div class="span5">{{ form.job }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span4">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <span class="mustin">*</span>
+                            <span class="text-info">{{ form.country.label }}</span>
+                        </div>
+                        <div class="span8">
+                            {{ form.country }}
+                        </div>
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <span class="text-info">{{ form.state.label }}</span>
+                        </div>
+                        <div class="span8">
+                            {{ form.state }}
+                        </div>
+                    </div>
+                </div>
+                <div class="span4">
+                    <div class="row-fluid">
+                        <div class="span4">
+                            <span class="text-info">{{ form.city.label }}</span>
+                        </div>
+                        <div class="span8">
+                            {{ form.city }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-box-module">
+            <div class="row-fluid">
+                <div class="span6">
+                    <button class="btn btn-info btn-block cancel">下次再说</button>
+                </div>
+                <div class="span6">
+                    {% csrf_token %}<input id="btn-submit" class="btn btn-primary btn-block" type="submit" value="保存">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block right_content %}
+<!-- TODO: 右边栏 -->
+{% endblock %}

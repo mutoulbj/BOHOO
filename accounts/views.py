@@ -25,14 +25,19 @@ def login(request, user=None):
     if user is None:
         user = request.user
     if request.method == 'POST':
+        first_login = False
         form = login_form(request, request.POST)
         if form.is_valid():
             from django.contrib.auth import login
             login(request, form.get_user())
             if request.session.test_cookie_worked():
                 request.session.delete_test_cookie()
-            myuser_logged_in.send(sender=user.__class__, request=request, user=user)
-            return redirect("/")
+            if user.latest_login is None:
+                first_login = True
+            myuser_logged_in.send(sender=user.__class__, request=request, user=user)  # 发送signal
+            if first_login:
+                return redirect(reverse('base_info_edit'))
+            return redirect(reverse('index'))
     else:
         form = login_form(request)
         request.session.set_test_cookie()
