@@ -4,7 +4,7 @@ import utils
 
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
-from django.core.signals import request_finished
+from django.contrib.auth.signals import user_logged_in
 
 
 class MyUserManager(BaseUserManager):
@@ -122,10 +122,4 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         return self.is_admin
 
 
-def after_login_callback(sender, instance, **kwargs):
-    import datetime
-    obj = instance
-    obj.update(lastest_login=datetime.datetime.now())
-
-request_finished.connect(after_login_callback, dispatch_uid="update_lastest_login")
 

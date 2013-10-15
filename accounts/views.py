@@ -11,18 +11,19 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.shortcuts import render
 from django.utils.datastructures import MultiValueDictKeyError
-from django.dispatch import receiver
-from django.core.signals import request_finished
 
 from accounts.forms import login_form, register_form, password_reset_apply_form, reset_password_form
+from User.signals import myuser_logged_in
 
 from User.models import MyUser
 
 
-def login(request):
+def login(request, user=None):
     """
     登录
     """
+    if user is None:
+        user = request.user
     if request.method == 'POST':
         form = login_form(request, request.POST)
         if form.is_valid():
@@ -30,6 +31,7 @@ def login(request):
             login(request, form.get_user())
             if request.session.test_cookie_worked():
                 request.session.delete_test_cookie()
+            myuser_logged_in.send(sender=user.__class__, request=request, user=user)
             return redirect("/")
     else:
         form = login_form(request)
