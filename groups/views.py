@@ -15,6 +15,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from User.models import MyUser
 from groups.forms import group, topicForm, replyForm, topicImageForm
+from groups.utils import get_most_topic_groups
 
 
 def new_group(request):
@@ -69,20 +70,25 @@ def group_detail(request, group_id):
             apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
                                                         join_type="member")
             is_member_processing = True
-        except:
+        except ObjectDoesNotExist:
             is_member_processing = False
 
         try:
             apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
                                                         join_type="manager")
             is_manager_processing = True
-        except:
+        except ObjectDoesNotExist:
             is_manager_processing = False
         topics = Topic.objects.filter(group=group).order_by("-last_reply_add")
-        return render(request, 'groups/detail.html', {'g': group, 'is_member': is_member, 'topics': topics,
-                                                      'is_member_processing': is_member_processing,
-                                                      'is_manager': is_manager,
-                                                      'is_manager_processing': is_manager_processing})
+        recommend_groups = get_most_topic_groups(request.user, 5)
+        ctx = {
+            'g': group, 'is_member': is_member, 'topics': topics,
+            'is_member_processing': is_member_processing,
+            'is_manager': is_manager,
+            'is_manager_processing': is_manager_processing,
+            'recommend_groups': recommend_groups
+        }
+        return render(request, 'groups/detail.html', ctx)
     except ObjectDoesNotExist:
         pass
 
@@ -280,7 +286,6 @@ def edit_topic(request, group_id, topic_id):
                 image_obj = []
                 g_id = int(group.id)
                 return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
-        print image_obj
         ctx = {
             'form': topicForm(instance=t_topic),
             'g': group,

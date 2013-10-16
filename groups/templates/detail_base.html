@@ -36,11 +36,11 @@
                         <li id="group_joined"><a href="{% url 'group_joined' %}">我加入的群组<i class="icon-chevron-left pull-left"></i></a></li>
                         <li id="group_managed"><a href="{% url 'group_my_manage' %}">我管理的群组<i class="icon-chevron-left pull-left"></i></a></li>
                     </ul>
-                    <ul class="nav nav-list left-list">
+                    <ul class="nav nav-list right-list">
                         <li class="nav-header">为你推荐</li>
-                        <li>群组头像</li>
-                        <li>群组头像</li>
-                        <li>群组头像</li>
+                        {% for g in recommend_groups %}
+                        <li><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name|truncatechars:9 }}</a></li>
+                        {% endfor %}
                     </ul>
                 {% endblock %}
             </div>
