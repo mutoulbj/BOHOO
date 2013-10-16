@@ -23,7 +23,6 @@ def new_group(request):
     """ 创建群组 @fanlintao """
     if request.method == 'POST':
         form = group(request.POST)
-        print form.errors
         if form.is_valid():
             g = form.save(commit=False)
             g.creator = request.user
