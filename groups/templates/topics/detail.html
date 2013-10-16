@@ -12,6 +12,9 @@
         .topic{
             margin-bottom: 40px;
         }
+        .topic-edit{
+            margin-right: 23px;
+        }
         .content{
             margin: 10px !important;
         }
@@ -72,11 +75,11 @@
                                 {% for i in topic.image.all %}
                                     <div><img src="{{ i.get_topic_image_url }}" style="width: 90%;margin-bottom: 20px"></div>
                                 {% endfor %}
-                                <div>{{ topic.content|linebreaksbr }}</div>
+                                <div class="span11">{{ topic.content|linebreaksbr }}</div>
                             </div>
                             {% if request.user == topic.creator or request.user in topic.group.manager.all %}
                             <div class="span12">
-                                <a href="{% url 'edit_topic' group_id=topic.group.id topic_id=topic.id %}" class="btn btn-link pull-right">修改</a>
+                                <a href="{% url 'edit_topic' group_id=topic.group.id topic_id=topic.id %}" class="btn btn-link pull-right topic-edit">修改</a>
                             </div>
                             {% endif %}
                         </div>
@@ -113,6 +116,18 @@
                         </div>
                     </div>
                 {% endfor %}
+                <!-- JiaThis Button BEGIN -->
+                <div class="jiathis_style row-fluid">
+                    <a class="jiathis_button_qzone"></a>
+                    <a class="jiathis_button_tsina"></a>
+                    <a class="jiathis_button_tqq"></a>
+                    <a class="jiathis_button_weixin"></a>
+                    <a class="jiathis_button_renren"></a>
+                    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis"
+                       target="_blank"></a>
+                    <a class="jiathis_counter_style"></a>
+                </div>
+                <!-- JiaThis Button END -->
                 {{ replies|pagination }}
                 <div class="row-fluid">
                     <h4 class="muted">你的回复</h4>
@@ -213,6 +228,14 @@
 {% block js_other %}
     <script type="text/javascript" src="{{ STATIC_URL }}js/join_group_detail.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.scrollTo.min.js"></script>
+    <!-- JiaThis Script BEGIN -->
+    <script type="text/javascript">
+        var jiathis_config = {
+            hideMore: false
+        }
+    </script>
+    <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js" charset="utf-8"></script>
+     <!-- JiaThis Script END -->
     <script type="text/javascript">
         // 对话题回复
         $('.reply-topic').click(function(e){

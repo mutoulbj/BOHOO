@@ -15,6 +15,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from User.models import MyUser
 from groups.forms import group, topicForm, replyForm, topicImageForm
+from groups.models import Category
 from groups.utils import get_most_topic_groups
 
 
@@ -22,9 +23,11 @@ def new_group(request):
     """ 创建群组 @fanlintao """
     if request.method == 'POST':
         form = group(request.POST)
+        print form.errors
         if form.is_valid():
             g = form.save(commit=False)
             g.creator = request.user
+            g.category = Category.objects.get(name=request.POST['category'])  # 必须保证分类存在
             g.save()
             g.manager.add(request.user)   # 创建者默认是管理员
             g.member.add(request.user)    # 创建者默认是小组成员

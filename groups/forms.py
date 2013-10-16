@@ -37,8 +37,8 @@ class group(ModelForm):
                            widget=forms.TextInput(
                                attrs={'class': 'span10 required', 'placeholder': u'小组的名称'}
                            ))
-    category = forms.ModelChoiceField(label=u'分类', queryset=Category.objects.all(),
-                                      widget=forms.Select(attrs={'class': 'span4 required'}))
+    #category = forms.ModelChoiceField(label=u'分类', queryset=Category.objects.all(),
+    #                                  widget=forms.Select(attrs={'class': 'span4 required'}))  #  分类因为联动,单独处理,view中需要注意
     group_type = forms.ChoiceField(label=u'小组类型', choices=GROUP_TYPE_CHOICES,
                                    widget=forms.Select(attrs={'class': 'span4 required'}), initial='open')
     member_join = forms.ChoiceField(label=u'加入方式', choices=MEMBER_JOIN_CHOICES,
@@ -53,7 +53,7 @@ class group(ModelForm):
 
     class Meta:
         model = Group
-        fields = ('name', 'category', 'group_type', 'member_join', 'place', 'description')
+        fields = ('name', 'group_type', 'member_join', 'place', 'description')
 
     def __unicode__(self):
         return "小组:%s" % self.name
