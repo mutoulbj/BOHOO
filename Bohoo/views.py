@@ -1,4 +1,5 @@
 #! -*- coding:utf-8 -*-
+import json
 from django.template import loader, RequestContext
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -97,7 +98,7 @@ def search(request):
                 'topics': topic_qs,
                 'categories': categories,
                 'content': content,
-                'ty':ty
+                'ty': ty
             }
         return render(request, 'search_result.html', ctx)
     except MultiValueDictKeyError:
@@ -109,5 +110,13 @@ def search(request):
             'categories': categories
         }
         return render(request, 'search_result.html', ctx)
+
+
+def get_messages(request):
+    """
+    ajax轮询,用于发送通知
+    """
+    error = {'test': 'test'}
+    return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 

@@ -204,6 +204,7 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/messenger.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery_fix_csrf.js"></script>
     <script type="text/javascript">
+        // 设置messager插件的样式
         $._messengerDefaults = {
             extraClasses: 'messenger-fixed messenger-theme-block messenger-on-top'
         };
@@ -221,6 +222,20 @@
             }else{
                 $(".search-query").submit();
             }
+        });
+        function get_messages(){
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: "{% url 'get_messages' %}",
+                success: function(res){
+                    console.log(res);
+                }
+            })
+        }
+        $(document).ready(function(){
+            get_messages();
+            setInterval('get_messages()', 1000);
         })
     </script>
 {% endcompress %}
