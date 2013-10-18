@@ -175,8 +175,8 @@ class Topic(models.Model):
         db_table = 'topic'
 
     def save(self, *args, **kwargs):
-        self.group.last_topic_add = datetime.datetime.now() # 更新“最新话题添加时间”
-        self.group.topic_amount += 1 # 小组话题数+1
+        self.group.last_topic_add = datetime.datetime.now()  # 更新“最新话题添加时间”
+        self.group.topic_amount += 1  # 小组话题数+1
         self.group.save()
         super(Topic, self).save(*args, **kwargs)
 

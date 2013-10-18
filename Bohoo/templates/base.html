@@ -89,16 +89,19 @@
     #footer {
         color: #999;
         padding-top: 6px;
-        margin: 40px 0 20px 0;
+        padding-bottom: 0;
+        margin-top: 40px;
         overflow: hidden;
         zoom: 1;
         border-top: 1px dashed #ddd;
     }
     .fleft{
         float: left;
+        padding-left: 90px;
     }
     .fright{
         float: right;
+        padding-right: 90px;
     }
     /* 分页 */
     .pagination{
@@ -187,7 +190,7 @@
 
 <footer id="footer">
 <span id="icp" class="fleft gray-link">
-    © 2013-2014 BOHOO, all rights reserved
+    © 2013-2014 BOHOO | 备案号
 </span>
 
 <span class="fright">
@@ -223,6 +226,7 @@
                 $(".search-query").submit();
             }
         });
+        // 轮询获取通知
         function get_messages(){
             $.ajax({
                 type: 'GET',
@@ -233,9 +237,10 @@
                 }
             })
         }
+        // 1分钟发送一次请求
         $(document).ready(function(){
             get_messages();
-            setInterval('get_messages()', 1000);
+            setInterval('get_messages()', 60000);
         })
     </script>
 {% endcompress %}

@@ -36,7 +36,9 @@
                 </div>
                 </tbody>
             </table>
+            {% if topics %}
             {{ topics|pagination }}
+            {% endif %}
             <hr>
         </div>
     </div>

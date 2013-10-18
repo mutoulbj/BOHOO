@@ -127,7 +127,7 @@
                             {% for t in g.get_last_reply_order_topic_qs %}
                                 <tr>
                                     <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></td>
-                                    <td>{{ t.create_time|date:"Y-m-d H:i:s" }}</td>
+                                    <td style="text-align: right !important;">{{ t.last_reply_add|date:"Y-m-d H:i:s" }}</td>
                                 </tr>
                             {% endfor %}
                         </table>

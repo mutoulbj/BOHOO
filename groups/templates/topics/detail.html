@@ -42,6 +42,9 @@
         .right{
             width: 17% !important;
         }
+        .jiathis_style{
+            margin-bottom: 15px;
+        }
     </style>
 {% endblock %}
 
@@ -85,6 +88,19 @@
                         </div>
                     </div>
                 </div>
+                <!-- JiaThis Button BEGIN -->
+                <div class="jiathis_style row-fluid">
+                    <a class="jiathis_button_qzone"></a>
+                    <a class="jiathis_button_tsina"></a>
+                    <a class="jiathis_button_tqq"></a>
+                    <a class="jiathis_button_weixin"></a>
+                    <a class="jiathis_button_renren"></a>
+                    <a href="http://www.jiathis.com/share"
+                       class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis"
+                       target="_blank"></a>
+                    <a class="jiathis_counter_style"></a>
+                </div>
+                <!-- JiaThis Button END -->
                 {% for r in replies %}
                     <div class="row-fluid">
                         <div class="span1 reply_avatar"><a href="">{% avatar r.creator 55 %}</a></div>
@@ -116,19 +132,9 @@
                         </div>
                     </div>
                 {% endfor %}
-                <!-- JiaThis Button BEGIN -->
-                <div class="jiathis_style row-fluid">
-                    <a class="jiathis_button_qzone"></a>
-                    <a class="jiathis_button_tsina"></a>
-                    <a class="jiathis_button_tqq"></a>
-                    <a class="jiathis_button_weixin"></a>
-                    <a class="jiathis_button_renren"></a>
-                    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis"
-                       target="_blank"></a>
-                    <a class="jiathis_counter_style"></a>
-                </div>
-                <!-- JiaThis Button END -->
-                {{ replies|pagination }}
+                {% if relies %}
+                    {{ replies|pagination }}
+                {% endif %}
                 <div class="row-fluid">
                     <h4 class="muted">你的回复</h4>
                     <form method="post" id="reply-form">
@@ -181,7 +187,7 @@
                             <tbody>
                             {% for t in recent_topics %}
                                 <tr>
-                                <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a>
+                                <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name|truncatechars:10 }}</a>
                                     <span class="muted"><small>({{ t.creator }})</small></span>
                                 </td>
                                 </tr>

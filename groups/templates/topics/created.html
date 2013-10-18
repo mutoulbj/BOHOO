@@ -35,7 +35,9 @@
                 </div>
                 </tbody>
             </table>
+            {% if topics %}
             {{ topics|pagination }}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
