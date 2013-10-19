@@ -246,7 +246,7 @@ class Applicant(models.Model):
     applicant    申请人
     group        申请加入的小组
     reason       申请理由
-    status       状态(处理中,通过,未通过)(processing,pass,reject)
+    status       状态(处理中,通过,未通过)(processing,pass,rejected)
     join_type         类型(加入群组,群组管理员)(member,manager)
     """
     applicant = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='applicant_user', verbose_name=u'申请人')
@@ -257,7 +257,7 @@ class Applicant(models.Model):
     join_type = models.CharField(max_length=128, verbose_name=u'类型')
 
     def __unicode__(self):
-        return self.applicant
+        return self.applicant.username
 
     class Meta:
         verbose_name = u'申请加入群组/成为管理员'

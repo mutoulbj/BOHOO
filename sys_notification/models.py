@@ -1,0 +1,43 @@
+#! -*- coding:utf-8 -*-
+from django.db import models
+
+from User.models import MyUser
+from groups.models import Group, Topic, Reply
+
+# 通知类型:群组,话题,好友
+NOTIFICATION_CHOICES = (('group', 'Group'), ('topic', 'Topic'), ('friend', 'Friend'))
+# 群组操作: 同意,拒绝
+GROUP_ACTION_CHOICES = (('pass', 'Pass'), ('reject', 'Reject'))
+# 回复操作:对话题的回复,对回复的回复,删除话题,删除回复
+TOPIC_ACTION_CHOICES = (('topic', 'Topic'), ('reply', 'Reply'), ('delete_topic', 'Delete Topic'),
+                        ('delete_reply', 'Delete Reple'))
+# 好友操作: 关注
+FRIEND_ACTION_CHOICES = (('follow', 'Follow'),)
+# 状态:未读, 已经读, 未点击,已点击
+STATUS_CHOICES = (('unread', 'Unread'), ('read', 'Read'))
+# 是否点击过: 未点击, 已点击
+CLICK_CHOICES = (('unclick', 'Unclick'), ('clicked', 'Clicked'))
+
+
+class Notification(models.Model):
+    """
+    通知
+    """
+    no_type = models.CharField(max_length=128, verbose_name=u'通知类型', choices=NOTIFICATION_CHOICES, db_index=True)
+    group_action = models.CharField(max_length=128, verbose_name=u'群组操作', choices=GROUP_ACTION_CHOICES, blank=True, null=True)
+    topic_action = models.CharField(max_length=128, verbose_name=u'回复操作', choices=TOPIC_ACTION_CHOICES, blank=True, null=True)
+    friend_action = models.CharField(max_length=128, verbose_name=u'好友操作', choices=FRIEND_ACTION_CHOICES, blank=True, null=True)
+    to_user = models.ForeignKey(MyUser, related_name='notify_user')
+    topic = models.ForeignKey(Topic, related_name='notify_topic', blank=True, null=True)
+    group = models.ForeignKey(Group, related_name='notify_group', blank=True, null=True)
+    reply = models.ForeignKey(Reply, related_name='notify_reply', blank=True, null=True)
+    status = models.CharField(max_length=128, default='unread', choices=STATUS_CHOICES, db_index=True)
+    click = models.CharField(max_length=128, default='unclick', choices=CLICK_CHOICES, db_index=True)
+
+    def __unicode__(self):
+        return u"通知,类型: %s" % self.no_type
+
+    class Meta:
+        verbose_name = u'通知'
+        verbose_name_plural = u'通知'
+        db_table = 'notification'

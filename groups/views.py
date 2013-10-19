@@ -43,6 +43,7 @@ def edit_group(request, group_id):
             if form.is_valid():
                 g = form.save(commit=False)
                 g.modify_time = datetime.datetime.now()
+                g.category = Category.objects.get(name=request.POST['category'])  # 必须保证分类存在
                 g.save()
                 return redirect(reverse("group_my_manage"))
         return render(request, 'groups/edit.html', {'t_group': t_group, 'form': group(instance=t_group)})
@@ -382,10 +383,10 @@ def topic_detail(request, topic_id):
             if form.is_valid():
                 try:
                     reply = Reply.objects.get(id=request.POST.get('reply_id'))
-                    print reply
-                except:
+                except ObjectDoesNotExist:
                     reply = None
-                print reply
+                except ValueError:
+                    reply = None
                 g = form.save(commit=False)
                 g.creator = request.user
                 g.topic = topic

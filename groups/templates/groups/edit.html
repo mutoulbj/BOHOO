@@ -109,10 +109,31 @@
             <div class="box-module">
                 <div class="row-fluid">
                     <div class="span3">
-                        <span class="text-info"><span class="mustin">*</span>{{ form.category.label }}</span>
+                        <span class="text-info"><span class="mustin">*</span>分类</span>
                     </div>
-                    <div class="span9">
-                        {{ form.category }}
+                    <div class="span4">
+                            <select class="span10" id="job_category">
+                                <option class="">---</option>
+                                <option value="it" class="it">计算机软件/互联网</option>
+                                <option value="elec" class="elec">通信/电子</option>
+                                <option value="trade" class="trade">贸易/批发/零售</option>
+                                <option value="finance" class="finance">会计/金融</option>
+                                <option value="medical" class="medical">制药/生物/医疗</option>
+                                <option value="culture" class="culture">文化/广告/媒体</option>
+                                <option value="building" class="building">房地产/建筑</option>
+                                <option value="education" class="education">教育/培训/科研</option>
+                                <option value="professional" class="professional">专业服务</option>
+                                <option value="machine" class="machine">加工/机械/制造</option>
+                                <option value="traffic" class="traffic">物流/运输</option>
+                                <option value="services" class="services">服务行业</option>
+                                <option value="energy" class="energy">能源/化工/原材料</option>
+                                <option value="government" class="government">政府/其他</option>
+                            </select>
+                        </div>
+                    <div class="span4">
+                        <select class="span11 required" id="id_category" name="category" disabled="disabled">
+                            <option value="" selected="selected">---</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -142,10 +163,10 @@
             <div class="box-module">
                 <div class="row-fluid">
                     <div class="span6">
-                        {% csrf_token %}<input type="submit" class="btn btn-primary btn-block" id="id-submit">
+                        <input type="reset" class="btn btn-info btn-block">
                     </div>
                     <div class="span6">
-                        <input type="reset" class="btn btn-info btn-block">
+                        {% csrf_token %}<input type="submit" class="btn btn-primary btn-block" id="id-submit">
                     </div>
                 </div>
             </div>
@@ -154,7 +175,19 @@
 {% endblock %}
 
 {% block js_other %}
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.chained.min.js"></script>
+    <script type="text/javascript" src={{ STATIC_URL }}js/job_category.js></script>  {# 引进job_category数据 #}
     <script type="text/javascript">
+        // 分类的联动处理
+        var job_category = eval(job_categories.job_category);
+        for (var k = 0;k < job_category.length; k++){
+            var jobs = eval(job_category[k].jobs);
+            for (var l = 0; l < jobs.length; l++){
+                $("#id_category").append("<option value='"+ jobs[l].job + "' class='" + job_category[k].category + "'>" + jobs[l].job + "</option>")
+            }
+        }
+        $("#id_category").chained("#job_category");
+
         $("#id-submit").on('click', function (e) {
             e.preventDefault();
             var pass_check = true;
@@ -174,6 +207,17 @@
             if (pass_check) {
                 $("#new-group-form").submit();
             }
+        });
+        $(document).ready(function(){
+            // 初始化分类
+            var p_category = "{{ t_group.category.parent.name }}";
+            var category = "{{ t_group.category.name }}";
+            $('select#job_category').children('option').each(function(){
+                if ($(this).text() == p_category){
+                    $(this).attr('selected', 'selected');
+                }
+            });
+            $('select#id_category').removeAttr('disabled').html("<option selected='selected' value='"+category+"'>"+category+"</option>");
         })
     </script>
 {% endblock %}

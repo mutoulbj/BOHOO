@@ -15,7 +15,7 @@ from django_messages.utils import format_quote, get_user_model, get_username_fie
 User = get_user_model()
 
 if "notification" in settings.INSTALLED_APPS:
-    from notification import models as notification
+    from sys_notification import models as notification
 else:
     notification = None
 

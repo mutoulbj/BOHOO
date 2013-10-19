@@ -51,19 +51,19 @@
                             <div class="span7 text-info group-name">{{ g.name }}</div>
                             <div class="span5 pull-right toolbar">
                                 {% if not is_member %}
-                                    {% if g.group_type == 'open' %}
+                                    {% if g.member_join == 'everyone_can_join' %}
                                         <button id="join_group" class="btn btn-primary" data-group-id={{ g.id }}>加入群组</button>
-                                    {% elif g.group_type == 'private' %}
+                                    {% elif g.member_join == 'need_check' %}
                                         <!-- button to tigger modal -->
                                         <button id="apply_join_modal_trigger" class="btn btn-primary">申请加入群组</button>
                                     {% endif %}
-                                {% elif is_member and not is_manager %}
-                                    <span class="text-warning">我是群组成员 ></span>
+{#                                {% elif is_member and not is_manager %}#}
+{#                                    <span class="text-warning">我是群组成员 ></span>#}
                                 {% endif %}
 
-                                {% if is_manager %}
-                                    <span class="text-warning">我是管理员 ></span>
-                                {% elif is_member and not is_manager %}
+{#                                {% if is_manager %}#}
+{#                                    <span class="text-warning">我是管理员 ></span>#}
+                                {% if is_member and not is_manager %}
                                     <button id="apply_be_manager_modal_trigger" class="btn btn-primary">成为管理员</button>
                                 {% endif %}
                                 {% if is_member %}

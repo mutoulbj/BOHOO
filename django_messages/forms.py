@@ -4,7 +4,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 if "notification" in settings.INSTALLED_APPS:
-    from notification import models as notification
+    from sys_notification import models as notification
 else:
     notification = None
 
