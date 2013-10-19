@@ -142,13 +142,13 @@
                     </li>
                     <li class="dropdown action">
                         <a class="dropdown-toggle" role="button" data-toggle="dropdown">
-                            <i class="icon-envelope-alt"></i>通知<b class="bdage">5555</b>
+                            <i class="icon-envelope-alt"></i>通知<b id="notify-all"></b> <!-- class="bdage" -->
                             <i class="icon-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">群组<b class="bdage-hor">3</b></a></li>
-                            <li><a href="">话题<b class="bdage-hor">3</b></a></li>
-                            <li><a href="">好友<b class="bdage-hor">1333</b></a></li>
+                            <li><a href="#">群组<b id="notify-group"></b></a></li>  <!-- class="bdage-hor" -->
+                            <li><a href="">话题<b id="notify-topic"></b></a></li>
+                            <li><a href="">好友<b id="notify-friend"></b></a></li>
                             <li class="divider"></li>
                             <li><a href="">全部</a></li>
                         </ul>
@@ -234,13 +234,22 @@
                 url: "{% url 'get_messages' %}",
                 success: function(res){
                     console.log(res);
+                    if (!!res['all']){
+                        $('#notify-all').text(res['all']).addClass('bdage');
+                    }
+                    if (!!res['for_group']){
+                        $('#notify-group').text(res['for_group']).addClass('bdage-hor');
+                    }
+                    if (!!res['for_topic']){
+                        $('#notify-topic').text(res['for_topic']).addClass('bdage-hor');
+                    }
                 }
             })
         }
-        // 1分钟发送一次请求
+        // 半分钟发送一次请求
         $(document).ready(function(){
             get_messages();
-            setInterval('get_messages()', 60000);
+            setInterval('get_messages()', 30000);
         })
     </script>
 {% endcompress %}

@@ -9,6 +9,7 @@ from django.conf import settings
 
 from accounts.forms import register_form
 from groups.models import Topic, Category, Group
+from sys_notification.models import Notification
 
 
 def index(request):
@@ -116,7 +117,13 @@ def get_messages(request):
     """
     ajax轮询,用于发送通知
     """
-    error = {'test': 'test'}
-    return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+    notification = {}
+    t_user_notify_qs = Notification.objects.filter(to_user=request.user).distinct()
+    for_group = t_user_notify_qs.filter(no_type='group')
+    for_topic = t_user_notify_qs.filter(no_type='topic')
+    notification['for_group'] = len(for_group)
+    notification['for_topic'] = len(for_topic)
+    notification['all'] = len(t_user_notify_qs)
+    return HttpResponse(json.dumps(notification, ensure_ascii=False), mimetype="application/json")
 
 
