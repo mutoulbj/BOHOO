@@ -17,6 +17,7 @@ from User.models import MyUser
 from groups.forms import group, topicForm, replyForm, topicImageForm
 from groups.models import Category
 from groups.utils import get_most_topic_groups
+from sys_notification.signals import group_notify, topic_notify
 
 
 def new_group(request):
@@ -191,6 +192,7 @@ def ajax_apply_pass(request):
                 group.manager.add(user)
             applicant.status = 'pass'
             applicant.save()
+            group_notify.send(sender=applicant, instance=applicant)   # 发送signal
             error['success'] = 'success'
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
         except ObjectDoesNotExist:
@@ -206,6 +208,7 @@ def ajax_apply_reject(request):
             applicant = Applicant.objects.get(id=request.POST.get("applicant_id"), status="processing")
             applicant.status = 'reject'
             applicant.save()
+            group_notify.send(sender=applicant, instance=applicant)   # 发送signal
             error['success'] = 'success'
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
         except ObjectDoesNotExist:
@@ -233,7 +236,6 @@ def add_topic(request, group_id):
                     img.save(settings.TOPIC_IMAGE_PATH+f.name)
                     i = imageForm.save()
                     image_obj.append(i)
-                    print image_obj[0].image
             if form.is_valid():
                 g = form.save(commit=False)
                 g.creator = request.user
@@ -393,6 +395,7 @@ def topic_detail(request, topic_id):
                 if reply:
                     g.reply = reply
                 g.save()
+                topic_notify.send(sender=g, instance=g)
                 return redirect(reverse('topic_detail', args=[topic_id]))
         return render(request, "topics/detail.html", {"topic": topic, "replies": replies, "is_member": is_member,
                                                       "is_manager": is_manager, 'recent_topics': recent_topics,

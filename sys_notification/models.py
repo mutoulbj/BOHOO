@@ -9,8 +9,8 @@ NOTIFICATION_CHOICES = (('group', 'Group'), ('topic', 'Topic'), ('friend', 'Frie
 # 群组操作: 同意,拒绝
 GROUP_ACTION_CHOICES = (('pass', 'Pass'), ('reject', 'Reject'))
 # 回复操作:对话题的回复,对回复的回复,删除话题,删除回复
-TOPIC_ACTION_CHOICES = (('topic', 'Topic'), ('reply', 'Reply'), ('delete_topic', 'Delete Topic'),
-                        ('delete_reply', 'Delete Reple'))
+TOPIC_ACTION_CHOICES = (('re_topic', 'Reply Topic'), ('re_reply', 'Reply Reply'), ('delete_topic', 'Delete Topic'),
+                        ('delete_reply', 'Delete Reply'))
 # 好友操作: 关注
 FRIEND_ACTION_CHOICES = (('follow', 'Follow'),)
 # 状态:未读, 已经读, 未点击,已点击

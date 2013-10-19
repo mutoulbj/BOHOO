@@ -4,6 +4,8 @@ from django.contrib import admin
 from models import Category, Group, Topic, Report, Applicant
 from django.contrib import messages
 
+from sys_notification.signals import group_notify
+
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'id', 'parent')
@@ -58,6 +60,7 @@ class ApplicantAdmin(admin.ModelAdmin):
                     q.group.member.add(q.applicant)   # 将申请人加进组员
                     q.status = "pass"
                     q.save()
+                group_notify.send(sender=q, instance=q)   # 发送signal
             msg = u"已经通过所有申请"
             self.message_user(request, msg)
         else:
@@ -74,6 +77,8 @@ class ApplicantAdmin(admin.ModelAdmin):
                 continue
         if can_treat:
             queryset.update(status="reject")
+            for q in queryset:
+                group_notify.send(sender=q, instance=q)   # 发送signal
             msg = u"已经驳回所有申请"
             self.message_user(request, msg)
         else:
