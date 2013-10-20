@@ -1,6 +1,7 @@
 #! -*- coding:utf-8 -*-
 from django.dispatch import Signal
 from django.db.models.signals import post_save
+from django.core.signals import request_finished
 from groups.models import Group, Topic, Reply, Applicant
 from sys_notification.models import Notification
 
@@ -12,6 +13,9 @@ topic_notify = Signal(providing_args=["instance", "args", "kwargs"])
 
 # 好友操作的signal
 # TODO: todo
+
+# 将通知置为已点击
+set_notity_clicked = Signal(providing_args=["request", "no_type", "args", "kwargs"])
 
 
 def group_action(sender, instance, *args, **kwargs):
@@ -34,6 +38,17 @@ def topic_action(sender, instance, *args, **kwargs):
         notify.save()
 
 topic_notify.connect(topic_action, dispatch_uid='create_topic_notify')
+
+
+def set_notification_clicked(sender, request, no_type, **kwargs):
+    """
+    点击相应页面后将通知置为已经点击clicked
+    @fanlintao
+    """
+    notify_qs = Notification.objects.filter(to_user=request.user, no_type=no_type, click='unclick')
+    notify_qs.update(click='clicked')
+
+set_notity_clicked.connect(set_notification_clicked, dispatch_uid='set_notification_clicked')
 
 
 

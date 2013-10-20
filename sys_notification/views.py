@@ -3,7 +3,7 @@ import json
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
-
+from sys_notification.signals import set_notity_clicked
 from sys_notification.models import Notification
 
 
@@ -17,6 +17,7 @@ def notify_group(request):
         'group_notify': group_notify,
         'active': 'group'
     }
+    set_notity_clicked.send(sender=group_notify, request=request, no_type='group')
     return render(request, 'notify/groups.html', ctx)
 
 
@@ -30,6 +31,7 @@ def notity_topic(request):
         'topic_notify': topic_notify,
         'active': 'topic'
     }
+    set_notity_clicked.send(sender=topic_notify, request=request, no_type='topic')
     return render(request, 'notify/topic.html', ctx)
 
 
