@@ -1,0 +1,43 @@
+{% extends 'notify_base.html' %}
+
+{% block left_content %}
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-hover">
+                {% for n in topic_notify %}
+                    {% if n.topic_action == 're_topic' %}
+                        <tr id="notify_{{ n.id }}">
+                        <td class="span10">你的话题<a href="{% url 'topic_detail' topic_id=n.topic.id %}">{{ n.topic.name }}</a>有了新回复.</td>
+                        <td class="span2"><a class="muted del_notify" href="{{ n.id }}">不再提醒</a></td>
+                        </tr>
+                    {% elif n.topic_action == 're_reply' %}
+                        <tr id="notify_{{ n.id }}">
+                        <td class="span10">你在话题<a href="{% url 'topic_detail' topic_id=n.topic.id %}">{{ n.topic.name }}</a>的回复有了新回复.</td>
+                        <td class="span2"><a class="muted del_notify" href="{{ n.id }}">不再提醒</a></td>
+                        </tr>
+                    <!-- TODO:话题和回复删除通知待处理 -->
+                    {% endif %}
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_other %}
+    <script type="text/javascript">
+    $('a.del_notify').click(function(e){
+        var self = $(this);
+        e.preventDefault();
+        var n_id = self.attr('href');
+        $.ajax({
+            url: "{% url 'del_notify' %}",
+            type: 'post',
+            dataType: 'json',
+            data: {'n_id': n_id},
+            success: function(){
+                $('#notify_'+n_id).remove();
+            }
+        })
+    })
+    </script>
+{% endblock %}

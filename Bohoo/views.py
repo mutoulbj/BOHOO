@@ -118,7 +118,7 @@ def get_messages(request):
     ajax轮询,用于发送通知
     """
     notification = {}
-    t_user_notify_qs = Notification.objects.filter(to_user=request.user).distinct()
+    t_user_notify_qs = Notification.objects.filter(to_user=request.user, click='unclick').distinct()
     for_group = t_user_notify_qs.filter(no_type='group')
     for_topic = t_user_notify_qs.filter(no_type='topic')
     notification['for_group'] = len(for_group)

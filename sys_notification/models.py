@@ -31,8 +31,9 @@ class Notification(models.Model):
     topic = models.ForeignKey(Topic, related_name='notify_topic', blank=True, null=True)
     group = models.ForeignKey(Group, related_name='notify_group', blank=True, null=True)
     reply = models.ForeignKey(Reply, related_name='notify_reply', blank=True, null=True)
-    status = models.CharField(max_length=128, default='unread', choices=STATUS_CHOICES, db_index=True)
+    status = models.CharField(max_length=128, default='unread', verbose_name=u'状态', choices=STATUS_CHOICES, db_index=True)
     click = models.CharField(max_length=128, default='unclick', choices=CLICK_CHOICES, db_index=True)
+    add_time = models.DateTimeField(auto_now_add=True, verbose_name=u'添加时间')
 
     def __unicode__(self):
         return u"通知,类型: %s" % self.no_type

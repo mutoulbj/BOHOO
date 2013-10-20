@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block head_other %}
+    <style type="text/css">
+        .content{
+            margin: 10px !important;
+        }
+        .left{
+            width: 78% !important;
+        }
+        .right{
+            width: 17% !important;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="container-fluid content">
+        <div class="row-fluid">
+            <div class="span9 left">
+                <h3>系统通知</h3>
+                <div class="row-fluid">
+                    <div class="span12">
+                        <ul class="nav nav-pills">
+                            <li {% if active == 'group' %}class="active"{% endif %}><a href="{% url 'notify_group' %}">群组</a></li>
+                            <li {% if active == 'topic' %}class="active"{% endif %}><a href="{% url 'notify_topic' %}">话题</a></li>
+                            <li {% if active == 'friend' %}class="active"{% endif %}><a href="">好友</a></li>  <!-- TODO:fill url -->
+                        </ul>
+                    </div>
+                </div>
+                {% block left_content %}{% endblock %}
+            </div>
+            <div class="span3 right">
+                {% block right_content %}
+                    <ul class="nav nav-list right-list">
+                        <li class="nav-header">话题</li>
+                        <li id="topic_my_group"><a href="{% url 'group_topic' %}">我的群组话题<i class="icon-chevron-left pull-left"></i></a></li>
+                        <li id="topic_replied"><a href="{% url 'replied_topic' %}">我回复的话题<i class="icon-chevron-left pull-left"></i></a></li>
+                        <li id="topic_created"><a href="{% url 'created_topic' %}">我发表的话题<i class="icon-chevron-left pull-left"></i></a></li>
+                        <li class="nav-header">群组</li>
+                        <li id="group_joined"><a href="{% url 'group_joined' %}">我加入的群组<i class="icon-chevron-left pull-left"></i></a></li>
+                        <li id="group_managed"><a href="{% url 'group_my_manage' %}">我管理的群组<i class="icon-chevron-left pull-left"></i></a></li>
+                    </ul>
+                    <ul class="nav nav-list right-list">
+                        <li class="nav-header">为你推荐</li>
+                        {% for g in recommend_groups %}
+                        <li><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name|truncatechars:9 }}</a></li>
+                        {% endfor %}
+                    </ul>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

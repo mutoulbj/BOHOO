@@ -1,0 +1,44 @@
+{% extends 'notify_base.html' %}
+
+{% block left_content %}
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-hover">
+                {% for n in group_notify %}
+                    {% if n.group_action == 'pass' %}
+                        <tr id="notify_{{ n.id }}">
+                        <td class="span10">你加入<a href="{% url 'group_detail' group_id=n.group.id %}">{{ n.group.name }}</a>的申请通过.</td>
+                        <td class="span2"><a class="muted del_notify" href="{{ n.id }}">不再提醒</a> </td>
+                        </tr>
+                    {% elif n.group_action == 'reject' %}
+                        <tr id="notify_{{ n.id }}">
+                        <td class="span10">你加入<a href="{% url 'group_detail' group_id=n.group.id %}">{{ n.group.name }}</a>的申请被拒绝.</td>
+                        <td class="span2"><a class="muted del_notify" href="{{ n.id }}">不再提醒</a></td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_other %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $('a.del_notify').click(function(e){
+        var self = $(this);
+        e.preventDefault();
+        var n_id = self.attr('href');
+        $.ajax({
+            url: "{% url 'del_notify' %}",
+            type: 'post',
+            dataType: 'json',
+            data: {'n_id': n_id},
+            success: function(){
+                console.log('1234');
+                $('#notify_'+n_id).remove();
+            }
+        })
+    })
+    </script>
+{% endblock %}

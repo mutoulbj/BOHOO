@@ -146,11 +146,11 @@
                             <i class="icon-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">群组<b id="notify-group"></b></a></li>  <!-- class="bdage-hor" -->
-                            <li><a href="">话题<b id="notify-topic"></b></a></li>
+                            <li><a href="{% url 'notify_group' %}">群组<b id="notify-group"></b></a></li>  <!-- class="bdage-hor" -->
+                            <li><a href="{% url 'notify_topic' %}">话题<b id="notify-topic"></b></a></li>
                             <li><a href="">好友<b id="notify-friend"></b></a></li>
-                            <li class="divider"></li>
-                            <li><a href="">全部</a></li>
+{#                            <li class="divider"></li>#}
+{#                            <li><a href="">全部</a></li>#}
                         </ul>
                     </li>
                 </ul>
@@ -233,7 +233,6 @@
                 dataType: 'json',
                 url: "{% url 'get_messages' %}",
                 success: function(res){
-                    console.log(res);
                     if (!!res['all']){
                         $('#notify-all').text(res['all']).addClass('bdage');
                     }

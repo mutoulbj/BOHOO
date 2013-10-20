@@ -31,6 +31,7 @@ urlpatterns = patterns(
     
     url(r'^relation/', include('friends.urls')),
     url(r'^message/', include('django_messages.urls')),
+    url(r'^notification/', include('sys_notification.urls'))
     
     # url(r"^settings/$", notice_settings, name="notification_notice_settings"),
 )
