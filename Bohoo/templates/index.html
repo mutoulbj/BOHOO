@@ -132,7 +132,9 @@
                             {% endfor %}
                         </table>
                     {% endfor %}
-                    {{ groups|pagination }}
+                    {% if groups %}
+                        {{ groups|pagination }}
+                    {% endif %}
                 </div>
             </div>
         </div>

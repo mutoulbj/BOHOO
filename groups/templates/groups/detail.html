@@ -32,6 +32,9 @@
     .topic-tab{
         margin-top: 15px;
     }
+    .topic-list tr th, .topic-list tr td{
+        text-align: center;
+    }
     </style>
     {% endcompress %}
 {% endblock %}
@@ -91,12 +94,13 @@
                 {% if topics %}
                 <div class="row-fluid topics">
                     <div class="span12">
-                        <table class="table">
+                        <table class="table topic-list">
                             <thead>
                             <tr>
                                 <th>话题</th>
                                 <th>创建者</th>
                                 <th>回复</th>
+                                <th>点击数</th>
                                 <th>最后回复</th>
                             </tr>
                             </thead>
@@ -106,6 +110,7 @@
                                     <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name|truncatechars:35 }}</a></td>
                                     <td><a href="{% url "profile_view" tid=t.creator.id %}">{{ t.creator }}</a></td>
                                     <td>{{ t.reply_amount }}</td>
+                                    <td>{{ t.click_amount|floatformat:"0" }}</td>
                                     <td>{{ t.last_reply_add|date:"Y-m-j H:i:s" }}</td>
                                 </tr>
                             {% endfor %}

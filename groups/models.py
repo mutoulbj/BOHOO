@@ -146,6 +146,7 @@ class Topic(models.Model):
     last_reply_add  最新回复时间
     reply_amount    回复总数
     image           图片
+    click_amount    点击次数
     
     #add by lazytiger
     topic_type      话题类型 : 1类是系统自动发布的，没有作者 ，另一类是用户发表的，需要有作者
@@ -163,6 +164,7 @@ class Topic(models.Model):
     last_reply_add = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'最新回复时间')
     reply_amount = models.IntegerField(default=0, verbose_name=u'回复总数')
     image = models.ManyToManyField(TopicImage, null=True, blank=True)
+    click_amount = models.FloatField(default=1, verbose_name=u'点击数')
 
     topic_type = models.IntegerField(default=0, verbose_name=u'话题类型')
 

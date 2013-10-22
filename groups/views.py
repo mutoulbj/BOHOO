@@ -397,6 +397,8 @@ def topic_detail(request, topic_id):
                 g.save()
                 topic_notify.send(sender=g, instance=g)
                 return redirect(reverse('topic_detail', args=[topic_id]))
+        topic.click_amount += 1
+        topic.save()
         return render(request, "topics/detail.html", {"topic": topic, "replies": replies, "is_member": is_member,
                                                       "is_manager": is_manager, 'recent_topics': recent_topics,
                                                       'form': replyForm()})
