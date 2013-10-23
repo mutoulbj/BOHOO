@@ -30,6 +30,9 @@
             padding-left: 10px;
             margin-top: 15px;
         }
+        .report{
+            float: right;
+        }
         .bg_reply{
             background-color: #e6e6e6;
         }
@@ -61,11 +64,14 @@
                 <div class="row-fluid topic">
                     <div class="span1">{% avatar topic.creator 55 %}</div>
                     <div class="span11">
-                        <div class="row-fluid">
+                        <div class="row-fluid topic-item">
                             <span class="items span12 ">
                                 <span class="muted">来自:</span>
                                 <span class="text-success"><a href="">{{ topic.creator }}</a></span>
                                 <span class="text-success">{{ topic.create_time|date:"Y-m-j H:i:s" }}</span>
+                                <span class="report">
+                                    <a href="{{ topic.id }}" class="report-topic muted">举报</a>
+                                </span>
                                 <span class="reply">
                                     <a href="#" class="reply-topic">
                                         回复
@@ -105,10 +111,13 @@
                     <div class="row-fluid">
                         <div class="span1 reply_avatar"><a href="">{% avatar r.creator 55 %}</a></div>
                         <div class="span11 reply-content">
-                            <div class="row-fluid">
+                            <div class="row-fluid reply-item">
                                 <div class="span12 bg_reply">
                                     <span class="text-success"><a href="">{{ r.creator }}</a></span>
                                     <span class="text-success">{{ r.create_time|date:"Y-m-j H:i:s" }}</span>
+                                    <span class="report">
+                                        <a href="{{ r.id }}" class="report-reply muted">举报</a>
+                                    </span>
                                     <span class="reply">
                                         <a href="#" class="reply-reply" data-reply_id="{{ r.id }}">
                                             回复
@@ -228,6 +237,8 @@
             <button id="apply_be_manager" class="btn btn-primary" data-group-id={{ g.id }}>发送请求</button>
         </div>
     </div>
+
+    <!-- modal 
 {% endblock %}
 
 
@@ -243,6 +254,8 @@
     <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js" charset="utf-8"></script>
      <!-- JiaThis Script END -->
     <script type="text/javascript">
+        // 话题举报
+
         // 对话题回复
         $('.reply-topic').click(function(e){
             e.preventDefault();

@@ -219,12 +219,14 @@ class Report(models.Model):
     字段:
     report_type   举报类型
     topic         话题
+    reply         回复
     user          用户
     reason        原因
     is_handle     处理情况
     """
     report_type = models.SmallIntegerField(default=1, choices=REPORT_TYPE_CHOICES, verbose_name=u'举报类型')
     topic = models.ForeignKey(Topic, related_name='topic_report')
+    reply = models.ForeignKey(Reply, related_name='reply_report')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_report')
     reason = models.SmallIntegerField(default=0, choices=REASON_CHOICES, verbose_name=u'举报原因')
     is_handle = models.BooleanField(default=False, verbose_name=u'处理情况')
