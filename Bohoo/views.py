@@ -38,7 +38,7 @@ def index(request):
             groups = paginator.page(paginator.num_pages)
 
 
-    recent_topics = Topic.objects.all().order_by("-last_reply_add")[:5]
+    recent_topics = Topic.objects.filter(status='enabled').order_by("-last_reply_add")[:5]
     categories = Category.objects.filter(parent__isnull=True)  # 顶级分类
     init_ca_id = Category.objects.get(name="互联网/电子商务").id   #初始化的分类的id
     init_ca_parent_id = Category.objects.get(name="互联网/电子商务").parent.id
@@ -84,7 +84,7 @@ def search(request):
                 'ty':ty
             }
         elif ty == 'topic':
-            topic_qs_list = Topic.objects.filter(name__icontains=content).distinct()
+            topic_qs_list = Topic.objects.filter(name__icontains=content, status='enabled').distinct()
             # 对话题分页
             paginator = Paginator(topic_qs_list, settings.PAGINATION_PER_PAGE)
             page = request.GET.get('page')

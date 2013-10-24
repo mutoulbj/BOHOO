@@ -10,7 +10,8 @@ GROUP_TYPE_CHOICES = (('open', 'Open'), ('private', 'Private'))
 MEMBER_ROLE_CHOICES = ((0, 'Member'), (1, 'Manager'), (2, 'Owner'))
 MEMBER_JOIN_CHOICES = (('everyone_can_join', 'Everyone can join'), ('need_check', 'Need check'))
 REPORT_TYPE_CHOICES = (('topic', u'话题'), ('reply', u'回复'))
-REASON_CHOICES = ((0, u'广告或垃圾信息'), (1, u'色情、淫秽或低俗内容'), (2, u'激进时政或意识形态话题'), (3, u'其他原因'))
+#REASON_CHOICES = ((0, u'广告或垃圾信息'), (1, u'色情、淫秽或低俗内容'), (2, u'激进时政或意识形态话题'), (3, u'其他原因'))
+STATUS_CHOICES = (('enabled', u'启用'), ('disabled', u'禁用'))
 
 
 class Category(models.Model):
@@ -101,7 +102,7 @@ class Group(models.Model):
         """
         返回数量为amount,默认为5,以最后回复排序的话题,返回queryset
         """
-        return self.group_topic.all().order_by("-last_reply_add")[:amount]
+        return self.group_topic.filter(status='enabled').order_by("-last_reply_add")[:amount]
 
 
 class TopicImage(models.Model):
@@ -147,6 +148,7 @@ class Topic(models.Model):
     reply_amount    回复总数
     image           图片
     click_amount    点击次数
+    status          状态
     
     #add by lazytiger
     topic_type      话题类型 : 1类是系统自动发布的，没有作者 ，另一类是用户发表的，需要有作者
@@ -165,6 +167,7 @@ class Topic(models.Model):
     reply_amount = models.IntegerField(default=0, verbose_name=u'回复总数')
     image = models.ManyToManyField(TopicImage, null=True, blank=True)
     click_amount = models.FloatField(default=1, verbose_name=u'点击数')
+    status = models.CharField(verbose_name=u'状态', default='enabled', max_length=56, choices=STATUS_CHOICES)
 
     topic_type = models.IntegerField(default=0, verbose_name=u'话题类型')
 
@@ -191,12 +194,14 @@ class Reply(models.Model):
     creator     创建者
     topic       话题
     create_time 创建时间
+    status          状态
     """
     content = models.TextField(verbose_name=u'内容')
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='creator_reply', verbose_name=u'创建者')
     topic = models.ForeignKey(Topic, related_name='topic_replies', verbose_name=u'话题')
     create_time = models.DateTimeField(default=datetime.datetime.now, verbose_name=u'创建时间')
     reply = models.ForeignKey('self', related_name='reply_reply', null=True, blank=True)
+    status = models.CharField(verbose_name=u'状态', default='enabled', max_length=56, choices=STATUS_CHOICES)
 
     def __unicode__(self):
         return "%s's reply" % self.topic.name
@@ -228,7 +233,7 @@ class Report(models.Model):
     topic = models.ForeignKey(Topic, related_name='topic_report', null=True, blank=True)
     reply = models.ForeignKey(Reply, related_name='reply_report', null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_report')
-    reason = models.TextField(choices=REASON_CHOICES, verbose_name=u'举报原因')
+    reason = models.TextField(verbose_name=u'举报原因')
     is_handle = models.BooleanField(default=False, verbose_name=u'处理情况')
 
     def __unicode__(self):

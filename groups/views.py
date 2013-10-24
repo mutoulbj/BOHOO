@@ -83,7 +83,7 @@ def group_detail(request, group_id):
             is_manager_processing = True
         except ObjectDoesNotExist:
             is_manager_processing = False
-        topics = Topic.objects.filter(group=group).order_by("-last_reply_add")
+        topics = Topic.objects.filter(group=group, status='enabled').order_by("-last_reply_add")
         recommend_groups = get_most_topic_groups(request.user, 5)
         ctx = {
             'g': group, 'is_member': is_member, 'topics': topics,
@@ -321,7 +321,7 @@ def ajax_delete_topic_image(request):
 def group_topic(request):
     """ 我的群组的话题 @fanlintao """
     groups = Group.objects.filter(member=request.user)
-    topics_list = Topic.objects.filter(group__in=groups).order_by("-last_reply_add")
+    topics_list = Topic.objects.filter(group__in=groups, status='enabled').order_by("-last_reply_add")
     paginator = Paginator(topics_list, settings.PAGINATION_PER_PAGE)
     page = request.GET.get('page')
     try:
@@ -335,7 +335,7 @@ def group_topic(request):
 
 def created_topic(request):
     """我创建的话题 @fanlintao """
-    topics_list = Topic.objects.filter(creator=request.user).order_by("-last_reply_add")
+    topics_list = Topic.objects.filter(creator=request.user, status='enabled').order_by("-last_reply_add")
     paginator = Paginator(topics_list, settings.PAGINATION_PER_PAGE)
     page = request.GET.get('page')
     try:
@@ -349,7 +349,7 @@ def created_topic(request):
 
 def replied_topic(request):
     """我回复的话题 @fanlintao """
-    topics_list = Topic.objects.filter(id__in=Reply.objects.all().order_by('-create_time').filter(creator=request.user).values_list('topic', flat=True))
+    topics_list = Topic.objects.filter(id__in=Reply.objects.all().order_by('-create_time').filter(creator=request.user).values_list('topic', flat=True), status='enabled')
     paginator = Paginator(topics_list, settings.PAGINATION_PER_PAGE)
     page = request.GET.get('page')
     try:
@@ -365,8 +365,8 @@ def topic_detail(request, topic_id):
     """ 话题详细页 @fanlintao """
     try:
         topic = Topic.objects.get(id=topic_id)
-        recent_topics = Topic.objects.filter(group=topic.group).order_by("-create_time")[:5]
-        replies_list = Reply.objects.filter(topic=topic).order_by("create_time")
+        recent_topics = Topic.objects.filter(group=topic.group, status='enabled').order_by("-create_time")[:5]
+        replies_list = Reply.objects.filter(topic=topic, status='enabled').order_by("create_time")
         # 对回复分页
         paginator = Paginator(replies_list, settings.PAGINATION_PER_PAGE)
         page = request.GET.get('page')
