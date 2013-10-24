@@ -48,6 +48,9 @@
         .jiathis_style{
             margin-bottom: 15px;
         }
+        #report_topic_reason{
+            width: 500px;
+        }
     </style>
 {% endblock %}
 
@@ -238,7 +241,35 @@
         </div>
     </div>
 
-    <!-- modal 
+    <!-- modal for topic report -->
+    <div class="modal hide fade" id="report_topic_modal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>话题举报</h3>
+        </div>
+        <div class="modal-body">
+            <textarea id="report_topic_reason" placeholder="请说明举报的原因......"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button id="report_topic_modal_close" class="btn">取消</button>
+            <button id="report_topic_manager" class="btn btn-primary" data-topic-id={{ topic.id }}>举报</button>
+        </div>
+    </div>
+
+    <!-- modal for reply report -->
+    <div class="modal hide fade" id="report_reply_modal">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3>回复举报</h3>
+        </div>
+        <div class="modal-body">
+            <textarea id="report_reply_reason" placeholder="请说明举报的原因......"></textarea>
+        </div>
+        <div class="modal-footer">
+            <button id="report_reply_modal_close" class="btn">取消</button>
+            <button id="report_reply_manager" class="btn btn-primary" data-reply-id="">举报</button>
+        </div>
+    </div>
 {% endblock %}
 
 
@@ -255,7 +286,60 @@
      <!-- JiaThis Script END -->
     <script type="text/javascript">
         // 话题举报
+        $('.report-topic').click(function(e){
+            e.preventDefault();
+            $('#report_topic_modal').modal('show');
+        });
+        $('#report_topic_modal_close').click(function(){
+            $('#report_topic_modal').modal('hide');
+        });
+        $("#report_topic_manager").click(function () {
+            $.ajax({
+                async: false,
+                url: "{% url 'ajax_report_topic' %}",     //url: "{% url 'ajax_apply_join_group' %}",
+                type: "POST",
+                data: {"topic_id": $(this).data("topic-id"), "reason": $("#report_topic_reason").val()},
+                dataType: "json",
+                success: function () {
+                    $('#report_topic_modal').modal('hide');
+                    $.globalMessenger().post({
+                        message: "举报成功!",
+                        hideAfter: 2,
+                        type: 'success',
+                        showCloseButton: true
+                    })
+                }
 
+            })
+        });
+        // 对回复的举报
+        $('.report-reply').click(function(e){
+            e.preventDefault();
+            $('#report_reply_manager').data('reply-id', $(this).attr('href'));
+            $('#report_reply_modal').modal('show');
+        });
+        $('#report_reply_modal_close').click(function(){
+            $('#report_reply_modal').modal('hide');
+        });
+        $("#report_reply_manager").click(function () {
+            $.ajax({
+                async: false,
+                url: "{% url 'ajax_report_reply' %}",     //url: "{% url 'ajax_apply_join_group' %}",
+                type: "POST",
+                data: {"reply_id": $(this).data("reply-id"), "reason": $("#report_reply_reason").val()},
+                dataType: "json",
+                success: function () {
+                    $('#report_reply_modal').modal('hide');
+                    $.globalMessenger().post({
+                        message: "举报成功!",
+                        hideAfter: 2,
+                        type: 'success',
+                        showCloseButton: true
+                    })
+                }
+
+            })
+        });
         // 对话题回复
         $('.reply-topic').click(function(e){
             e.preventDefault();

@@ -224,11 +224,11 @@ class Report(models.Model):
     reason        原因
     is_handle     处理情况
     """
-    report_type = models.SmallIntegerField(default=1, choices=REPORT_TYPE_CHOICES, verbose_name=u'举报类型')
-    topic = models.ForeignKey(Topic, related_name='topic_report')
-    reply = models.ForeignKey(Reply, related_name='reply_report')
+    report_type = models.CharField(max_length=128, choices=REPORT_TYPE_CHOICES, verbose_name=u'举报类型')
+    topic = models.ForeignKey(Topic, related_name='topic_report', null=True, blank=True)
+    reply = models.ForeignKey(Reply, related_name='reply_report', null=True, blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='user_report')
-    reason = models.SmallIntegerField(default=0, choices=REASON_CHOICES, verbose_name=u'举报原因')
+    reason = models.TextField(choices=REASON_CHOICES, verbose_name=u'举报原因')
     is_handle = models.BooleanField(default=False, verbose_name=u'处理情况')
 
     def __unicode__(self):

@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from models import Group, Topic, Reply, Applicant, TopicImage
+from groups.models import Group, Topic, Reply, Applicant, TopicImage, Report
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -404,3 +404,33 @@ def topic_detail(request, topic_id):
                                                       'form': replyForm()})
     except ObjectDoesNotExist:
         pass
+
+
+def ajax_report_topic(request):
+    error = {'error': '', 'success': ''}
+    if request.method == 'POST':
+        try:
+            topic = Topic.objects.get(id=request.POST['topic_id'])
+            reason = request.POST['reason']
+            report = Report(report_type='topic', topic=topic, user=request.user, reason=reason)
+            report.save()
+            error['success'] = 'success'
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+        except ObjectDoesNotExist:
+            error['error'] = 'error'
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+
+
+def ajax_report_reply(request):
+    error = {'error': '', 'success': ''}
+    if request.method == 'POST':
+        try:
+            reply = Reply.objects.get(id=request.POST['reply_id'])
+            reason = request.POST['reason']
+            report = Report(report_type='reply', reply=reply, user=request.user, reason=reason)
+            report.save()
+            error['success'] = 'success'
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
+        except ObjectDoesNotExist:
+            error['error'] = 'error'
+            return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")

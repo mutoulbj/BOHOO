@@ -22,4 +22,6 @@ urlpatterns = patterns(
     url(r'^topic/created/$', 'created_topic', name='created_topic'),
     url(r'^topic/relied/$', 'replied_topic', name='replied_topic'),
     url(r'^topic/detail/(?P<topic_id>\d+)/$', 'topic_detail', name='topic_detail'),
+    url(r'^topic/report/$', 'ajax_report_topic', name='ajax_report_topic'),
+    url(r'^reply/report/$', 'ajax_report_reply', name='ajax_report_reply'),
 )

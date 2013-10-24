@@ -65,12 +65,6 @@ $(document).ready(function () {
             data: {"group_id": $(this).data("group-id"), "apply_reason": $("#apply_reason").val()},
             dataType: "json",
             success: apply_join_success()
-//                                        fail: $.globalMessenger().post({
-//                                            message: "服务器错误,请稍后再试",
-//                                            hideAfter: 2,
-//                                            type: 'error',
-//                                            showCloseButton: true
-//                                        })
         })
     });
 
@@ -83,12 +77,6 @@ $(document).ready(function () {
             data: {"group_id": $(this).data("group-id"), "apply_reason": $("#apply_be_manager_reason").val()},
             dataType: "json",
             success: apply_be_manager_success()
-//                                        fail: $.globalMessenger().post({
-//                                            message: "服务器错误,请稍后再试",
-//                                            hideAfter: 2,
-//                                            type: 'error',
-//                                            showCloseButton: true
-//                                        })
         })
     });
 });
