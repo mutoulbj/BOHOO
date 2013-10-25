@@ -226,6 +226,7 @@
                 $(".search-query").submit();
             }
         });
+        {% if request.user.is_authenticated %}   // 只有登录的用户才轮询获取通知
         // 轮询获取通知
         function get_messages(){
             $.ajax({
@@ -250,6 +251,7 @@
             get_messages();
             setInterval('get_messages()', 30000);
         })
+        {% endif %}
     </script>
 {% endcompress %}
 {% block js_other %}{% endblock %}
