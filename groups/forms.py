@@ -5,6 +5,13 @@ from django.forms import ModelForm
 
 from groups.models import Category, Group, Topic, Reply, TopicImage
 
+CITIES = ((u"北京", u"北京"), (u"天津", u"天津"), (u"河北", u"河北"), (u"山西", u"山西"), (u"内蒙古", u"内蒙古"), (u"辽宁", u"辽宁"),
+          (u"吉林", u"吉林"), (u"黑龙江", u"黑龙江"), (u"上海", u"上海"), (u"江苏", u"江苏"), (u"浙江", u"浙江"), (u"安徽", u"安徽"),
+          (u"福建", u"福建"), (u"江西", u"江西"), (u"山东", u"山东"), (u"河南", u"河南"), (u"湖北", u"湖北"), (u"湖南", u"湖南"),
+          (u"广东", u"广东"), (u"广西", u"广西"), (u"海南", u"海南"), (u"重庆", u"重庆"), (u"四川", u"四川"), (u"贵州", u"贵州"),
+          (u"云南", u"云南"), (u"西藏", u"西藏"), (u"陕西", u"陕西"), (u"甘肃", u"甘肃"), (u"青海", u"青海"), (u"宁夏", u"宁夏"),
+          (u"新疆", u"新疆"), (u"台湾", u"台湾"), (u"香港", u"香港"), (u"澳门", u"澳门"), (u"海外", u"海外"))
+
 
 class category(ModelForm):
     """ 分类form @fanlintao
@@ -45,7 +52,7 @@ class group(ModelForm):
                                     widget=forms.Select(attrs={'class': 'span4 required'}),
                                     initial='everyone_can_join')
     place = forms.CharField(label=u'群组地点',
-                            widget=forms.TextInput(attrs={'class': 'span10 required', 'placeholder': u'群组的根据地'}))
+                            widget=forms.Select(choices=CITIES, attrs={'class': 'span4 required'}))
     description = forms.CharField(label=u'描述',
                                   widget=forms.Textarea(
                                       attrs={'class': 'span10 required', 'placeholder': u'群组作用、功能等简要描述'}

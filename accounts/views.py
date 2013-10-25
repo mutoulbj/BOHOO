@@ -58,7 +58,11 @@ def register(request):
         form = register_form(data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')   # 跳转到登录页面
+            email = form.cleaned_data['email']
+            user = MyUser.objects.get(email=email)
+            login(request, user)
+            return redirect(reverse('base_info_edit'))  # 跳转到基本信息编辑界面
+            #return redirect('login')   # 跳转到登录页面
     vt = loader.get_template('register.html')
     c = RequestContext(
         request, {

@@ -1,7 +1,6 @@
 # Create your views here.
 #coding=utf-8
 import json
-import re
 import datetime
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -31,7 +30,8 @@ def new_group(request):
             g.save()
             g.manager.add(request.user)   # 创建者默认是管理员
             g.member.add(request.user)    # 创建者默认是小组成员
-            return redirect(reverse("group_detail", args=[g.id]))
+            return redirect(reverse("add_group_avatar", kwargs={'group_id': g.id}))
+            #return redirect(reverse("group_detail", args=[g.id]))
     return render(request, 'groups/new/group.html', {'form': group()})
 
 
@@ -69,6 +69,9 @@ def group_detail(request, group_id):
         # 判断当前用户是不是小组管理员
         if request.user in group.manager.all():
             is_manager = True
+        # 判断当前用户是不是小组创建者
+        if request.user == group.creator:
+            is_creator = True
         # 判断当前用户申请加入该小组的请求是否正在处理中,若正在处理中,不允许重复申请
         try:
             apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
@@ -83,10 +86,22 @@ def group_detail(request, group_id):
             is_manager_processing = True
         except ObjectDoesNotExist:
             is_manager_processing = False
-        topics = Topic.objects.filter(group=group, status='enabled').order_by("-last_reply_add")
+        topics_list = Topic.objects.filter(group=group, status='enabled').order_by("-last_reply_add")
+
+        # 对话题分页
+        paginator = Paginator(topics_list, settings.TOPIC_PAGINTION_PER_PAGE)
+        page = request.GET.get('page')
+        try:
+            topics = paginator.page(page)
+        except PageNotAnInteger:
+            topics = paginator.page(1)
+        except EmptyPage:
+            topics = paginator.page(paginator.num_pages)
+
         recommend_groups = get_most_topic_groups(request.user, 5)
         ctx = {
             'g': group, 'is_member': is_member, 'topics': topics,
+            'is_creator': is_creator,
             'is_member_processing': is_member_processing,
             'is_manager': is_manager,
             'is_manager_processing': is_manager_processing,

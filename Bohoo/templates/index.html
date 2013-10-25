@@ -80,19 +80,19 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="row pull-left">
-            <div class="span8">
-                <div class="recent-topic">
-                    <ul>
-                        {% for t in recent_topics %}
-                            <li><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+{#    <div class="container-fluid">#}
+{#        <div class="row pull-left">#}
+{#            <div class="span8">#}
+{#                <div class="recent-topic">#}
+{#                    <ul>#}
+{#                        {% for t in recent_topics %}#}
+{#                            <li><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></li>#}
+{#                        {% endfor %}#}
+{#                    </ul>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
     {% else %}
         <div class="container-fluid">
             <div class="row-fluid">

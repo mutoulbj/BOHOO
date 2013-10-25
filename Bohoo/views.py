@@ -1,5 +1,6 @@
 #! -*- coding:utf-8 -*-
 import json
+from django.core.urlresolvers import reverse
 from django.template import loader, RequestContext
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
@@ -10,6 +11,8 @@ from django.conf import settings
 from accounts.forms import register_form
 from groups.models import Topic, Category, Group
 from sys_notification.models import Notification
+from User.models import MyUser
+from accounts.views import login
 
 
 def index(request):
@@ -21,7 +24,11 @@ def index(request):
         form = register_form(data=request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')   # 跳转到登录页面
+            email = form.cleaned_data['email']
+            user = MyUser.objects.get(email=email)
+            login(request, user)
+            return redirect(reverse('base_info_edit'))  # 跳转到基本信息编辑界面
+            #return redirect('login')   # 跳转到登录页面
     if request.method == "GET":
         try:
             groups_list = Group.objects.filter(category__id=request.GET["c_id"]).order_by("-last_topic_add")

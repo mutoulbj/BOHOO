@@ -25,6 +25,8 @@ LOGIN_URL = '/accounts/login'
 
 # 分页
 PAGINATION_PER_PAGE = 2
+TOPIC_PAGINTION_PER_PAGE = 50   # 每页话题数量
+GROUP_PAGINTION_PER_PAGE = 3    # 每页群组数量
 
 
 AUTHENTICATION_BACKENDS = ('Bohoo.backends.EmailAuthBackend', 'django.contrib.auth.backends.ModelBackend',)

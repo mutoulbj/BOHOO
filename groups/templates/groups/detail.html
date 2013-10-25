@@ -1,6 +1,7 @@
 {% extends 'detail_base.html' %}
 {% load compress %}
 {% load group_avatar_tags group_tags %}
+{% load bootstrap_toolkit %}
 
 {% block title %}{{ g.name }}--详情{% endblock %}
 
@@ -53,7 +54,7 @@
                         <div class="row-fluid">
                             <div class="span7 text-info group-name">{{ g.name }}</div>
                             <div class="span5 pull-right toolbar">
-                                {% if not is_member %}
+                                {% if not is_member and not is_creator %}
                                     {% if g.member_join == 'everyone_can_join' %}
                                         <button id="join_group" class="btn btn-primary" data-group-id={{ g.id }}>加入群组</button>
                                     {% elif g.member_join == 'need_check' %}
@@ -66,10 +67,10 @@
 
 {#                                {% if is_manager %}#}
 {#                                    <span class="text-warning">我是管理员 ></span>#}
-                                {% if is_member and not is_manager %}
+                                {% if is_member and not is_manager and not is_creator %}
                                     <button id="apply_be_manager_modal_trigger" class="btn btn-primary">成为管理员</button>
                                 {% endif %}
-                                {% if is_member %}
+                                {% if is_member and not is_creator %}
                                     <button id="quit_group" class="btn btn-danger" data-group-id={{ g.id }}>退出群组</button>
                                 {% endif %}
                             </div>
@@ -118,6 +119,7 @@
                         </table>
                     </div>
                 </div>
+                {{ topics|pagination }}
                 {% else %}
                 <div class="row-fluid">
                     <div class="span12">
