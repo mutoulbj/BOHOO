@@ -122,7 +122,8 @@
                     {% for g in groups %}
                         <table class="table table-hover">
                             <tr>
-                                <th colspan="2"><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></th>
+                                <th><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></th>
+                                <th style="text-align: right !important;">{{ g.place }}</th>
                             </tr>
                             {% for t in g.get_last_reply_order_topic_qs %}
                                 <tr>
