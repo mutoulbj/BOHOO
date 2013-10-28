@@ -43,7 +43,7 @@
             <div class="box-module">
                 <div class="row-fluid">
                     <div class="span9">
-                        <a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a>
+                        <a href="{% url 'group_detail' group_id=g.id %}?type=recent">{{ g.name }}</a>
                     </div>
                     <div class="span3">
                         <button id="quit_group" class="btn btn-primary btn-block" data-group-id={{ g.id }}>退出群组</button>

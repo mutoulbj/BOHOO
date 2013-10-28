@@ -79,7 +79,7 @@
                         <table class="table table-hover">
                             {% for g in groups %}
                                 <tr>
-                                    <td style="width: 30%"><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name|truncatechars:25 }}</a></td>
+                                    <td style="width: 30%"><a href="{% url 'group_detail' group_id=g.id %}?type=recent">{{ g.name|truncatechars:25 }}</a></td>
                                     <td style="width: 70%;">
                                         <span>{{ g.get_members }}个成员</span> <br />
                                         <span class="muted">{{ g.description|truncatechars:150 }}</span>
@@ -100,7 +100,7 @@
                                     <td>{{ t.create_time|date:"m-d H:i:s" }}</td>
                                     <td>{{ t.reply_amount }}回复</td>
                                     <td>
-                                        <a href="{% url 'group_detail' group_id=t.group.id %}">{{ t.group.name|truncatechars:20 }}</a>
+                                        <a href="{% url 'group_detail' group_id=t.group.id %}?type=recent">{{ t.group.name|truncatechars:20 }}</a>
                                     </td>
                                 </tr>
                             {% endfor %}

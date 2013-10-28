@@ -122,8 +122,8 @@
                     {% for g in groups %}
                         <table class="table table-hover">
                             <tr>
-                                <th><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a></th>
-                                <th style="text-align: right !important;">{{ g.place }}</th>
+                                <th><a href="{% url 'group_detail' group_id=g.id %}?type=recent">{{ g.name }}</a></th>
+                                <th style="text-align: right !important;">地点:&nbsp;&nbsp;<span class="text-info">{{ g.place }}</span></th>
                             </tr>
                             {% for t in g.get_last_reply_order_topic_qs %}
                                 <tr>

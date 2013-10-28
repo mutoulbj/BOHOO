@@ -37,7 +37,7 @@ def login(request, user=None):
             myuser_logged_in.send(sender=user.__class__, request=request, user=user)  # 发送signal
             if first_login:
                 return redirect(reverse('base_info_edit'))
-            return redirect(reverse('index'))
+            return redirect(reverse('index') + '?init=1')
     else:
         form = login_form(request)
         request.session.set_test_cookie()

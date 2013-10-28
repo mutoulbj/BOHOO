@@ -108,8 +108,8 @@
 
 {% block right_content %}
     <div class="row-fluid left-list">
-        <div class="span12"><a href="{% url 'group_detail' group_id=g.id %}">{% group_avatar g %}</a></div>
-        <div class="span12"><a href="{% url 'group_detail' group_id=g.id %}">返回{{ g.name  }}</a></div>
+        <div class="span12"><a href="{% url 'group_detail' group_id=g.id %}?type=recent">{% group_avatar g %}</a></div>
+        <div class="span12"><a href="{% url 'group_detail' group_id=g.id %}?type=recent">返回{{ g.name  }}</a></div>
     </div>
 {% endblock %}
 

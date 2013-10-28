@@ -81,9 +81,9 @@
                     </div>
                 </div>
                 <div class="row-fluid topic-tab">
-                    <ul class="breadcrumb">
-                        <li><a href="">最近话题</a><span class="divider">/</span></li>
-                        <li><a href="">热门话题</a></li>
+                    <ul class="nav nav-pills">
+                        <li id="pills-recent"><a href="{% url 'group_detail' group_id=g.id %}?type=recent">最近话题</a></li>
+                        <li id="pills-hot"><a href="{% url 'group_detail' group_id=g.id %}?type=hot">热门话题</a></li>
                         <li class="pull-right">
                             <a href="{% url 'add_topic' group_id=g.id %}" id="create-topic">
                                 <i class="icon-plus"></i>
@@ -213,6 +213,13 @@
             $("#apply_be_manager_modal_close").click(function(){
                 $("#apply_be_manager_modal").modal("hide");
             });
+
+            // pills
+            {% if request.GET.type == 'recent' %}
+                $('#pills-recent').addClass('active');
+            {% elif request.GET.type == 'hot' %}
+                $('#pills-hot').addClass('active');
+            {% endif %}
         });
         // 发帖
 {#        $("#create-topic").click(function(e){#}

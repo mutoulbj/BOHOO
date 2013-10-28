@@ -44,7 +44,7 @@
                     <ul class="nav nav-list right-list">
                         <li class="nav-header">为你推荐</li>
                         {% for g in recommend_groups %}
-                        <li><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name|truncatechars:9 }}</a></li>
+                        <li><a href="{% url 'group_detail' group_id=g.id %}?type=recent">{{ g.name|truncatechars:9 }}</a></li>
                         {% endfor %}
                     </ul>
                 {% endblock %}

@@ -27,7 +27,7 @@
                         <td><a href="{% url "profile_view" tid=t.creator.id %}">{{ t.creator }}</a></td>
                         <td>{{ t.reply_amount }}</td>
                         <td>{{ t.last_reply_add|date:"m-j H:i:s" }}</td>
-                        <td><a href="{% url 'group_detail' t.group.id %}">{{ t.group.name }}</a></td>
+                        <td><a href="{% url 'group_detail' t.group.id %}?type=recent">{{ t.group.name }}</a></td>
                     </tr>
                 {% endfor %}
                 <div class="row-fluid">

@@ -75,7 +75,7 @@ def group_add(request, group_id, extra_context=None, next_override=None,
             messages.success(request, _("Successfully uploaded a new avatar."))
             group_avatar_updated.send(sender=GroupAvatar, group=group, group_avatar=group_avatar)
             # return redirect(next_override or _get_next(request))
-            return redirect(reverse('group_detail', kwargs={'group_id': group.id}))
+            return redirect(reverse('group_detail', kwargs={'group_id': group.id}) + '?type=recent')
     context = {
         'group': group,
         'group_avatar': group_avatar,
@@ -114,7 +114,7 @@ def group_change(request, group_id, extra_context=None, next_override=None,
             group_avatar_updated.send(sender=GroupAvatar, group=group, group_avatar=group_avatar)
         # TODO: 修改小组头像后跳转
         # return redirect(next_override or _get_next(request))
-        return redirect(reverse('group_detail', kwargs={'group_id': group.id}))
+        return redirect(reverse('group_detail', kwargs={'group_id': group.id}) + '?type=recent')
     context = {
         'group': group,
         'group_avatar': group_avatar,
@@ -149,7 +149,7 @@ def group_delete(request, group_id, extra_context=None, next_override=None, *arg
             messages.success(request, _("Successfully deleted the requested avatars."))
             # TODO: 成功删除小组头像后页面跳转
             # return redirect(next_override or _get_next(request))
-            return redirect(reverse('group_detail', kwargs={'group_id': group.id}))
+            return redirect(reverse('group_detail', kwargs={'group_id': group.id}) + '?type=recent')
     context = {
         'group_avatar': group_avatar,
         'group_avatars': group_avatars,

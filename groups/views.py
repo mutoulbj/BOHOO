@@ -86,7 +86,12 @@ def group_detail(request, group_id):
             is_manager_processing = True
         except ObjectDoesNotExist:
             is_manager_processing = False
-        topics_list = Topic.objects.filter(group=group, status='enabled').order_by("-last_reply_add")
+
+        topic_qs = Topic.objects.filter(group=group, status='enabled')
+        if request.GET['type'] == 'recent':   # 最近话题:按最近回复时间排序
+            topics_list = topic_qs.order_by("-last_reply_add")
+        elif request.GET['type'] == 'hot':    # 最热话题:按回复数量排序
+            topics_list = topic_qs.order_by("-reply_amount")
 
         # 对话题分页
         paginator = Paginator(topics_list, settings.TOPIC_PAGINTION_PER_PAGE)
@@ -260,7 +265,7 @@ def add_topic(request, group_id):
                         g.image.add(i)
                 image_obj = []
                 g_id = int(group.id)
-                return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
+                return redirect(reverse("group_detail", kwargs={'group_id': g_id}) + '?type=recent')
         ctx = {
             'form': topicForm(initial={"group": group}),
             'g': group,
@@ -305,7 +310,7 @@ def edit_topic(request, group_id, topic_id):
                         g.image.add(i)
                 image_obj = []
                 g_id = int(group.id)
-                return redirect(reverse("group_detail", kwargs={'group_id': g_id}))
+                return redirect(reverse("group_detail", kwargs={'group_id': g_id}) + '?type=recent')
         ctx = {
             'form': topicForm(instance=t_topic),
             'g': group,

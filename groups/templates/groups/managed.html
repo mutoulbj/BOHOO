@@ -48,7 +48,7 @@
                     <div class="span12">
                         <div class="row-fluid">
                             <div class="span6">
-                                <a href="{% url 'group_detail' group_id=g.id %}">{{ g.name }}</a>
+                                <a href="{% url 'group_detail' group_id=g.id %}?type=recent">{{ g.name }}</a>
                             </div>
                             <div class="span3">
                                 <a href="{% url 'edit_group' group_id=g.id %}"
