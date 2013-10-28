@@ -76,7 +76,7 @@ def search(request):
             # 对群组分页
             paginator = Paginator(group_qs_list, settings.PAGINATION_PER_PAGE)
             page = request.GET.get('page')
-            print paginator.page()
+            #print paginator.page()
             try:
                 group_qs = paginator.page(page)
             except PageNotAnInteger:

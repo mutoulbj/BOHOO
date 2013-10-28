@@ -87,7 +87,11 @@
                                 </tr>
                             {% endfor %}
                         </table>
-                        {% bootstrap_pagination groups url="/search?page=1&ty=group" extra="search_content=\{{ content \}}"  align="right" %}
+                        {% if groups %}
+                            {% bootstrap_pagination groups url="/search?page=1&ty=group&search_content=" align="right" %}
+                        {% else %}
+                            <h4 class="muted">没有搜索结果哦!</h4>
+                        {% endif %}
                     {% elif ty == 'topic' %}
                         <table class="table table-hover">
                             {% for t in topics %}
@@ -101,7 +105,11 @@
                                 </tr>
                             {% endfor %}
                         </table>
-                        {% bootstrap_pagination topics url="/search?page=1&ty=topic" extra="search_content=py" align="right" %}
+                        {% if topics %}
+                            {% bootstrap_pagination topics url="/search?page=1&ty=topic" align="right" %}
+                        {% else %}
+                            <h4 class="muted">没有搜索结果哦!</h4>
+                        {% endif %}
                     {% endif %}
 
                     {% if not ty %}
@@ -118,6 +126,16 @@
             $('li.search-group').addClass('active');
         {% elif ty == 'topic' %}
             $('li.search-topic').addClass('active');
+        {% endif %}
+
+        // 初始化时使用js加上search_content
+        {% if topics or groups %}
+        $(document).ready(function(){
+            $('.pagination>ul li a').each(function(){
+                var base_href = $(this).attr('href');
+                $(this).attr('href', base_href + '&search_content={{ content }}');
+            })
+        });
         {% endif %}
     </script>
 {% endblock %}
