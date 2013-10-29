@@ -42,6 +42,7 @@
 
 {% block left_content %}
     <div class="container-fluid left_content">
+    <a name="to_topics" id="to_topics"></a>    {# 锚点,定位话题列表 #}
         <div class="row-fluid box">
             <div class="box-module">
                 <div class="row-fluid">
@@ -80,7 +81,7 @@
                         </div>
                     </div>
                 </div>
-                <a name="to_topics" id="to_topics"></a>
+
                 <div class="row-fluid topic-tab">
                     <ul class="nav nav-pills">
                         <li id="pills-recent"><a href="{% url 'group_detail' group_id=g.id %}?type=recent#to_topics">最近话题</a></li>
