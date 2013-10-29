@@ -144,6 +144,7 @@
 
 {% block js_other %}
     <script type="text/javascript">
+        console.log("{{ request.GET.c_id }}");
         {% if request.GET.init %}
             // 初始化的左侧加上active样式,所在分类展开
             var init_ca_id = "c_" + "{{ init_ca_id }}";
@@ -428,5 +429,17 @@
                 return false;
             }
         });
+
+       // 初始化时使用js加上search_content
+        {% if groups %}
+        $(document).ready(function(){
+            var c_id = "{{ request.GET.c_id }}";
+            var ca = "{{ request.GET.ca }}";
+            $('.pagination>ul li a').each(function(){
+                var base_href = $(this).attr('href');
+                $(this).attr('href', base_href + '&c_id='+c_id+"&ca="+ca);
+            })
+        });
+        {% endif %}
     </script>
 {% endblock %}

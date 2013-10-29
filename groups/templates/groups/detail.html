@@ -80,10 +80,11 @@
                         </div>
                     </div>
                 </div>
+                <a name="to_topics" id="to_topics"></a>
                 <div class="row-fluid topic-tab">
                     <ul class="nav nav-pills">
-                        <li id="pills-recent"><a href="{% url 'group_detail' group_id=g.id %}?type=recent">最近话题</a></li>
-                        <li id="pills-hot"><a href="{% url 'group_detail' group_id=g.id %}?type=hot">热门话题</a></li>
+                        <li id="pills-recent"><a href="{% url 'group_detail' group_id=g.id %}?type=recent#to_topics">最近话题</a></li>
+                        <li id="pills-hot"><a href="{% url 'group_detail' group_id=g.id %}?type=hot#to_topics">热门话题</a></li>
                         <li class="pull-right">
                             <a href="{% url 'add_topic' group_id=g.id %}" id="create-topic">
                                 <i class="icon-plus"></i>
@@ -219,6 +220,15 @@
                 $('#pills-recent').addClass('active');
             {% elif request.GET.type == 'hot' %}
                 $('#pills-hot').addClass('active');
+            {% endif %}
+
+            // 初始化时使用js加上search_content
+            {% if topics %}
+                console.log("{{ request.GET.type }}");
+                $('.pagination>ul li a').each(function () {
+                    var base_href = $(this).attr('href');
+                    $(this).attr('href', base_href + '&type=' + '{{ request.GET.type }}#to_topics');
+                });
             {% endif %}
         });
         // 发帖
