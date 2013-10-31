@@ -62,7 +62,7 @@ def group_detail(request, group_id):
     """ 群组详细页 @fanlintao"""
     try:
         group = Group.objects.get(id=group_id)
-        is_member, is_manager = False, False
+        is_member, is_manager, is_creator = False, False, False
         # 判断当前用户是不是小组成员
         if request.user in group.member.all():
             is_member = True
