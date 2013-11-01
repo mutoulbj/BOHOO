@@ -1,7 +1,7 @@
 {% extends 'group_base.html' %}
 {% load group_avatar_tags %}
 
-{% block title %}我的管理群组{% endblock %}
+{% block title %}我管理的群组{% endblock %}
 
 {% block head_other %}
     {{ block.super }}
@@ -55,18 +55,18 @@
                                    class="btn btn-primary edit-group">修改群组资料</a>
                             </div>
                             <div class="span3">
-                                {% if g.group_type == 'private' %}
-                                    <div class="text-warning">
+                                <div class="text-warning">
+                                    {% if g.member_join == 'need_check' %}
                                         申请加入群组:
                                         <a href="{% url 'apply_deal' group_id=g.id %}" class="text-error">
                                             <strong>{{ g.get_applicant_member_num }}</strong>
-                                        </a><br />
-                                        申请管理员:
-                                        <a href="{% url 'apply_deal' group_id=g.id %}" class="text-error">
-                                            <strong>{{ g.get_applicant_manager_num }}</strong>
-                                        </a>
-                                    </div>
-                                {% endif %}
+                                        </a><br/>
+                                    {% endif %}
+                                    申请管理员:
+                                    <a href="{% url 'apply_deal' group_id=g.id %}" class="text-error">
+                                        <strong>{{ g.get_applicant_manager_num }}</strong>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
