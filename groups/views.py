@@ -144,7 +144,7 @@ def ajax_apply_join_group(request):
 
 
 def ajax_apply_be_manager(request):
-    """ 申请成为组长 ajax @fanlintao """
+    """ 申请成为管理员 ajax @fanlintao """
     error = {"success": "", "error": ""}
     if request.method == "POST":
         try:
@@ -205,7 +205,7 @@ def ajax_apply_pass(request):
             pass_type = request.POST.get("type")
             group = Group.objects.get(id=request.POST.get("group_id"))
             user = MyUser.objects.get(id=request.POST.get("applicant_id"))
-            applicant = Applicant.objects.get(applicant=user, status="processing")
+            applicant = Applicant.objects.get(applicant=user, group=group, status="processing")
             if pass_type == "member":
                 group.member.add(user)
             elif pass_type == "manager":

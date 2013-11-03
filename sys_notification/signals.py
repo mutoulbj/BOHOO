@@ -21,7 +21,8 @@ set_notity_clicked = Signal(providing_args=["request", "no_type", "args", "kwarg
 def group_action(sender, instance, *args, **kwargs):
     obj = instance
     if obj.status != 'processing':
-        notify = Notification(no_type='group', group_action=obj.status, to_user=obj.applicant, group=obj.group)
+        notify = Notification(no_type='group', group_action=obj.status, to_user=obj.applicant, group=obj.group,
+                              applicant=obj)
         notify.save()
 
 group_notify.connect(group_action, dispatch_uid='create_group_notify')

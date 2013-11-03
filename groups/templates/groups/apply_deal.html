@@ -90,12 +90,12 @@
 {% block js_other %}
     <script type="text/javascript">
     function action_success(){
-        $.globalMessenger().post({
-            message: "操作成功",
-            hideAfter: 4,
-            type: 'success',
-            showCloseButton: true
-        });
+{#        $.globalMessenger().post({#}
+{#            message: "操作成功",#}
+{#            hideAfter: 2,#}
+{#            type: 'success',#}
+{#            showCloseButton: true#}
+{#        });#}
         location.reload();
     }
     $(".pass").on("click", function(){
