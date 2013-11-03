@@ -144,11 +144,16 @@
 
 {% block js_other %}
     <script type="text/javascript">
-        console.log("{{ request.GET.c_id }}");
         {% if request.GET.init %}
             // 初始化的左侧加上active样式,所在分类展开
             var init_ca_id = "c_" + "{{ init_ca_id }}";
             $('#' + init_ca_id).addClass("active").parents(".accordion-body").addClass('in');
+            var c_id = "{{ init_ca_id }}";
+            var ca = "{{ init_ca_parent_id }}";
+            $('.pagination>ul li a').each(function(){
+                var base_href = $(this).attr('href');
+                $(this).attr('href', base_href + '&c_id='+c_id+"&ca="+ca);
+            });
         {% endif %}
         // 给选定的tab加上active
         {% if request.GET.c_id %}
@@ -431,14 +436,15 @@
         });
 
        // 初始化时使用js加上search_content
-        {% if groups %}
+        {% if groups and not request.GET.init %}
         $(document).ready(function(){
             var c_id = "{{ request.GET.c_id }}";
             var ca = "{{ request.GET.ca }}";
             $('.pagination>ul li a').each(function(){
                 var base_href = $(this).attr('href');
                 $(this).attr('href', base_href + '&c_id='+c_id+"&ca="+ca);
-            })
+            });
+            $('#c_' + c_id).addClass("active").parents(".accordion-body").addClass('in');
         });
         {% endif %}
     </script>
