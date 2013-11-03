@@ -163,7 +163,6 @@ INSTALLED_APPS = (
     'User',
     'groups',
     'accounts',
-    'friends',
     'django_messages',
     'social',
     'sys_notification'
