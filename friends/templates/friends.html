@@ -1,0 +1,13 @@
+{% load avatar_tags %}
+<div class="democontent">
+    {% avatar user 50 %}
+
+    <div class="info"><h3>{{ user.username }}</h3>
+        <p>{{ user.sign }}</p>
+        </p>
+    </div>
+    <div class="footer">
+        <a data-user_id="{{ user.id }}" class="btn btn-primary">关注</a>
+    </div>
+    <div class="clear"></div>
+</div>
