@@ -29,7 +29,7 @@ urlpatterns = patterns(
 #     url(r'^admin/weibo/auth/done/$', 'blog.admin_views.admin_weibo_auth_deal'),
     url(r'^group/', include('groups.urls')),
     
-    url(r'^relation/', include('friends.urls')),
+    url(r'^friends/', include('friends.urls')),
     url(r'^message/', include('django_messages.urls')),
     url(r'^notification/', include('sys_notification.urls'))
     

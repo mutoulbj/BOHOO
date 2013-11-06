@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}css/bootstrap-responsive.min.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/messenger/messenger.css">
     <link rel="stylesheet" href="{{ STATIC_URL }}css/messenger/messenger-theme-block.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.qtip.min.css">
     <!-- bootstrap and awesome font end -->
     <style type="text/css">
     .search-input{
@@ -206,7 +207,7 @@
     <script type="text/javascript" src="{{ STATIC_URL }}js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/messenger.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}js/jquery_fix_csrf.js"></script>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/friends.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/jquery.qtip.min.js"></script>
     <script type="text/javascript">
         // 设置messager插件的样式
         $._messengerDefaults = {
@@ -253,6 +254,39 @@
             setInterval('get_messages()', 30000);
         });
         {% endif %}
+        // Create the tooltips only when document ready
+        $(document).ready(function () {
+            // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!
+            $('.people_avatar > a').each(function () {
+                var self = $(this);
+                var t_id = self.parent().data('t_id');
+                $(this).qtip({
+                    content: {
+                        text: function (event, api) {
+                            $.ajax({
+                                url: "{% url 'friend_tooltip' %}?t_id=" + t_id // Use href attribute as URL
+                            })
+                                    .then(function (content) {
+                                        // Set the tooltip content upon successful retrieval
+                                        api.set('content.text', content);
+                                    }, function (xhr, status, error) {
+                                        // Upon failure... set the tooltip content to error
+                                        api.set('content.text', status + ': ' + error);
+                                    });
+
+                            return 'Loading...'; // Set some initial text
+                        }
+                    },
+                    position: {
+                        target: 'mouse',
+                        adjust: {
+                            mouse: false
+                        }
+                    },
+                    style: 'qtip-bootstrap'
+                });
+            });
+        });
     </script>
 {% endcompress %}
 {% block js_other %}{% endblock %}

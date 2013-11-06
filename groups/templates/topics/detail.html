@@ -65,7 +65,7 @@
         <div class="row-fluid left">
             <div class="span9">
                 <div class="row-fluid topic">
-                    <div class="span1">{% avatar topic.creator 55 %}</div>
+                    <div class="span1 people_avatar" data-t_id="{{ topic.creator.id }}"><a href="">{% avatar topic.creator 55 %}</a></div>
                     <div class="span11">
                         <div class="row-fluid topic-item">
                             <span class="items span12 ">
@@ -112,7 +112,7 @@
                 <!-- JiaThis Button END -->
                 {% for r in replies %}
                     <div class="row-fluid">
-                        <div class="span1 reply_avatar"><a href="">{% avatar r.creator 55 %}</a></div>
+                        <div class="span1 reply_avatar people_avatar" data-t_id="{{ r.creator.id }}"><a href="">{% avatar r.creator 55 %}</a></div>
                         <div class="span11 reply-content">
                             <div class="row-fluid reply-item">
                                 <div class="span12 bg_reply">

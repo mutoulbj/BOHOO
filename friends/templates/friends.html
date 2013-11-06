@@ -1,13 +1,32 @@
 {% load avatar_tags %}
-<div class="democontent">
-    {% avatar user 50 %}
-
-    <div class="info"><h3>{{ user.username }}</h3>
-        <p>{{ user.sign }}</p>
-        </p>
+<div class="democontent" style="margin:1px; padding-top: 1px">
+    <div class="row-fluid span12" style="margin: 1px">
+        <div class="span4">
+            {% avatar user 50 %}
+        </div>
+        <div class="span8 info">
+            <h3>{{ user.username }}</h3>
+        </div>
     </div>
-    <div class="footer">
-        <a data-user_id="{{ user.id }}" class="btn btn-primary">关注</a>
+    <div class="row-fluid span12" style="margin: 1px">
+        <span>{{ user.sign|truncatechars:50 }}</span>
+    </div>
+    <div class="footer row-fluid" style="margin: 1px;">
+        <div style="border-top: 1px solid #eee; padding-top: 2px">
+            {% if user != request.user %}
+                {% if not is_followed %}
+                    <a data-user_id="{{ user.id }}" class="btn btn-primary pull-right follow">关注</a>
+                    <a data-user_id="{{ user.id }}" class="btn pull-right unfollow" style="display: none;">取消关注</a>
+                {% else %}
+                    <a data-user_id="{{ user.id }}" class="btn btn-primary pull-right follow" style="display: none;">>关注</a>
+                    <a data-user_id="{{ user.id }}" class="btn pull-right unfollow">取消关注</a>
+                {% endif %}
+            {% else %}
+                <p>你自己</p>
+            {% endif %}
+        </div>
+
     </div>
     <div class="clear"></div>
 </div>
+<script type="text/javascript" src="{{ STATIC_URL }}js/follow.js"></script>
