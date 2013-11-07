@@ -9,12 +9,13 @@
     }
     .help-block{
         padding-left: 27px;
+{#        margin-left: -400px;#}
     }
     </style>
 {% endblock %}
 
 {% block main %}
-    <div class="container-fluid">
+    <div class="container-fluid" style="text-align: center">
         <div class="row-fluid">
             <form method="post" id="id_register_form">{% csrf_token %}
             <div class="container-fluid">
@@ -28,7 +29,10 @@
                         <div class="help-block"><span class="password-help text-info"></span></div>
                         <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span>{{ form.password1 }}</div>
                         <div class="help-block"><span class="re-password-help text-info"></span></div>
-                        <label class="checkbox"><input type="checkbox" id="id_terms">我已经阅读并同意<a href="">服务条款</a> </label>
+                        <label class="checkbox" style="margin-left: -380px">
+                            <input type="checkbox" id="id_terms" style="position: absolute;">
+                            <span class="terms">我已经阅读并同意<a href="">服务条款</a></span>
+                        </label>
                         <button class="btn btn-primary btn-register">注册</button>
                     </div>
                 </div>
