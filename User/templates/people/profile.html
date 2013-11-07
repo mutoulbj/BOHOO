@@ -50,12 +50,12 @@
             <div class="span4 avatar">
                 {% avatar user %}
             </div>
-            <div class="span2">
+            <div class="span4">
                 <span class="pull-right"><a href="{% url 'reset_password' user_id=request.user.id %}">修改密码</a></span>
             </div>
-            <div class="span2">
-                <span class="pull-right"><a href="{% url 'profile_edit' %}">编辑个人资料</a></span>
-            </div>
+{#            <div class="span2">#}
+{#                <span class="pull-right"><a href="{% url 'profile_edit' %}">编辑个人资料</a></span>#}
+{#            </div>#}
         </div>
     </div>
 
@@ -77,34 +77,34 @@
             </div>
         </div>
 
-        <div class="profile-box-module">
-            <div class="row-fluid">
-                <div class="span6">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <span class="text-info">姓</span>
-                        </div>
-                        <div class="span8">
-                            {% if user.last_name %}
-                                {{ user.last_name }}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                <div class="span6">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <span class="text-info">名</span>
-                        </div>
-                        <div class="span8">
-                            {% if user.first_name %}
-                                {{ user.first_name }}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+{#        <div class="profile-box-module">#}
+{#            <div class="row-fluid">#}
+{#                <div class="span6">#}
+{#                    <div class="row-fluid">#}
+{#                        <div class="span4">#}
+{#                            <span class="text-info">姓</span>#}
+{#                        </div>#}
+{#                        <div class="span8">#}
+{#                            {% if user.last_name %}#}
+{#                                {{ user.last_name }}#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="span6">#}
+{#                    <div class="row-fluid">#}
+{#                        <div class="span4">#}
+{#                            <span class="text-info">名</span>#}
+{#                        </div>#}
+{#                        <div class="span8">#}
+{#                            {% if user.first_name %}#}
+{#                                {{ user.first_name }}#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
 
         <div class="profile-box-module">
             <div class="row-fluid">
@@ -123,15 +123,27 @@
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">生日</span>
+                            <span class="text-info">职业</span>
                         </div>
                         <div class="span8">
-                            {% if user.birthday %}
-                                {{ user.birthday|date:"Y-m-d" }}
+                            {% if user.job %}
+                                {{ user.job }}
                             {% endif %}
                         </div>
                     </div>
                 </div>
+{#                <div class="span6">#}
+{#                    <div class="row-fluid">#}
+{#                        <div class="span4">#}
+{#                            <span class="text-info">生日</span>#}
+{#                        </div>#}
+{#                        <div class="span8">#}
+{#                            {% if user.birthday %}#}
+{#                                {{ user.birthday|date:"Y-m-d" }}#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
             </div>
         </div>
 
@@ -149,49 +161,49 @@
                         </div>
                     </div>
                 </div>
-                <div class="span6">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <span class="text-info">电话号码</span>
-                        </div>
-                        <div class="span8">
-                            {% if user.phone_number %}
-                                {{ user.phone_number }}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+{#                <div class="span6">#}
+{#                    <div class="row-fluid">#}
+{#                        <div class="span4">#}
+{#                            <span class="text-info">电话号码</span>#}
+{#                        </div>#}
+{#                        <div class="span8">#}
+{#                            {% if user.phone_number %}#}
+{#                                {{ user.phone_number }}#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
             </div>
         </div>
 
-        <div class="profile-box-module">
-            <div class="row-fluid">
-                <div class="span6">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <span class="text-info">QQ</span>
-                        </div>
-                        <div class="span8">
-                            {% if user.qq %}
-                                {{ user.qq }}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                <div class="span6">
-                    <div class="row-fluid">
-                        <div class="span4">
-                            <span class="text-info">微博</span>
-                        </div>
-                        <div class="span8">
-                            {% if user.weibo %}
-                                 {{ user.weibo }}
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+{#        <div class="profile-box-module">#}
+{#            <div class="row-fluid">#}
+{#                <div class="span6">#}
+{#                    <div class="row-fluid">#}
+{#                        <div class="span4">#}
+{#                            <span class="text-info">QQ</span>#}
+{#                        </div>#}
+{#                        <div class="span8">#}
+{#                            {% if user.qq %}#}
+{#                                {{ user.qq }}#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="span6">#}
+{#                    <div class="row-fluid">#}
+{#                        <div class="span4">#}
+{#                            <span class="text-info">微博</span>#}
+{#                        </div>#}
+{#                        <div class="span8">#}
+{#                            {% if user.weibo %}#}
+{#                                 {{ user.weibo }}#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
 
         <div class="profile-box-module">
             <div class="row-fluid">

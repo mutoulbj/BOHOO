@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="{{ STATIC_URL }}css/jquery.qtip.min.css">
     <!-- bootstrap and awesome font end -->
     <style type="text/css">
+    .main_navbar{
+        margin-left: 100px;
+    }
     .search-input{
         width: 250px !important;
     }
@@ -117,7 +120,8 @@
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container">
-            <a class="brand" href="#">BOHOO</a>
+        <div class="main_navbar">
+            <a class="brand" href="#">伯虎</a>
 
             <div class="nav-collapse collapse">
                 <ul class="nav">
@@ -155,6 +159,7 @@
                         </ul>
                     </li>
                 </ul>
+            </div>
 
                 <ul class="nav pull-right">
                     {% if request.user.is_authenticated %}
