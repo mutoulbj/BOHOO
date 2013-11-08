@@ -54,11 +54,7 @@
         <div class="row-fluid">
             <div class="span8">
                 {# 网站功能描述 #}
-                <p class="text-info">网站介绍1</p>
-                <p class="text-info">网站介绍2</p>
-                <p class="text-info">网站介绍3</p>
-                <p class="text-info">网站介绍4</p>
-                <p class="text-info">网站介绍5</p>
+                <h4 class="text-info">欢迎来到伯虎网，在这里你可以找到同行业的朋友!</h4>
             </div>
             <div class="span4">
                 <div class="control-group">
@@ -74,25 +70,13 @@
                         <label class="checkbox"><input type="checkbox" id="id_terms">我已经阅读并同意<a href="">服务条款</a> </label>
                         <button class="btn btn-primary btn-register">注册</button>
                     </form>
-                        <a href="{% url 'social_weibo_login' %}" class="btn btn-primary btn-signup-weibo">微博帐号注册</a>
-                        <a href="{% url 'social_qqweibo_login' %}" class="btn btn-primary btn-signup-qq">qq帐号注册</a>
+{#                        <a href="{% url 'social_weibo_login' %}" class="btn btn-primary btn-signup-weibo">微博帐号注册</a>#}
+{#                        <a href="{% url 'social_qqweibo_login' %}" class="btn btn-primary btn-signup-qq">qq帐号注册</a>#}
                 </div>
             </div>
         </div>
     </div>
-{#    <div class="container-fluid">#}
-{#        <div class="row pull-left">#}
-{#            <div class="span8">#}
-{#                <div class="recent-topic">#}
-{#                    <ul>#}
-{#                        {% for t in recent_topics %}#}
-{#                            <li><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name }}</a></li>#}
-{#                        {% endfor %}#}
-{#                    </ul>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
+
     {% else %}
         <div class="container-fluid">
             <div class="row-fluid">
