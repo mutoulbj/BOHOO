@@ -15,10 +15,24 @@ from User.models import MyUser
 from accounts.views import login
 
 
+def main(request):
+    """
+    进入网站的页面
+    未登录的显示,已经登录的跳转到首页
+    """
+    if request.user.is_anonymous():
+        form = register_form(large_input=False)
+        ctx = {
+            'form': form
+        }
+        return render(request, 'register.html', ctx)
+    elif request.user.is_authenticated():
+        return redirect(reverse('index'))
+
+
 def index(request):
     """
     首页index
-    若未登录显示
     """
     if request.method == "POST":
         form = register_form(data=request.POST)

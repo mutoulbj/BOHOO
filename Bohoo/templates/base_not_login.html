@@ -179,11 +179,11 @@
                     </li>
                     {% else %}
                     <li>
-                        <a href="#" style="padding: 10px 0  0 10px !important">已有帐号? 请</a>
+                        <a href="{% url 'login' %}"><i class="icon-fire"></i>登录</a>
                     </li>
-                    <li>
-                        <a href="{% url 'login' %}" style="padding-left: 0 !important"><i class="icon-fire"></i>登录</a>
-                    </li>
+{#                    <li>#}
+{#                        <a href="{% url 'register' %}"><i class="icon-lemon"></i>注册</a>#}
+{#                    </li>#}
                     {% endif %}
                 </ul>
             </div>
@@ -234,67 +234,6 @@
                 $(".search-query").submit();
             }
         });
-        {% if request.user.is_authenticated %}   // 只有登录的用户才轮询获取通知
-        // 轮询获取通知
-        function get_messages(){
-            $.ajax({
-                type: 'GET',
-                dataType: 'json',
-                url: "{% url 'get_messages' %}",
-                success: function(res){
-                    if (!!res['all']){
-                        $('#notify-all').text(res['all']).addClass('bdage');
-                    }
-                    if (!!res['for_group']){
-                        $('#notify-group').text(res['for_group']).addClass('bdage-hor');
-                    }
-                    if (!!res['for_topic']){
-                        $('#notify-topic').text(res['for_topic']).addClass('bdage-hor');
-                    }
-                }
-            })
-        }
-        // 半分钟发送一次请求
-        $(document).ready(function(){
-            get_messages();
-            setInterval('get_messages()', 30000);
-        });
-        {% endif %}
-
-        //移动到头像显示关注界面
-        // Create the tooltips only when document ready
-{#        $(document).ready(function () {#}
-{#            // MAKE SURE YOUR SELECTOR MATCHES SOMETHING IN YOUR HTML!!!#}
-{#            $('.people_avatar > a').each(function () {#}
-{#                var self = $(this);#}
-{#                var t_id = self.parent().data('t_id');#}
-{#                $(this).qtip({#}
-{#                    content: {#}
-{#                        text: function (event, api) {#}
-{#                            $.ajax({#}
-{#                                url: "{% url 'friend_tooltip' %}?t_id=" + t_id // Use href attribute as URL#}
-{#                            })#}
-{#                                    .then(function (content) {#}
-{#                                        // Set the tooltip content upon successful retrieval#}
-{#                                        api.set('content.text', content);#}
-{#                                    }, function (xhr, status, error) {#}
-{#                                        // Upon failure... set the tooltip content to error#}
-{#                                        api.set('content.text', status + ': ' + error);#}
-{#                                    });#}
-{##}
-{#                            return 'Loading...'; // Set some initial text#}
-{#                        }#}
-{#                    },#}
-{#                    position: {#}
-{#                        target: 'mouse',#}
-{#                        adjust: {#}
-{#                            mouse: false#}
-{#                        }#}
-{#                    },#}
-{#                    style: 'qtip-bootstrap'#}
-{#                });#}
-{#            });#}
-{#        });#}
     </script>
 {% endcompress %}
 {% block js_other %}{% endblock %}

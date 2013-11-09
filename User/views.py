@@ -46,6 +46,7 @@ def view_profile(request, tid):
     return HttpResponse(vt.render(c))
 
 
+@login_required()
 def base_info_edit(request):
     """
     编辑基本资料

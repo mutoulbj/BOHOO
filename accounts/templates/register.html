@@ -1,26 +1,66 @@
-{% extends 'base.html' %}
+{% extends 'base_not_login.html' %}
 
 {% block title %}注册{% endblock %}
 
 {% block head_other %}
+    {{ block.super }}
     <style type="text/css">
     .btn-register{
-        width: 572px;
+        width: 247px;
     }
-    .help-block{
-        padding-left: 27px;
-{#        margin-left: -400px;#}
+    .btn-signup-weibo,.btn-signup-qq{
+        width: 222px;
+    }
+    .btn-signup-weibo{
+        margin-bottom: 20px;
     }
     </style>
+{#    <style type="text/css">#}
+{#    .btn-register{#}
+{#        width: 572px;#}
+{#    }#}
+{#    .help-block{#}
+{#        padding-left: 27px;#}
+{#    }#}
+{#    </style>#}
 {% endblock %}
 
 {% block main %}
-    <div class="container-fluid" style="text-align: center">
+{#    <div class="container-fluid" style="text-align: center">#}
+{#        <div class="row-fluid">#}
+{#            <form method="post" id="id_register_form">{% csrf_token %}#}
+{#            <div class="container-fluid">#}
+{#                <div class="span12">#}
+{#                    <div class="control-group">#}
+{#                        <div class="input-prepend"><span class="add-on"><i class="icon-envelope"></i></span>{{ form.email }}</div>#}
+{#                        <div class="help-block"><span class="email-help text-info"></span></div>#}
+{#                        <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span>{{ form.username }}</div>#}
+{#                        <div class="help-block"><span class="username-help text-info"></span></div>#}
+{#                        <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span>{{ form.password }}</div>#}
+{#                        <div class="help-block"><span class="password-help text-info"></span></div>#}
+{#                        <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span>{{ form.password1 }}</div>#}
+{#                        <div class="help-block"><span class="re-password-help text-info"></span></div>#}
+{#                        <label class="checkbox" style="margin-left: -380px">#}
+{#                            <input type="checkbox" id="id_terms" style="position: absolute;">#}
+{#                            <span class="terms">我已经阅读并同意<a href="">服务条款</a></span>#}
+{#                        </label>#}
+{#                        <button class="btn btn-primary btn-register">注册</button>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            </form>#}
+{#        </div>#}
+{#    </div>#}
+
+    <div class="container-fluid">
         <div class="row-fluid">
-            <form method="post" id="id_register_form">{% csrf_token %}
-            <div class="container-fluid">
-                <div class="span12">
-                    <div class="control-group">
+            <div class="span8">
+                {# 网站功能描述 #}
+                <h4 class="text-info">欢迎来到伯虎网，在这里你可以找到同行业的朋友!</h4>
+            </div>
+            <div class="span4">
+                <div class="control-group">
+                    <form method="post" id="id_register_form">{% csrf_token %}
                         <div class="input-prepend"><span class="add-on"><i class="icon-envelope"></i></span>{{ form.email }}</div>
                         <div class="help-block"><span class="email-help text-info"></span></div>
                         <div class="input-prepend"><span class="add-on"><i class="icon-user"></i></span>{{ form.username }}</div>
@@ -29,15 +69,13 @@
                         <div class="help-block"><span class="password-help text-info"></span></div>
                         <div class="input-prepend"><span class="add-on"><i class="icon-lock"></i></span>{{ form.password1 }}</div>
                         <div class="help-block"><span class="re-password-help text-info"></span></div>
-                        <label class="checkbox" style="margin-left: -380px">
-                            <input type="checkbox" id="id_terms" style="position: absolute;">
-                            <span class="terms">我已经阅读并同意<a href="">服务条款</a></span>
-                        </label>
+                        <label class="checkbox"><input type="checkbox" id="id_terms">我已经阅读并同意<a href="">服务条款</a> </label>
                         <button class="btn btn-primary btn-register">注册</button>
-                    </div>
+                    </form>
+{#                        <a href="{% url 'social_weibo_login' %}" class="btn btn-primary btn-signup-weibo">微博帐号注册</a>#}
+{#                        <a href="{% url 'social_qqweibo_login' %}" class="btn btn-primary btn-signup-qq">qq帐号注册</a>#}
                 </div>
             </div>
-            </form>
         </div>
     </div>
 

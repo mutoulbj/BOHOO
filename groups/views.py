@@ -174,18 +174,21 @@ def ajax_quite_group(request):
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 
+@login_required()
 def manage(request):
     """ 我管理的群组 @fanlintao """
     groups = Group.objects.filter(manager=request.user)
     return render(request, 'groups/managed.html', {'groups': groups})
 
 
+@login_required()
 def joined(request):
     """  我加入的群组 @fanlintao """
     groups = Group.objects.filter(member=request.user)
     return render(request, 'groups/joined.html', {'groups': groups})
 
 
+@login_required()
 def apply_deal(request, group_id):
     """ 处理请求 @fanlintao """
     try:
@@ -237,6 +240,7 @@ def ajax_apply_reject(request):
 
 
 image_obj = []
+@login_required()
 def add_topic(request, group_id):
     """ 添加话题 @fanlintao """
     try:
@@ -277,6 +281,7 @@ def add_topic(request, group_id):
         pass
 
 
+@login_required()
 def edit_topic(request, group_id, topic_id):
     """编辑话题 @fanlintao """
     try:
@@ -322,6 +327,7 @@ def edit_topic(request, group_id, topic_id):
         pass
 
 
+@login_required()
 def ajax_delete_topic_image(request):
     """ 删除图片 @fanlintao """
     error = {"success": "", "error": ""}
@@ -338,6 +344,7 @@ def ajax_delete_topic_image(request):
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 
+@login_required()
 def group_topic(request):
     """ 我的群组的话题 @fanlintao """
     groups = Group.objects.filter(member=request.user)
@@ -353,6 +360,7 @@ def group_topic(request):
     return render(request, "topics/group.html", {"topics": topics})
 
 
+@login_required()
 def created_topic(request):
     """我创建的话题 @fanlintao """
     topics_list = Topic.objects.filter(creator=request.user, status='enabled').order_by("-last_reply_add")
@@ -367,6 +375,7 @@ def created_topic(request):
     return render(request, "topics/created.html", {"topics": topics})
 
 
+@login_required()
 def replied_topic(request):
     """我回复的话题 @fanlintao """
     topics_list = Topic.objects.filter(id__in=Reply.objects.all().order_by('-create_time').filter(creator=request.user).values_list('topic', flat=True), status='enabled')

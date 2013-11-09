@@ -21,7 +21,7 @@ EMAIL_HOST_PASSOWORD = ''
 EMAIL_USE_TLS = False
 DEFAULT_FROM_EMAIL = '@qq.com'
 
-LOGIN_URL = '/accounts/login'
+LOGIN_URL = '/'
 
 # 分页
 PAGINATION_PER_PAGE = 2

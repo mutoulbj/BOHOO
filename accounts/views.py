@@ -66,7 +66,7 @@ def register(request):
     vt = loader.get_template('register.html')
     c = RequestContext(
         request, {
-            'form': register_form()
+            'form': register_form(large_input=False)
         }
     )
     return HttpResponse(vt.render(c))
@@ -78,7 +78,7 @@ def log_out(request):
     注销
     """
     logout(request)
-    return redirect('/')
+    return redirect(reverse('main'))
 
 
 def view_member_info(request):

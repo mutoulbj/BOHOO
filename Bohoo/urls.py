@@ -9,7 +9,8 @@ admin.autodiscover()
 # from notification.views import *
 urlpatterns = patterns(
     '',
-    url(r'^$', 'Bohoo.views.index', name='index'),
+    url(r'^$', 'Bohoo.views.main', name='main'),
+    url(r'^home/$', 'Bohoo.views.index', name='index'),
     url(r'^get_messages/$', 'Bohoo.views.get_messages', name='get_messages'),   # 轮询
     url(r'^captcha/', include('captcha.urls')),   # django-simple-captcha
     url(r'^search/$', 'Bohoo.views.search', name='search'),

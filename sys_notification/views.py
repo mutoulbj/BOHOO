@@ -1,5 +1,6 @@
 #! -*- coding:utf-8 -*-
 import json
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -7,6 +8,7 @@ from sys_notification.signals import set_notity_clicked
 from sys_notification.models import Notification
 
 
+@login_required()
 def notify_group(request):
     """
     通知:群组
@@ -21,6 +23,7 @@ def notify_group(request):
     return render(request, 'notify/groups.html', ctx)
 
 
+@login_required()
 def notity_topic(request):
     """
     通知:话题
@@ -35,6 +38,7 @@ def notity_topic(request):
     return render(request, 'notify/topic.html', ctx)
 
 
+@login_required()
 def del_notify(request):
     """
     通知:不再提醒

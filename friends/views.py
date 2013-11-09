@@ -1,5 +1,6 @@
 #! -*- coding:utf-8 -*-
 import json
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
@@ -8,6 +9,7 @@ from friends.models import Friendship
 from User.models import MyUser
 
 
+@login_required()
 def follow(request, user_id):
     """关注 @fanlintao 20131105"""
     error = {'success': '', 'error': ''}
