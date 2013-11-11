@@ -162,7 +162,7 @@
                 </ul>
             </div>
 
-                <ul class="nav pull-right">
+                <ul class="nav pull-right" style="margin-right: 50px">
                     {% if request.user.is_authenticated %}
                         <li class="dropdown action">
                         <a class="dropdown-toggle" role="button" data-toggle="dropdown">
@@ -179,11 +179,13 @@
                     </li>
                     {% else %}
                     <li>
-                        <a href="{% url 'login' %}"><i class="icon-fire"></i>登录</a>
+                        <span style="padding: 10px 0  0 10px !important; display: block;color: #777777; padding-right: 0">
+                            已有帐号? 请
+                        </span>
                     </li>
-{#                    <li>#}
-{#                        <a href="{% url 'register' %}"><i class="icon-lemon"></i>注册</a>#}
-{#                    </li>#}
+                    <li>
+                        <a href="{% url 'login' %}" style="color: #006dcc; padding-left: 0">登录</a>
+                    </li>
                     {% endif %}
                 </ul>
             </div>

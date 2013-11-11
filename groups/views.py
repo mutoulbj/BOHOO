@@ -74,16 +74,22 @@ def group_detail(request, group_id):
             is_creator = True
         # 判断当前用户申请加入该小组的请求是否正在处理中,若正在处理中,不允许重复申请
         try:
-            apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
-                                                        join_type="member")
-            is_member_processing = True
+            if not request.user.is_anonymous():
+                apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
+                                                            join_type="member")
+                is_member_processing = True
+            else:
+                is_member_processing = False
         except ObjectDoesNotExist:
             is_member_processing = False
 
         try:
-            apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
-                                                        join_type="manager")
-            is_manager_processing = True
+            if not request.user.is_anonymous():
+                apply_is_processing = Applicant.objects.get(applicant=request.user, group=group, status="processing",
+                                                            join_type="manager")
+                is_manager_processing = True
+            else:
+                is_manager_processing = False
         except ObjectDoesNotExist:
             is_manager_processing = False
 
@@ -103,7 +109,10 @@ def group_detail(request, group_id):
         except EmptyPage:
             topics = paginator.page(paginator.num_pages)
 
-        recommend_groups = get_most_topic_groups(request.user, 5)
+        if not request.user.is_anonymous():
+            recommend_groups = get_most_topic_groups(request.user, 5)
+        else:
+            recommend_groups = None
         ctx = {
             'g': group, 'is_member': is_member, 'topics': topics,
             'is_creator': is_creator,

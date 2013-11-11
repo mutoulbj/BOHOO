@@ -178,11 +178,14 @@
                         </ul>
                     </li>
                     {% else %}
-                    <li>
-                        <a href="#" style="padding: 10px 0  0 10px !important">已有帐号? 请</a>
-                    </li>
+{#                    <li>#}
+{#                        <a href="#" style="padding: 10px 0  0 10px !important">已有帐号? 请</a>#}
+{#                    </li>#}
                     <li>
                         <a href="{% url 'login' %}" style="padding-left: 0 !important"><i class="icon-fire"></i>登录</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'register' %}"><i class="icon-lemon"></i>注册</a>
                     </li>
                     {% endif %}
                 </ul>
