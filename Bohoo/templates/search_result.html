@@ -107,6 +107,9 @@
                                     <td>
                                         <a href="{% url 'group_detail' group_id=t.group.id %}?type=recent">{{ t.group.name|truncatechars:20 }}</a>
                                     </td>
+                                    <td>
+                                        {{ t.group.place }}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </table>

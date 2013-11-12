@@ -126,6 +126,7 @@ def group_detail(request, group_id):
         pass
 
 
+@login_required()
 def ajax_join_group(request):
     """ 加入群组  ajax @fanlintao """
     error = {"success": "", "error": ""}
@@ -136,6 +137,7 @@ def ajax_join_group(request):
         return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 
+@login_required()
 def ajax_apply_join_group(request):
     """ 申请加入群组 ajax @fanlintao """
     error = {"success": "", "error": ""}
@@ -168,6 +170,7 @@ def ajax_apply_be_manager(request):
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 
+@login_required()
 def ajax_quite_group(request):
     error = {"success": "", "error": ""}
     if request.method == 'POST':
@@ -209,6 +212,7 @@ def apply_deal(request, group_id):
         pass
 
 
+@login_required()
 def ajax_apply_pass(request):
     """ ajax 通过请求 @fanlintao """
     error = {"success": "", "error": ""}
@@ -232,6 +236,7 @@ def ajax_apply_pass(request):
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 
 
+@login_required()
 def ajax_apply_reject(request):
     """ ajax 拒绝请求 @fanlintao """
     error = {"success": "", "error": ""}

@@ -111,7 +111,7 @@
                             {% for t in topics %}
                                 <tr>
                                     <td><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name|truncatechars:35 }}</a></td>
-                                    <td><a href="{% url "profile_view" tid=t.creator.id %}">{{ t.creator }}</a></td>
+                                    <td>{% if t.topic_type != 1 %}<a href="{% url "profile_view" tid=t.creator.id %}">{{ t.creator }}</a>{% endif %}</td>
                                     <td>{{ t.reply_amount }}</td>
                                     <td>{{ t.click_amount|floatformat:"0" }}</td>
                                     <td>{{ t.last_reply_add|date:"Y-m-j H:i:s" }}</td>
