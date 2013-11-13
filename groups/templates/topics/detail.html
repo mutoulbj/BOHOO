@@ -65,12 +65,24 @@
         <div class="row-fluid left">
             <div class="span9">
                 <div class="row-fluid topic">
-                    <div class="span1 people_avatar" data-t_id="{{ topic.creator.id }}"><a href="">{% avatar topic.creator 55 %}</a></div>
+                    <div class="span1 people_avatar" data-t_id="{{ topic.creator.id }}">
+                        {% if request.user == topic.creator %}
+                            <a href="{% url "profile_view" tid=topic.creator.id %}">{% avatar topic.creator 55 %}</a>
+                        {% else %}
+                            <a href="{% url "info_view" tid=topic.creator.id %}">{% avatar topic.creator 55 %}</a>
+                        {% endif %}
+                    </div>
                     <div class="span11">
                         <div class="row-fluid topic-item">
                             <span class="items span12 ">
                                 <span class="muted">来自:</span>
-                                <span class="text-success"><a href="">{{ topic.creator }}</a></span>
+                                <span class="text-success">
+                                    {% if request.user == topic.creator %}
+                                        <a href="{% url "profile_view" tid=topic.creator.id %}">{{ topic.creator }}</a>
+                                    {% else %}
+                                        <a href="{% url "info_view" tid=topic.creator.id %}">{{ topic.creator }}</a>
+                                    {% endif %}
+                                </span>
                                 <span class="text-success">{{ topic.create_time|date:"Y-m-j H:i:s" }}</span>
                                 <span class="report">
                                     <a href="{{ topic.id }}" class="report-topic muted">举报</a>
@@ -132,8 +144,13 @@
                                 <div class="row-fluid">
                                     <div class="span12 muted reply-quote">
                                         <blockquote>{{ r.reply.content|linebreaksbr|truncatechars:50 }}
-                                            <!-- TODO: 设置个人主页链接 -->
-                                            <span>&nbsp;&nbsp;@<a href="">{{ r.reply.creator }}</a></span>
+                                            <span>&nbsp;&nbsp;@
+                                                {% if request.user == r.reply.creator %}
+                                                    <a href="{% url "profile_view" tid=r.reply.creator.id %}">{{ r.reply.creator }}</a>
+                                                {% else %}
+                                                    <a href="{% url "info_view" tid=r.reply.creator.id %}">{{ r.reply.creator }}</a>
+                                                {% endif %}
+                                            </span>
                                         </blockquote>
                                     </div>
                                 </div>

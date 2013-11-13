@@ -9,7 +9,7 @@ from django.contrib.auth import logout
 from django.core.mail import send_mail
 from django.conf import settings
 from django.core.urlresolvers import reverse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 
 from accounts.forms import login_form, register_form, password_reset_apply_form, reset_password_form
@@ -79,19 +79,6 @@ def log_out(request):
     """
     logout(request)
     return redirect(reverse('main'))
-
-
-def view_member_info(request):
-    """
-    查看他人信息
-    """
-    vt = loader.get_template('member_info.html')
-    c = RequestContext(
-        request, {
-
-        }
-    )
-    return HttpResponse(vt.render(c))
 
 
 def username_check(request):

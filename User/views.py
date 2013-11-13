@@ -50,11 +50,12 @@ def view_info(request, tid):
     查看他人资料
     @fanlintao
     """
-    user = get_object_or_404(MyUser, id=tid)
+    t_user = get_object_or_404(MyUser, id=tid)
+    print t_user.username
     vt = loader.get_template("people/info.html")
     c = RequestContext(
         request, {
-            'user': user
+            't_user': t_user
         }
     )
     return HttpResponse(vt.render(c))
