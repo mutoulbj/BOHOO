@@ -39,21 +39,32 @@ function apply_be_manager_success() {
 // 加入小组
 $(document).ready(function () {
     $("#join_group").click(function () {
-        if (confirm("确认加入该群组?")) {
-            $.ajax({
-                async: false,
-                url: "/group/ajax_join_group/",     //url: "{% url 'ajax_join_group' %}",
-                type: "POST",
-                data: {"group_id": $(this).data("group-id")},
-                dataType: "json",
-                success: join_success()
-//                                        fail: $.globalMessenger().post({
-//                                            message: "服务器错误,请稍后再试",
-//                                            hideAfter: 2,
-//                                            type: 'error',
-//                                            showCloseButton: true
-//                                        })
-            })
+        e.preventDefault();
+        if ("{{ request.user.is_authenticated }}" === 'False') {    // 未登录
+            $.globalMessenger().post({
+                message: "请先登录!",
+                hideAfter: 2,
+                type: 'error',
+                showCloseButton: true
+            });
+            return false;
+        } else {
+            if (confirm("确认加入该群组?")) {
+                $.ajax({
+                    async: false,
+                    url: "/group/ajax_join_group/",     //url: "{% url 'ajax_join_group' %}",
+                    type: "POST",
+                    data: {"group_id": $(this).data("group-id")},
+                    dataType: "json",
+                    success: join_success()
+    //                                        fail: $.globalMessenger().post({
+    //                                            message: "服务器错误,请稍后再试",
+    //                                            hideAfter: 2,
+    //                                            type: 'error',
+    //                                            showCloseButton: true
+    //                                        })
+                })
+            }
         }
 
     });
