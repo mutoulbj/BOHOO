@@ -344,6 +344,7 @@
                     type: 'error',
                     showCloseButton: true
                 });
+                location.href = "{% url 'register' %}";
                 return false;
             } else {
                 if (confirm("确认加入该群组?")) {
@@ -374,6 +375,7 @@
                     type: 'error',
                     showCloseButton: true
                 });
+                location.href = "{% url 'register' %}";
                 return false;
             } else {
                 $.ajax({
@@ -397,6 +399,7 @@
                     type: 'error',
                     showCloseButton: true
                 });
+                location.href = "{% url 'register' %}";
                 return false;
             } else {
                 $.ajax({

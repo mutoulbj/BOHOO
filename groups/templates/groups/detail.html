@@ -36,6 +36,11 @@
     .topic-list tr th, .topic-list tr td{
         text-align: center;
     }
+    .group-description{
+        border-top: 1px solid #eee;
+        margin-top: 8px;
+        padding-top: 10px;
+    }
     </style>
     {% endcompress %}
 {% endblock %}
@@ -48,36 +53,47 @@
                 <div class="row-fluid">
                     <div class="span2 avatar">
                         <div class="row-fluid">
-                             {% group_avatar g 50 %}
+                             {% group_avatar g 60 %}
                         </div>
                     </div>
                     <div class="span10">
                         <div class="row-fluid">
-                            <div class="span7 text-info group-name">{{ g.name }}</div>
+                            <div class="span7">
+                                <div class="row-fluid">
+                                    <span class="text-info group-name">{{ g.name }}</span>
+                                </div>
+                                <div class="row-fluid">
+                                    <h4 class="g_place muted">{{ g.place }}</h4>
+                                </div>
+                            </div>
                             <div class="span5 pull-right toolbar">
-                                {% if not is_member and not is_creator %}
-                                    {% if g.member_join == 'everyone_can_join' %}
-                                        <button id="join_group" class="btn btn-primary" data-group-id={{ g.id }}>加入群组</button>
-                                    {% elif g.member_join == 'need_check' %}
-                                        <!-- button to tigger modal -->
-                                        <button id="apply_join_modal_trigger" class="btn btn-primary">申请加入群组</button>
+                                    {% if not is_member and not is_creator %}
+                                        {% if g.member_join == 'everyone_can_join' %}
+                                            <button id="join_group" class="btn btn-primary" data-group-id={{ g.id }}>加入群组</button>
+                                        {% elif g.member_join == 'need_check' %}
+                                            <!-- button to tigger modal -->
+                                            <button id="apply_join_modal_trigger" class="btn btn-primary">申请加入群组</button>
+                                        {% endif %}
+    {#                                {% elif is_member and not is_manager %}#}
+    {#                                    <span class="text-warning">我是群组成员 ></span>#}
                                     {% endif %}
-{#                                {% elif is_member and not is_manager %}#}
-{#                                    <span class="text-warning">我是群组成员 ></span>#}
-                                {% endif %}
 
-{#                                {% if is_manager %}#}
-{#                                    <span class="text-warning">我是管理员 ></span>#}
-                                {% if is_member and not is_manager and not is_creator %}
-                                    <button id="apply_be_manager_modal_trigger" class="btn btn-primary">成为管理员</button>
-                                {% endif %}
-                                {% if is_member and not is_creator %}
-                                    <button id="quit_group" class="btn btn-danger" data-group-id={{ g.id }}>退出群组</button>
-                                {% endif %}
+    {#                                {% if is_manager %}#}
+    {#                                    <span class="text-warning">我是管理员 ></span>#}
+                                    {% if is_member and not is_manager and not is_creator %}
+                                        <button id="apply_be_manager_modal_trigger" class="btn btn-primary">成为管理员</button>
+                                    {% endif %}
+                                    {% if is_member and not is_creator %}
+                                        <button id="quit_group" class="btn btn-danger" data-group-id={{ g.id }}>退出群组</button>
+                                    {% endif %}
                             </div>
                         </div>
-                        <div class="row-fluid">
-                            <div class="span12 group-description">{{ g.description|linebreaksbr }}</div>
+                    </div>
+                    <div class="row-fluid">
+                        <div class="span12 group-description">
+                            {% if g.description %}
+                                {{ g.description|linebreaksbr }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -219,6 +235,7 @@
                     type: 'error',
                     showCloseButton: true
                 });
+                location.href = "{% url 'register' %}";
                 return false;
             } else {
                 if (confirm("确认加入该群组?")) {
@@ -249,6 +266,7 @@
                     type: 'error',
                     showCloseButton: true
                 });
+                location.href = "{% url 'register' %}";
                 return false;
             } else {
                 $.ajax({
@@ -272,6 +290,7 @@
                     type: 'error',
                     showCloseButton: true
                 });
+                location.href = "{% url 'register' %}";
                 return false;
             } else {
                 $.ajax({
