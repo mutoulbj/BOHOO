@@ -143,7 +143,10 @@ def reset_password_apply(request):
                   '?id=' + user_id + '&timestamp=' + timestamp + '&hash_code=' + hash_code
             subject = u'密码重置'
             message = u'请点击下面的连接进行密码重置,如果不能点击请将链接复制到浏览器地址栏中打开.%s' % url
-            send_mail(subject, message, settings.EMAIL_HOST_USER, [t_email, ])
+            try:
+                send_mail(subject, message, settings.EMAIL_HOST_USER, [t_email, ])
+            except:
+                pass
             return render(request, 'reset_password_email_sent.html', {'email': t_email})
     else:
         form = password_reset_apply_form()
