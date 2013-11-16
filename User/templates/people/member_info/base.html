@@ -158,7 +158,7 @@
                     <td>
                         <ul class="unstyled">
                             <li><a href="{% url 'info_view' tid=f.to_user.id %}">{{ f.to_user.username }}</a></li>
-                            <li class="muted">{{ f.from_user.sign|truncatechars:30 }}</li>
+                            <li class="muted">{{ f.to_user.sign|truncatechars:30 }}</li>
                         </ul>
                     </td>
                     </tr>

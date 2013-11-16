@@ -40,11 +40,19 @@ def view_profile(request, tid):
     查看个人资料
     @fanlintao
     """
-    user = MyUser.objects.get(id=tid)
+    t_user = get_object_or_404(MyUser, id=tid)
+    #关注了
+    t_followed = Friendship.objects.filter(from_user=t_user)
+
+    # 关注者
+    t_follower = Friendship.objects.filter(to_user=t_user)
+
     vt = loader.get_template("people/profile.html")
     c = RequestContext(
         request, {
-            'user': user
+            'user': t_user,
+            'followed': t_followed,
+            'follower': t_follower
         }
     )
     return HttpResponse(vt.render(c))
