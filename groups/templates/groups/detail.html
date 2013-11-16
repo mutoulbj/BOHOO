@@ -227,6 +227,8 @@
                 $('#pills-recent').addClass('active');
             {% elif request.GET.type == 'hot' %}
                 $('#pills-hot').addClass('active');
+            {% else %}
+                $('#pills-recent').addClass('active');
             {% endif %}
 
             // 初始化时使用js加上search_content

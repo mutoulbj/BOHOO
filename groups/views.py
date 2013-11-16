@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils.datastructures import MultiValueDictKeyError
 from groups.models import Group, Topic, Reply, Applicant, TopicImage, Report
 from django.shortcuts import render
 from django.core.urlresolvers import reverse
@@ -94,10 +95,15 @@ def group_detail(request, group_id):
             is_manager_processing = False
 
         topic_qs = Topic.objects.filter(group=group, status='enabled')
-        if request.GET['type'] == 'recent':   # 最近话题:按最近回复时间排序
-            topics_list = topic_qs.order_by("-last_reply_add")
-        elif request.GET['type'] == 'hot':    # 最热话题:按回复数量排序
-            topics_list = topic_qs.order_by("-reply_amount")
+        topics_list = topic_qs.order_by("-last_reply_add")  # 默认按最近回复时间排序
+        try:
+            if request.GET['type'] == 'recent':   # 最近话题:按最近回复时间排序
+                #topics_list = topic_qs.order_by("-last_reply_add")
+                pass
+            elif request.GET['type'] == 'hot':    # 最热话题:按回复数量排序
+                topics_list = topic_qs.order_by("-reply_amount")
+        except MultiValueDictKeyError:
+            pass
 
         # 对话题分页
         paginator = Paginator(topics_list, settings.TOPIC_PAGINTION_PER_PAGE)

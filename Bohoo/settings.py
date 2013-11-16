@@ -28,6 +28,11 @@ PAGINATION_PER_PAGE = 2
 TOPIC_PAGINTION_PER_PAGE = 50   # 每页话题数量
 GROUP_PAGINTION_PER_PAGE = 3    # 每页群组数量
 
+# 个人页面相关的显示数量
+JOINED_GROUPS_NUM = 10          # 加入的群组
+ADD_TOPIC_NUM = 10              # 添加的话题
+REPLY_TOPIC_NUM = 10            # 回复的话题
+
 
 AUTHENTICATION_BACKENDS = ('Bohoo.backends.EmailAuthBackend', 'django.contrib.auth.backends.ModelBackend',)
 

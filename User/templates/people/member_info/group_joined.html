@@ -1,0 +1,54 @@
+{% extends 'people/member_info/base.html' %}
+{% load group_avatar_tags %}
+
+
+{% block member_pills %}
+    <div class="row-fluid info-tab">
+        <ul class="nav nav-pills">
+            <li id="pills-groups" class="active">
+                <a href="{% url 'info_view' tid=t_user.id %}#pill_link">他加入的群组</a>
+            </li>
+            <li id="pills-tadd">
+                <a href="{% url 'm_add_topic' tid=t_user.id %}#pill_link">他发表的话题</a>
+            </li>
+            <li id="pills-reply">
+                <a href="{% url 'm_reply_topic' tid=t_user.id %}#pill_link">他回复的话题</a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block member_relate %}
+    <div class="span12 m_group_joined">
+    <table class="table m_group_list">
+        <tbody>
+        {% for g in joined_groups %}
+            <tr>
+            <td class="group_avatar"><a href="{% url 'group_detail' group_id=g.id %}">{% group_avatar g 50 %}</a></td>
+            <td>
+                <ul class="unstyled">
+                    <li><h4><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name|truncatechars:30 }}</a></h4></li>
+                    <li>{{ g.description|truncatechars:45 }}</li>
+                </ul>
+            </td>
+            </tr>
+        {% empty %}
+            <tr>
+            <td>
+                <h4 class="muted">还未加入任何小组!</h4>
+            </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
+
+{% block head_other %}
+    {{ block.super }}
+    <style type="text/css">
+    .group_avatar img{
+        padding-top: 10px;
+    }
+    </style>
+{% endblock %}

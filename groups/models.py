@@ -193,8 +193,9 @@ class Reply(models.Model):
     content     回复内容
     creator     创建者
     topic       话题
+    reply       回复
     create_time 创建时间
-    status          状态
+    status      状态
     """
     content = models.TextField(verbose_name=u'内容')
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='creator_reply', verbose_name=u'创建者')
@@ -266,7 +267,7 @@ class Applicant(models.Model):
     join_type = models.CharField(max_length=128, verbose_name=u'类型')
 
     def __unicode__(self):
-        return self.applicant.username
+        return self.applicant
 
     class Meta:
         verbose_name = u'申请加入群组/成为管理员'
