@@ -73,11 +73,11 @@
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">性别</span>
+                            <span class="text-info">职业</span>
                         </div>
-                        <div class="span8 sex">
-                            {% if user.sex %}
-                                {{ user.sex }}
+                        <div class="span8">
+                            {% if user.job %}
+                                {{ user.job }}
                             {% endif %}
                         </div>
                     </div>
@@ -85,11 +85,11 @@
                 <div class="span6">
                     <div class="row-fluid">
                         <div class="span4">
-                            <span class="text-info">职业</span>
+                            <span class="text-info">注册时间</span>
                         </div>
-                        <div class="span8">
-                            {% if user.job %}
-                                {{ user.job }}
+                        <div class="span8 sex">
+                            {% if user.date_joined %}
+                                {{ user.date_joined|date:"Y-m-d H:i:s" }}
                             {% endif %}
                         </div>
                     </div>
