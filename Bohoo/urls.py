@@ -11,6 +11,10 @@ urlpatterns = patterns(
     '',
     url(r'^$', 'Bohoo.views.main', name='main'),
     url(r'^home/$', 'Bohoo.views.index', name='index'),
+    url(r'^contact/$', 'Bohoo.views.contact', name='contact_us'),     # 联系我们
+    url(r'^statement/$', 'Bohoo.views.statement', name='statement'),  # 免责声明
+    url(r'^about/$', 'Bohoo.views.about', name='about'),       # 关于页面
+    url(r'^terms/$', 'Bohoo.views.terms', name='terms'),       # 服务条款
     url(r'^get_messages/$', 'Bohoo.views.get_messages', name='get_messages'),   # 轮询
     url(r'^captcha/', include('captcha.urls')),   # django-simple-captcha
     url(r'^search/$', 'Bohoo.views.search', name='search'),

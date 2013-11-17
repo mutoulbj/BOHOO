@@ -148,3 +148,36 @@ def get_messages(request):
     return HttpResponse(json.dumps(notification, ensure_ascii=False), mimetype="application/json")
 
 
+def contact(request):
+    """
+    关于页面
+    @fanlintao
+    """
+    return render(request, 'contact_us.html')
+
+
+def statement(request):
+    """
+    免责声明
+    @fanlintao
+    """
+    return render(request, 'statement.html')
+
+
+def about(request):
+    """
+    关于
+    @fanlintao
+    """
+    return render(request, 'about.html')
+
+
+def terms(request):
+    """
+    服务条款
+    @fanlintao
+    """
+    return render(request, 'terms.html')
+
+
+
