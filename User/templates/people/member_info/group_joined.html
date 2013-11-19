@@ -27,7 +27,7 @@
             <td class="group_avatar"><a href="{% url 'group_detail' group_id=g.id %}">{% group_avatar g 50 %}</a></td>
             <td>
                 <ul class="unstyled">
-                    <li><h4><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name|truncatechars:30 }}</a></h4></li>
+                    <li><h5><a href="{% url 'group_detail' group_id=g.id %}">{{ g.name|truncatechars:30 }}</a></h5></li>
                     <li>{{ g.description|truncatechars:45 }}</li>
                 </ul>
             </td>

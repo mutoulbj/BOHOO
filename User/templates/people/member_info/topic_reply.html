@@ -24,7 +24,7 @@
             <tr>
             <td>
                 <ul class="unstyled">
-                    <li><h4><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name|truncatechars:30 }}</a></h4></li>
+                    <li><h5><a href="{% url 'topic_detail' topic_id=t.id %}">{{ t.name|truncatechars:30 }}</a></h5></li>
                     <li>{{ t.content|truncatechars:45 }}</li>
                 </ul>
             </td>

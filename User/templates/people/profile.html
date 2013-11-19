@@ -27,6 +27,9 @@
     .right_content{
         margin-left: 0 !important;
     }
+    #pills-follower{
+        margin-left: 40px;
+    }
     </style>
 {% endblock %}
 
@@ -165,7 +168,12 @@
                     </td>
                     <td>
                         <ul class="unstyled">
-                            <li><a href="{% url 'info_view' tid=f.to_user.id %}">{{ f.to_user.username }}</a></li>
+                            <li>
+                                <a href="{% url 'info_view' tid=f.to_user.id %}">{{ f.to_user.username }}</a>
+                                {% if f.to_user.job %}
+                                <span class="muted">|职业:{{ f.from_user.job }}</span>
+                                {% endif %}
+                            </li>
                             <li class="muted">{{ f.to_user.sign|truncatechars:30 }}</li>
                         </ul>
                     </td>
@@ -188,7 +196,12 @@
                     </td>
                     <td>
                         <ul class="unstyled">
-                            <li><a href="{% url 'info_view' tid=f.from_user.id %}">{{ f.from_user.username }}</a></li>
+                            <li>
+                                <a href="{% url 'info_view' tid=f.from_user.id %}">{{ f.from_user.username }}</a>
+                                {% if f.from_user.job %}
+                                <span class="muted">|职业:{{ f.from_user.job }}</span>
+                                {% endif %}
+                            </li>
                             <li class="muted">{{ f.from_user.sign|truncatechars:30 }}</li>
                         </ul>
                     </td>

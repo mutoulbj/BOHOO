@@ -124,11 +124,23 @@
                 <!-- JiaThis Button END -->
                 {% for r in replies %}
                     <div class="row-fluid">
-                        <div class="span1 reply_avatar people_avatar" data-t_id="{{ r.creator.id }}"><a href="">{% avatar r.creator 55 %}</a></div>
+                        <div class="span1 reply_avatar people_avatar" data-t_id="{{ r.creator.id }}">
+                            {% if request.user == r.creator %}
+                            <a href="{% url "profile_view" tid=r.creator.id %}">{% avatar topic.creator 55 %}</a>
+                            {% else %}
+                                <a href="{% url "info_view" tid=r.creator.id %}">{% avatar topic.creator 55 %}</a>
+                            {% endif %}
+                        </div>
                         <div class="span11 reply-content">
                             <div class="row-fluid reply-item">
                                 <div class="span12 bg_reply">
-                                    <span class="text-success"><a href="">{{ r.creator }}</a></span>
+                                    <span class="text-success">
+                                        {% if request.user == r.creator %}
+                                        <a href="{% url "profile_view" tid=r.creator.id %}">{{ r.creator }}</a>
+                                        {% else %}
+                                            <a href="{% url "info_view" tid=r.creator.id %}">{{ r.creator }}</a>
+                                        {% endif %}
+                                    </span>
                                     <span class="text-success">{{ r.create_time|date:"Y-m-j H:i:s" }}</span>
                                     <span class="report">
                                         <a href="{{ r.id }}" class="report-reply muted">举报</a>
@@ -345,7 +357,6 @@
                     showCloseButton: true
                 });
                 location.href = "{% url 'register' %}";
-                return false;
             } else {
                 if (confirm("确认加入该群组?")) {
                     $.ajax({
@@ -376,7 +387,6 @@
                     showCloseButton: true
                 });
                 location.href = "{% url 'register' %}";
-                return false;
             } else {
                 $.ajax({
                     async: false,

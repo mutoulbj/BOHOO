@@ -37,7 +37,9 @@
     }
     .info_navbar .item{
         float: left;
-        padding: 12px 20px;
+{#        padding: 12px 20px;#}
+        margin-top: 8px;
+        padding-left: 5px;
         font-weight: 700;
         color: #666;
         text-align: center;
@@ -45,12 +47,16 @@
         text-decoration: none;
         line-height: 22px;
     }
-
-    .info_navbar .item .num {
-        color: #999;
-        font-weight: 400;
-        margin-left: 3px;
+    .info_navbar .first_item{
+        padding-left: 0 !important;
+        margin-left: 0;
     }
+
+{#    .info_navbar .item .num {#}
+{#        color: #999;#}
+{#        font-weight: 400;#}
+{#        margin-left: 3px;#}
+{#    }#}
     .right_content{
         margin-left: 0 !important;
     }
@@ -60,6 +66,9 @@
     }
     .info_right{
         margin-left: 0 !important;
+    }
+    .tab-follower{
+        margin-left: 40px;
     }
     </style>
 {% endblock %}
@@ -102,10 +111,15 @@
                         </div>
 
                         <div class="row-fluid span12 info_bottom">
-                            <div class="container span8 info_navbar">
+{#                            <div class="container span8 info_navbar">#}
 {#                                <a class="item" href="">群组<span class="num">3</span> </a>#}
 {#                                <a class="item" href="">话题<span class="num">3</span> </a>#}
 {#                                <a class="item" href="">回复<span class="num">3</span> </a>#}
+{#                            </div>#}
+                            <div class="container span8 info_navbar">
+                                <span class="item first_item">地点:<span class="muted">{{ t_user.city }}</span></span>
+                                <span class="item">职业:<span class="muted">{{ t_user.job }}</span></span>
+                                <span class="item">注册时间:<span class="muted">{{ t_user.date_joined|date:"Y-m-d H:i:s" }}</span></span>
                             </div>
                             <div class="container span4 div_follow">
                                 {% if t_user != request.user %}
@@ -136,13 +150,18 @@
 
 
 {% block right_content %}
+    <form id="follow_form" style="display: none">
+    <input type="hidden" name="follow_user" value="{{ t_user.id }}">
+    <input type="hidden" name="follow_type" value="" id="follow_type">
+    </form>
+
     <div class="row-fluid info-tab">
         <ul class="nav nav-pills">
-            <li id="pills-followed" class="active">
-                <a href="#tab-followed" data-toggle="tab">关注了</a>
+            <li id="pills-followed" class="{% if active_tab == 'followed' %}active{% endif %}">
+                <a href="#tab-followed" class="tab-followed">关注了</a>
             </li>
-            <li id="pills-follower">
-                <a href="#tab-follower" data-toggle="tab">关注者</a>
+            <li id="pills-follower" class="{% if active_tab == 'follower' %}active{% endif %}">
+                <a href="#tab-follower" class="tab-follower">关注者</a>
             </li>
         </ul>
     </div>
@@ -157,7 +176,12 @@
                     </td>
                     <td>
                         <ul class="unstyled">
-                            <li><a href="{% url 'info_view' tid=f.to_user.id %}">{{ f.to_user.username }}</a></li>
+                            <li>
+                                <a href="{% url 'info_view' tid=f.to_user.id %}">{{ f.to_user.username }}</a>
+                                {% if f.to_user.job %}
+                                <span class="muted">|职业:{{ f.to_user.job }}</span>
+                                {% endif %}
+                            </li>
                             <li class="muted">{{ f.to_user.sign|truncatechars:30 }}</li>
                         </ul>
                     </td>
@@ -180,7 +204,12 @@
                     </td>
                     <td>
                         <ul class="unstyled">
-                            <li><a href="{% url 'info_view' tid=f.from_user.id %}">{{ f.from_user.username }}</a></li>
+                            <li>
+                                <a href="{% url 'info_view' tid=f.from_user.id %}">{{ f.from_user.username }}</a>
+                                {% if f.from_user.job %}
+                                <span class="muted">|职业:{{ f.from_user.job }}</span>
+                                {% endif %}
+                            </li>
                             <li class="muted">{{ f.from_user.sign|truncatechars:30 }}</li>
                         </ul>
                     </td>
@@ -200,34 +229,74 @@
     <script type="text/javascript">
     $('.follow').bind('click' ,function(e){
         e.preventDefault();
-        var self = $(this);
-        var user_id = $(this).data('user_id');
-        $.ajax({
-            url: "{% url 'ajax_follow' %}",
-            data: {'user_id': user_id},
-            dataType: "json",
-            type: 'post',
-            success: function(){
-                self.hide();
-                $('.unfollow', self.parent()).show()
-            }
-        })
+        if ("{{ request.user.is_authenticated }}" === 'False') {    // 未登录
+            $.globalMessenger().post({
+                message: "请先登录!",
+                hideAfter: 2,
+                type: 'error',
+                showCloseButton: true
+            });
+            location.href = "{% url 'register' %}";
+        } else {
+            var self = $(this);
+            var user_id = $(this).data('user_id');
+            $.ajax({
+                url: "{% url 'ajax_follow' %}",
+                data: {'user_id': user_id},
+                dataType: "json",
+                type: 'post',
+                success: function(){
+                    self.hide();
+                    $('.unfollow', self.parent()).show();
+                    location.reload();
+                }
+            })
+        }
     });
 
     $('.unfollow').bind('click', function(e){
         e.preventDefault();
-        var self = $(this);
-        var user_id = $(this).data('user_id');
-        $.ajax({
-            url: "{% url 'ajax_unfollow' %}",
-            data: {'user_id': user_id},
-            dataType: "json",
-            type: 'post',
-            success: function(){
-                self.hide();
-                $('.follow', self.parent()).show()
-            }
-        })
+        if ("{{ request.user.is_authenticated }}" === 'False') {    // 未登录
+            $.globalMessenger().post({
+                message: "请先登录!",
+                hideAfter: 2,
+                type: 'error',
+                showCloseButton: true
+            });
+            location.href = "{% url 'register' %}";
+        } else {
+            var self = $(this);
+            var user_id = $(this).data('user_id');
+            $.ajax({
+                url: "{% url 'ajax_unfollow' %}",
+                data: {'user_id': user_id},
+                dataType: "json",
+                type: 'post',
+                success: function(){
+                    self.hide();
+                    $('.follow', self.parent()).show();
+                    location.reload();
+                }
+            })
+        }
     });
+
+    $('.tab-followed').bind('click', function(e){
+        e.preventDefault();
+        $('input#follow_type').val('followed');
+        $('#follow_form').submit();
+    });
+    $('.tab-follower').bind('click', function(e){
+        e.preventDefault();
+        $('input#follow_type').val('follower');
+        $('#follow_form').submit();
+    });
+    {% if active_tab == 'followed' %}
+        $("#tab-follower").hide();
+        $("#tab-followed").show();
+    {% elif active_tab == 'follower' %}
+        $("#tab-followed").hide();
+        $("#tab-follower").show();
+    {% endif %}
     </script>
 {% endblock %}
