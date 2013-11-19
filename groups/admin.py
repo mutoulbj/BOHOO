@@ -1,7 +1,7 @@
 #coding=utf-8
 
 from django.contrib import admin
-from models import Category, Group, Topic, Report, Applicant
+from models import Category, Group, Topic, Report, Applicant, Reply
 from django.contrib import messages
 
 from sys_notification.signals import group_notify
@@ -16,7 +16,7 @@ admin.site.register(Category, CategoryAdmin)
 class GroupAdmin(admin.ModelAdmin):
     date_hierarchy = 'create_time'
     list_display = ('name', 'creator', 'group_type', 'create_time', 'modify_time', 'is_closed', 'last_topic_add')
-    list_filter = ('creator', 'group_type', 'is_closed')
+    list_filter = ('creator', 'group_type', 'is_closed', 'place')
 
 admin.site.register(Group, GroupAdmin)
 
@@ -24,10 +24,19 @@ admin.site.register(Group, GroupAdmin)
 class TopicAdmin(admin.ModelAdmin):
     date_hierarchy = 'create_time'
     list_display = ('name', 'group', 'creator', 'create_time', 'modify_time', 'is_closed', 'last_reply_add')
-    list_filter = ('creator', 'is_closed')
-    search_fields = ('id',)
+    list_filter = ('creator', 'is_closed', 'status')
+    #search_fields = ('id',)
 
 admin.site.register(Topic, TopicAdmin)
+
+
+class ReplyAdmin(admin.ModelAdmin):
+    date_hierarchy = 'create_time'
+    list_display = ('content', 'creator', 'topic', 'create_time', 'reply', 'status')
+    list_filter = ('status', 'creator',)
+    #search_fields = ('id',)
+
+admin.site.register(Reply, ReplyAdmin)
 
 
 class ReportAdmin(admin.ModelAdmin):
@@ -126,5 +135,8 @@ class ApplicantAdmin(admin.ModelAdmin):
     reject_apply.short_description = u"拒绝申请"
 
 admin.site.register(Applicant, ApplicantAdmin)
+
+
+
 
 
