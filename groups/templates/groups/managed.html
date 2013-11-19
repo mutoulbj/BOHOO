@@ -1,5 +1,6 @@
 {% extends 'group_base.html' %}
 {% load group_avatar_tags %}
+{% load bootstrap_toolkit %}
 
 {% block title %}我管理的群组{% endblock %}
 
@@ -80,6 +81,9 @@
                 </div>
             </div>
         {% endfor %}
+        {% if groups %}
+            {{ groups|pagination }}
+        {% endif %}
     </div>
 {% endblock %}
 

@@ -24,8 +24,6 @@ urlpatterns = patterns(
     url(r'^accounts/', include('social.urls')),
     url(r'^people/', include('User.urls')),
     url(r'^group/', include('groups.urls')),
-    # Uncomment the admin/doc line below to enable admin documentation:
-    # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),

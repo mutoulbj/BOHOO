@@ -93,6 +93,7 @@
             // 初始化的左侧加上active样式,所在分类展开
             var init_ca_id = "c_" + "{{ init_ca_id }}";
             $('#' + init_ca_id).addClass("active").parents(".accordion-body").addClass('in');
+            // 给分页加上c_id,和ca,避免出错
             var c_id = "{{ init_ca_id }}";
             var ca = "{{ init_ca_parent_id }}";
             $('.pagination>ul li a').each(function(){

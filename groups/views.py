@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.datastructures import MultiValueDictKeyError
 from groups.models import Group, Topic, Reply, Applicant, TopicImage, Report
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -55,8 +55,8 @@ def edit_group(request, group_id):
 
 def add_group_avatar(request, group_id):
     """ 添加小组头像 """
-    group = Group.objects.get(id=group_id)
-    return render(request, 'groups/new/add_avatar.html', {'group': group})
+    t_group = get_object_or_404(Group, id=group_id)
+    return render(request, 'groups/new/add_avatar.html', {'group': t_group})
 
 
 def group_detail(request, group_id):
@@ -195,14 +195,32 @@ def ajax_quite_group(request):
 @login_required()
 def manage(request):
     """ 我管理的群组 @fanlintao """
-    groups = Group.objects.filter(manager=request.user)
+    groups_list = Group.objects.filter(manager=request.user)
+    # 对群组分页
+    paginator = Paginator(groups_list, settings.GROUP_MANAGED_PER_PAGE)
+    page = request.GET.get('page')
+    try:
+        groups = paginator.page(page)
+    except PageNotAnInteger:
+        groups = paginator.page(1)
+    except EmptyPage:
+        groups = paginator.page(paginator.num_pages)
     return render(request, 'groups/managed.html', {'groups': groups})
 
 
 @login_required()
 def joined(request):
     """  我加入的群组 @fanlintao """
-    groups = Group.objects.filter(member=request.user)
+    groups_list = Group.objects.filter(member=request.user)
+    # 对群组分页
+    paginator = Paginator(groups_list, settings.GROUP_JOINED_PER_PAGE)
+    page = request.GET.get('page')
+    try:
+        groups = paginator.page(page)
+    except PageNotAnInteger:
+        groups = paginator.page(1)
+    except EmptyPage:
+        groups = paginator.page(paginator.num_pages)
     return render(request, 'groups/joined.html', {'groups': groups})
 
 
@@ -368,8 +386,8 @@ def ajax_delete_topic_image(request):
 def group_topic(request):
     """ 我的群组的话题 @fanlintao """
     groups = Group.objects.filter(member=request.user)
-    topics_list = Topic.objects.filter(group__in=groups, status='enabled').order_by("-last_reply_add")
-    paginator = Paginator(topics_list, settings.PAGINATION_PER_PAGE)
+    topics_list = Topic.objects.filter(group__in=groups, status='enabled').order_by("-last_reply_add")[0: 100] # 显示100个
+    paginator = Paginator(topics_list, settings.TOPIC_MYGROUP_PER_PAGE)
     page = request.GET.get('page')
     try:
         topics = paginator.page(page)
@@ -383,8 +401,8 @@ def group_topic(request):
 @login_required()
 def created_topic(request):
     """我创建的话题 @fanlintao """
-    topics_list = Topic.objects.filter(creator=request.user, status='enabled').order_by("-last_reply_add")
-    paginator = Paginator(topics_list, settings.PAGINATION_PER_PAGE)
+    topics_list = Topic.objects.filter(creator=request.user, status='enabled').order_by("-last_reply_add")[0:100] # 显示100个
+    paginator = Paginator(topics_list, settings.TOPIC_ADD_PER_PAGE)
     page = request.GET.get('page')
     try:
         topics = paginator.page(page)
@@ -398,8 +416,9 @@ def created_topic(request):
 @login_required()
 def replied_topic(request):
     """我回复的话题 @fanlintao """
-    topics_list = Topic.objects.filter(id__in=Reply.objects.all().order_by('-create_time').filter(creator=request.user).values_list('topic', flat=True), status='enabled')
-    paginator = Paginator(topics_list, settings.PAGINATION_PER_PAGE)
+    reply_ids = Reply.objects.all().order_by('-create_time').filter(creator=request.user).values_list('topic', flat=True)
+    topics_list = Topic.objects.filter(id__in=reply_ids, status='enabled')[0:100]  # 显示100个
+    paginator = Paginator(topics_list, settings.TOPIC_REPLY_PER_PAGE)
     page = request.GET.get('page')
     try:
         topics = paginator.page(page)

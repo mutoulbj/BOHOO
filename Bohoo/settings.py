@@ -27,6 +27,11 @@ LOGIN_URL = '/'
 PAGINATION_PER_PAGE = 2
 TOPIC_PAGINTION_PER_PAGE = 50   # 每页话题数量
 GROUP_PAGINTION_PER_PAGE = 3    # 每页群组数量
+GROUP_MANAGED_PER_PAGE = 20     # 我管理的群组分页数目
+GROUP_JOINED_PER_PAGE = 20      # 我加入的群组分页数目
+TOPIC_ADD_PER_PAGE = 20         # 我发表的话题分页数目
+TOPIC_REPLY_PER_PAGE = 20       # 我回复的话题分页数目
+TOPIC_MYGROUP_PER_PAGE = 20     # 我的群组话题分页数目
 
 # 个人页面相关的显示数量
 JOINED_GROUPS_NUM = 10          # 加入的群组
