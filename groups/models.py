@@ -149,6 +149,7 @@ class Topic(models.Model):
     image           图片
     click_amount    点击次数
     status          状态
+    source          来源
     
     #add by lazytiger
     topic_type      话题类型 : 1类是系统自动发布的，没有作者 ，另一类是用户发表的，需要有作者
@@ -168,6 +169,7 @@ class Topic(models.Model):
     image = models.ManyToManyField(TopicImage, null=True, blank=True)
     click_amount = models.FloatField(default=1, verbose_name=u'点击数')
     status = models.CharField(verbose_name=u'状态', default='enabled', max_length=56, choices=STATUS_CHOICES)
+    source = models.URLField(verbose_name=u'来源', blank=True, null=True)
 
     topic_type = models.IntegerField(default=0, verbose_name=u'话题类型')
 
