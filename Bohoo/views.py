@@ -21,11 +21,20 @@ def main(request):
     未登录的显示,已经登录的跳转到首页
     """
     if request.user.is_anonymous():
-        form = register_form(large_input=False)
-        ctx = {
-            'form': form
-        }
-        return render(request, 'register.html', ctx)
+        if request.method == 'POST':
+            form = register_form(large_input=False, data=request.POST)
+            if form.is_valid():
+                form.save()
+                email = form.cleaned_data['email']
+                user = MyUser.objects.get(email=email)
+                login(request, user)
+                return redirect(reverse('base_info_edit'))  # 跳转到基本信息编辑界面
+        else:
+            form = register_form(large_input=False)
+            ctx = {
+                'form': form
+            }
+            return render(request, 'register.html', ctx)
     elif request.user.is_authenticated():
         return redirect(reverse('index'))
 
