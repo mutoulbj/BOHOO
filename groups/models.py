@@ -58,8 +58,8 @@ class Group(models.Model):
     description = models.TextField(blank=True, null=True, verbose_name=u'描述')
     category = models.ForeignKey(Category, related_name='category_group', verbose_name=u'小组分类')
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='creator_group', verbose_name=u'创建人')
-    member = models.ManyToManyField(settings.AUTH_USER_MODEL)
-    gfriend = models.ManyToManyField('self', symmetrical=False, verbose_name=u'友情小组')
+    member = models.ManyToManyField(settings.AUTH_USER_MODEL, null=True, blank=True)
+    gfriend = models.ManyToManyField('self', symmetrical=False, verbose_name=u'友情小组', null=True, blank=True)
     group_type = models.CharField(default='open', max_length=256, choices=GROUP_TYPE_CHOICES, verbose_name=u'类型')
     member_join = models.CharField(default='everyone_can_join', max_length=256, choices=MEMBER_JOIN_CHOICES,
                                    verbose_name=u'加入方式')
