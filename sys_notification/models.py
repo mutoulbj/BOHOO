@@ -31,6 +31,7 @@ class Notification(models.Model):
     group      群组
     reply      回复
     applicant  相对应的申请
+    follower   关注的用户
     status     状态
     click      点击
     add_time   添加时间
@@ -44,6 +45,7 @@ class Notification(models.Model):
     group = models.ForeignKey(Group, related_name='notify_group', blank=True, null=True)
     reply = models.ForeignKey(Reply, related_name='notify_reply', blank=True, null=True)
     applicant = models.ForeignKey(Applicant, related_name='notify_applicant', blank=True, null=True)
+    follower = models.ForeignKey(MyUser, related_name='notify_follower', blank=True, null=True)
     status = models.CharField(max_length=128, default='unread', verbose_name=u'状态', choices=STATUS_CHOICES, db_index=True)
     click = models.CharField(max_length=128, default='unclick', choices=CLICK_CHOICES, db_index=True)
     add_time = models.DateTimeField(auto_now_add=True, verbose_name=u'添加时间')

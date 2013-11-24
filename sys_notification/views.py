@@ -39,6 +39,21 @@ def notity_topic(request):
 
 
 @login_required()
+def notity_friend(request):
+    """
+    通知:好友
+    @fanlintao
+    """
+    friend_notify = Notification.objects.filter(to_user=request.user, no_type='friend', status='unread').order_by('-add_time')
+    ctx = {
+        'friend_notify': friend_notify,
+        'active': 'friend'
+    }
+    set_notity_clicked.send(sender=friend_notify, request=request, no_type='friend')
+    return render(request, 'notify/friend.html', ctx)
+
+
+@login_required()
 def del_notify(request):
     """
     通知:不再提醒

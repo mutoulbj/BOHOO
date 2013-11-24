@@ -12,7 +12,7 @@ group_notify = Signal(providing_args=["instance", "args", "kwargs"])
 topic_notify = Signal(providing_args=["instance", "args", "kwargs"])
 
 # 好友操作的signal
-# TODO: todo
+friend_notify = Signal(providing_args=["instance", "args", "kwargs"])
 
 # 将通知置为已点击
 set_notity_clicked = Signal(providing_args=["request", "no_type", "args", "kwargs"])
@@ -39,6 +39,14 @@ def topic_action(sender, instance, *args, **kwargs):
         notify.save()
 
 topic_notify.connect(topic_action, dispatch_uid='create_topic_notify')
+
+
+def friend_action(sender, instance, *args, **kwargs):
+    obj = instance
+    # 关注操作
+    notify = Notification(no_type='friend', friend_action='follow', to_user=obj.to_user, follower=obj.from_user)
+    notify.save()
+friend_notify.connect(friend_action, dispatch_uid='follow_notify')
 
 
 def set_notification_clicked(sender, request, no_type, **kwargs):

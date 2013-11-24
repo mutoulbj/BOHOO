@@ -7,6 +7,7 @@ from django.http import HttpResponse
 
 from friends.models import Friendship
 from User.models import MyUser
+from sys_notification.signals import friend_notify
 
 
 @login_required()
@@ -49,10 +50,10 @@ def ajax_follow(request):
             except ObjectDoesNotExist:
                 f = Friendship(from_user=request.user, to_user=t_user)
                 f.save()
+                friend_notify.send(sender=f, instance=f)
                 error['success'] = 'success'
                 return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
         except ObjectDoesNotExist:
-            print 1234
             error['error'] = 'error'
             return HttpResponse(json.dumps(error, ensure_ascii=False), mimetype="application/json")
 

@@ -24,7 +24,7 @@
                         <ul class="nav nav-pills">
                             <li {% if active == 'group' %}class="active"{% endif %}><a href="{% url 'notify_group' %}">群组</a></li>
                             <li {% if active == 'topic' %}class="active"{% endif %}><a href="{% url 'notify_topic' %}">话题</a></li>
-                            <li {% if active == 'friend' %}class="active"{% endif %}><a href="">好友</a></li>  <!-- TODO:fill url -->
+                            <li {% if active == 'friend' %}class="active"{% endif %}><a href="{% url 'notify_friend' %}">好友</a></li>
                         </ul>
                     </div>
                 </div>

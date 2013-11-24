@@ -151,8 +151,10 @@ def get_messages(request):
     t_user_notify_qs = Notification.objects.filter(to_user=request.user, click='unclick').distinct()
     for_group = t_user_notify_qs.filter(no_type='group')
     for_topic = t_user_notify_qs.filter(no_type='topic')
+    for_friend = t_user_notify_qs.filter(no_type='friend')
     notification['for_group'] = len(for_group)
     notification['for_topic'] = len(for_topic)
+    notification['for_friend'] = len(for_friend)
     notification['all'] = len(t_user_notify_qs)
     return HttpResponse(json.dumps(notification, ensure_ascii=False), mimetype="application/json")
 

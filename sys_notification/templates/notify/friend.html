@@ -1,1 +1,36 @@
-<!-- TODO:关于好友的通知 -->
+{% extends 'notify_base.html' %}
+
+{% block left_content %}
+    <div class="row-fluid">
+        <div class="span12">
+            <table class="table table-hover">
+                {% for n in friend_notify %}
+                    <tr id="notify_{{ n.id }}">
+                        <td class="span10"><a href="{% url 'info_view' tid=n.follower.id %}">{{ n.follower.username }}</a>关注了你.</td>
+                        <td class="span2"><a class="muted del_notify" href="{{ n.id }}">不再提醒</a> </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_other %}
+    {{ block.super }}
+    <script type="text/javascript">
+    $('a.del_notify').click(function(e){
+        var self = $(this);
+        e.preventDefault();
+        var n_id = self.attr('href');
+        $.ajax({
+            url: "{% url 'del_notify' %}",
+            type: 'post',
+            dataType: 'json',
+            data: {'n_id': n_id},
+            success: function(){
+                $('#notify_'+n_id).remove();
+            }
+        })
+    })
+    </script>
+{% endblock %}
